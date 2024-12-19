@@ -1,4 +1,4 @@
-import Board from "@/app/components/domain/Board";
+import Board from "@/app/components/domain/board/Board";
 
 const testList = [
   // 임시 테스트 리스트

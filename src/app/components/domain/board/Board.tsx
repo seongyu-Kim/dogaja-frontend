@@ -1,6 +1,5 @@
 import List from "@/app/components/common/List";
-import Button from "@/app/components/common/Button";
-import Link from "next/link";
+import PathToCreate from "@/app/components/domain/board/PathToCreate";
 
 interface BoardPorps {
   name: string;
@@ -14,18 +13,10 @@ export default function Board({ name, list }: BoardPorps) {
       <p className="text-3xl">{name} 게시판</p>
       <main className="w-[50%]">
         <List list={list} />
+        <div className="mt-2 flex justify-end">
+          <PathToCreate />
+        </div>
       </main>
-      <footer>
-        <Link href="../create">
-          <Button
-            style={{
-              backgroundColor: "background-color: #3CB731",
-            }}
-          >
-            글 작성
-          </Button>
-        </Link>
-      </footer>
     </div>
   );
 }
