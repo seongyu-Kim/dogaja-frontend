@@ -6,6 +6,8 @@ import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { modules } from "@/app/utils/reactQuillOptions";
+import Button from "@/app/components/common/Button";
+import Link from "next/link";
 
 //임시 폼 액션 - 글 작성
 export function tests() {
@@ -36,7 +38,7 @@ export default function PostCreate() {
     <div className="flex justify-center">
       <form
         onSubmit={tests}
-        className="w-[300px] md:w-1/2 h-[100vh] items-center mt-10 "
+        className="w-[300px] md:w-1/2 h-[100vh] items-center mt-10"
       >
         <div className="border-b border-gray-400 pb-2 w-full flex flex-col items-center justify-center">
           <p className="text-3xl">글 작성</p>
@@ -60,6 +62,12 @@ export default function PostCreate() {
               className="h-full"
             />
           </div>
+        </div>
+        <div className="flex items-center justify-end gap-3 mt-16">
+          <Link href="./">
+            <Button>취소</Button>
+          </Link>
+          <Button>작성</Button>
         </div>
       </form>
     </div>
