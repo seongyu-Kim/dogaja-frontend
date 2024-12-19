@@ -27,6 +27,7 @@ const testList = [
 
 export default async function FindFriendId({ params }: PostIdProps) {
   const { findFriendId } = params;
+  const a = true; //임시 추후 유저 데이터 값으로 버튼 필터링
   return (
     <div className="flex justify-center">
       <div className="flex flex-col w-[50%] h-auto gap-5 pt-10 px-3 bg-gray-100">
@@ -59,24 +60,6 @@ export default async function FindFriendId({ params }: PostIdProps) {
             <div className="flex gap-2">
               <Button
                 style={{
-                  backgroundColor: "bg-mainBlue",
-                  hoverColor: "hover:bg-mainBlueHover",
-                  width: "w-[90px]",
-                }}
-              >
-                수정
-              </Button>
-              <Button
-                style={{
-                  backgroundColor: "bg-mainRed",
-                  hoverColor: "hover:bg-mainRedHover",
-                  width: "w-[90px]",
-                }}
-              >
-                삭제
-              </Button>
-              <Button
-                style={{
                   backgroundColor: "bg-mainColor",
                   hoverColor: "hover:bg-mainHover",
                   width: "w-[90px]",
@@ -84,11 +67,33 @@ export default async function FindFriendId({ params }: PostIdProps) {
               >
                 글 작성
               </Button>
+              {a && (
+                <Button
+                  style={{
+                    backgroundColor: "bg-mainColor",
+                    hoverColor: "hover:bg-mainHover",
+                    width: "w-[90px]",
+                  }}
+                >
+                  수정
+                </Button>
+              )}
+              {a && (
+                <Button
+                  style={{
+                    backgroundColor: "bg-mainColor",
+                    hoverColor: "hover:bg-mainHover",
+                    width: "w-[90px]",
+                  }}
+                >
+                  삭제
+                </Button>
+              )}
             </div>
           </div>
           <div className="flex gap-3 items-center">
             <FaComments className="w-[35px] h-[35px] text-gray-400" />
-            <p>{1} 댓글</p>
+            <p>{1} 댓글(댓글 배열 길이 넣기~)</p>
           </div>
           <div>
             <CommentList list={testList} />
