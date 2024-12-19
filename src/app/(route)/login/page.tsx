@@ -50,35 +50,6 @@ const Login: React.FC = () => {
             함께 여행을 계획해 보세요(대충 설명 or 슬로건)
           </p>
 
-          {/* <div className="space-y-4 mt-4 w-10/12 mx-auto">
-            <div className="flex flex-col">
-              <label className="ml-2">이메일</label>
-              <Input
-                type="string"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="focus:ring-1 focus:ring-green-300"
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label className="ml-2">비밀번호</label>
-              <Input
-                type="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="focus:ring-1 focus:ring-green-300"
-              />
-            </div>
-            <Link
-              href="/reset-password"
-              className="text-xs mr-1 mt-1 text-gray-500 text-right"
-            >
-              비밀번호 찾기
-            </Link>
-          </div> */}
           <div className="space-y-4 mt-4 w-10/12 mx-auto">
             <div className="flex flex-col">
               <label className="ml-2">이메일</label>
@@ -104,7 +75,7 @@ const Login: React.FC = () => {
 
             <div className="flex justify-end">
               <Link
-                href="/reset-password"
+                href="/find-password"
                 className="text-xs text-gray-500 mr-1 -mt-2"
               >
                 비밀번호 찾기
