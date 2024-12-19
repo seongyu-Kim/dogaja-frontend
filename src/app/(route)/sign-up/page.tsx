@@ -6,45 +6,87 @@ import Input from "@/app/components/common/Input";
 import Button from "@/app/components/common/Button";
 import Logo from "@/app/assets/Do_logo_non_text.png";
 import Image from "next/image";
+// import { mainApi } from "@/app/utils/mainApi";
 
 const SignUp: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [info, setInfo] = useState({
+    email: "",
+    nickname: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInfo({
+      ...info,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const emailPattern =
       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 
-    if (!email) {
+    if (!info.email) {
       setError("이메일을 입력해주세요");
       return;
     }
 
-    if (!emailPattern.test(email)) {
+    if (!emailPattern.test(info.email)) {
       setError("올바른 이메일 형식이 아닙니다");
       return;
     }
 
-    if (!nickname) {
+    if (!info.nickname) {
       setError("닉네임을 입력해주세요");
       return;
     }
 
-    if (!password) {
+    if (info.nickname.length < 3 || info.nickname.length > 15) {
+      setError("닉네임은 3자 이상 15자 이하여야 합니다");
+      return;
+    }
+
+    if (!info.password) {
       setError("비밀번호를 입력해주세요");
       return;
     }
 
-    if (password !== confirmPassword) {
+    if (info.password.length < 6 || info.password.length > 20) {
+      setError("비밀번호는 6자 이상 20자 이하여야 합니다");
+      return;
+    }
+
+    if (info.password !== info.confirmPassword) {
       setError("비밀번호 확인이 일치하지 않습니다");
       return;
     }
-    console.log("회원가입 성공");
+
+    setError(null);
+
+    // try {
+    //   const res = await mainApi({
+    //     url: "api/signup",
+    //     method: "POST",
+    //     data: {
+    //       email: info.email,
+    //       nickname: info.nickname,
+    //       password: info.password,
+    //     },
+    //   });
+
+    //   if (response.status === 200) {
+    //     console.log("회원가입 성공");
+    //     //로그인 페이지로 이동
+    //     //토스티파이 회원가입 성공알림
+    //   }
+    // } catch (e) {
+    //   console.error("회원가입 실패", e);
+    // }
   };
 
   return (
@@ -59,8 +101,8 @@ const SignUp: React.FC = () => {
               <Input
                 type="string"
                 name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={info.email}
+                onChange={handleChange}
                 className="focus:ring-1 focus:ring-green-300"
               />
             </div>
@@ -70,8 +112,8 @@ const SignUp: React.FC = () => {
               <Input
                 type="text"
                 name="nickname"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
+                value={info.nickname}
+                onChange={handleChange}
                 className="focus:ring-1 focus:ring-green-300"
               />
             </div>
@@ -81,8 +123,8 @@ const SignUp: React.FC = () => {
               <Input
                 type="password"
                 name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={info.password}
+                onChange={handleChange}
                 className="focus:ring-1 focus:ring-green-300"
               />
             </div>
@@ -92,8 +134,8 @@ const SignUp: React.FC = () => {
               <Input
                 type="password"
                 name="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                value={info.confirmPassword}
+                onChange={handleChange}
                 className="focus:ring-1 focus:ring-green-300"
               />
             </div>
