@@ -35,12 +35,8 @@ const FindPassword: React.FC = () => {
     <div className="flex items-center min-h-screen">
       <div className="max-w-md w-full mx-auto p-4 border rounded-md shadow-xl drop-shadow-sm h-[600px] relative">
         <Form onSubmit={handleSubmit}>
-          <Image
-            src={Logo}
-            alt="로고이미지"
-            width={150}
-            className="mx-auto mt-24"
-          />
+          <Image src={Logo} alt="로고이미지" width={150} />
+          <p className="text-center text-3xl mt-7">비밀번호 찾기</p>
           <p className="text-center text-gray-600 mt-2">
             비밀번호를 잊으셨나요? <br />
             이메일을 입력하고 재설정 링크를 받아보세요
@@ -68,7 +64,7 @@ const FindPassword: React.FC = () => {
           )}
 
           {!message && (
-            <div className="flex flex-col items-center mt-16">
+            <div className="flex flex-col items-center mt-28">
               <Button
                 style={{
                   hoverColor: "hover:bg-[#3CB731]",
