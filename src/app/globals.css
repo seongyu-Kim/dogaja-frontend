@@ -7,3 +7,13 @@ body {
     margin: 0;
     font-family: -apple-system, Paperlogy, sans-serif;
 }
+
+/*텍스트 에디터 CSS*/
+/*.ql-container {*/
+/*    border-bottom-left-radius: 1.5em;*/
+/*    border-bottom-right-radius: 1.5em;*/
+/*}*/
+.ql-toolbar {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
