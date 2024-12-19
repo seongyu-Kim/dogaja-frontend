@@ -1,19 +1,22 @@
 import { IoDocumentText } from "react-icons/io5";
+import Link from "next/link";
 interface ListProps {
   // 임시 타입
   list: any[];
 }
-
+// 추가로 라우터 주소, 받아야함
 export default function List({ list }: ListProps) {
   if (!list) {
     return null;
   }
+  const id = 1;
 
   return (
     <main className="w-[300px] md:w-auto">
       <ul className="flex flex-col items-center justify-center w-full">
         {list.map((item) => (
-          <div
+          <Link
+            href={`../${id}`}
             key={item.id}
             className="w-full py-2 border-b border-gray-400 hover:cursor-pointer "
           >
@@ -33,7 +36,7 @@ export default function List({ list }: ListProps) {
                 <p>{item.name}</p>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </ul>
     </main>

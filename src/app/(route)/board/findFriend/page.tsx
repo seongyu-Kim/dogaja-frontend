@@ -52,10 +52,10 @@ const testList = [
   },
 ];
 
-export default async function ReviewBoardPage() {
+export default async function FindFriendBoardPage() {
   return (
     <div>
-      <Board name="후기" list={testList} />
+      <Board name="친구 구함" list={testList} />
     </div>
   );
 }

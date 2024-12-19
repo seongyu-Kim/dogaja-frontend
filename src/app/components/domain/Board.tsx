@@ -1,5 +1,6 @@
 import List from "@/app/components/common/List";
 import Button from "@/app/components/common/Button";
+import Link from "next/link";
 
 interface BoardPorps {
   name: string;
@@ -14,15 +15,17 @@ export default function Board({ name, list }: BoardPorps) {
       <main className="w-[50%]">
         <List list={list} />
       </main>
-      <div>
-        <Button
-          style={{
-            backgroundColor: "background-color: #3CB731",
-          }}
-        >
-          글 작성
-        </Button>
-      </div>
+      <footer>
+        <Link href="../create">
+          <Button
+            style={{
+              backgroundColor: "background-color: #3CB731",
+            }}
+          >
+            글 작성
+          </Button>
+        </Link>
+      </footer>
     </div>
   );
 }
