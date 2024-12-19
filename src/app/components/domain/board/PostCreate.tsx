@@ -65,9 +65,25 @@ export default function PostCreate() {
         </div>
         <div className="flex items-center justify-end gap-3 mt-16">
           <Link href="./">
-            <Button>취소</Button>
+            <Button
+              style={{
+                backgroundColor: "bg-mainRed",
+                hoverColor: "hover:bg-mainRedHover",
+                width: "w-[100px]",
+              }}
+            >
+              취소
+            </Button>
           </Link>
-          <Button>작성</Button>
+          <Button
+            style={{
+              backgroundColor: "bg-mainColor",
+              hoverColor: "hover:bg-mainHover",
+              width: "w-[100px]",
+            }}
+          >
+            작성
+          </Button>
         </div>
       </form>
     </div>
