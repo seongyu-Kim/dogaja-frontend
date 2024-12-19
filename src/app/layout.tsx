@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="flex flex-col flex-1">
+      <body className={`${font.className} antialiased flex flex-col flex-1`}>
         <Navbar />
         <div className="flex min-h-screen">
           <Sidebar />
