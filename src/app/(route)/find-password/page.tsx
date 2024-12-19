@@ -8,7 +8,7 @@ import Logo from "@/app/assets/Do_logo_non_text.png";
 import Image from "next/image";
 import Link from "next/link";
 
-const PasswordReset: React.FC = () => {
+const FindPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -97,4 +97,4 @@ const PasswordReset: React.FC = () => {
   );
 };
 
-export default PasswordReset;
+export default FindPassword;

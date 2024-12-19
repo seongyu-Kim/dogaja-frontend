@@ -3,6 +3,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import Navbar from "./components/common/Navbar";
 import Sidebar from "./components/common/Sidebar";
+import Script from "next/script";
 
 const font = localFont({ src: "./fonts/Paperlogy-6SemiBold.ttf" });
 
@@ -24,6 +25,10 @@ export default function RootLayout({
           <Sidebar />
           <main className="w-full">{children}</main>
         </div>
+        <script
+          type="text/javascript"
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_API_KEY}&libraries=services,clusterer`}
+        ></script>
       </body>
     </html>
   );
