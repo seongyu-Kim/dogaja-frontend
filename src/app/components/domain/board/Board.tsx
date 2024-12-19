@@ -9,7 +9,7 @@ interface BoardPorps {
 
 export default function Board({ name, list }: BoardPorps) {
   return (
-    <div className="flex flex-col w-full h-[100vh] items-center gap-20">
+    <div className="flex flex-col w-full h-[100vh] items-center gap-20 mt-10">
       <p className="text-3xl">{name} 게시판</p>
       <main className="w-[50%]">
         <List list={list} />

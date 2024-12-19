@@ -10,19 +10,29 @@ body {
     font-family: -apple-system, Paperlogy, sans-serif;
 }
 
+/*텍스트 에디터 CSS*/
+/*.ql-container {*/
+/*    border-bottom-left-radius: 1.5em;*/
+/*    border-bottom-right-radius: 1.5em;*/
+/*}*/
+.ql-toolbar {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
 
 @layer components {
   /* 커스텀 스크롤바 */
   ::-webkit-scrollbar {
-    width: 8px; /* 스크롤바 너비 */
+    width: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #d1d2d1; /* 트랙 배경색 */
+    background: #d1d2d1;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #3CB731; /* 스크롤바 색상 */
-    border-radius: 3px; /* 모서리 둥글게 */
+    background: #3CB731;
+    border-radius: 3px;
   }
 }

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
-import Navbar from './components/common/Navbar';
-import Sidebar from './components/common/Sidebar';
-import Main from "./(route)/page";
+import Navbar from "./components/common/Navbar";
+import Sidebar from "./components/common/Sidebar";
+import Script from "next/script";
 
 const font = localFont({ src: "./fonts/Paperlogy-6SemiBold.ttf" });
 
@@ -19,19 +19,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="flex flex-col flex-1">
+
+      <body className={`${font.className} antialiased flex flex-col flex-1`}>
         <Navbar />
-        <div>
-          <div className="p-4 w-full h-screen flex flex-col items-center justify-center">
-            <Main />
-          </div>
-          {/* <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="p-4 w-full">
-              {children}
-            </main>
-          </div> */}
+        <div className="flex min-h-screen">
+          <Sidebar />
+          <main className="p-4 w-full">{children}</main>
         </div>
+        <script
+          type="text/javascript"
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_API_KEY}&libraries=services,clusterer`}
+        ></script>
       </body>
     </html>
   );
