@@ -7,13 +7,14 @@ import Button from "@/app/components/common/Button";
 import Logo from "@/app/assets/Do_logo_non_text.png";
 import Image from "next/image";
 import Link from "next/link";
+// import { mainApi } from "@/app/utils/mainApi";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email) {
@@ -25,13 +26,28 @@ const Login: React.FC = () => {
       return;
     }
 
-    if (email !== "example" || password !== "1234") {
-      setError("이메일 혹은 비밀번호가 일치하지 않습니다.");
-      return;
-    }
-
+    // if (email !== "example" || password !== "1234") {
+    //   setError("이메일 혹은 비밀번호가 일치하지 않습니다.");
+    //   return;
+    // }
     setError(null);
-    console.log("로그인 성공");
+
+    //로그인 API
+    // try {
+    //   const res = await mainApi({
+    //     url: "api/login",
+    //     method: "POST",
+    //     data: { email, password },
+    //   });
+
+    //   if (res.status === 200) {
+    //     localStorage.setItem("token", res.data.token);
+    //   } else {
+    //     setError("이메일 혹은 비밀번호가 일치하지 않습니다.");
+    //   }
+    // } catch (e) {
+    //   console.error("로그인 실패", e);
+    // }
   };
 
   return (
