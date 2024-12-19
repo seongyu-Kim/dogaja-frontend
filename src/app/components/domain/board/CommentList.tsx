@@ -1,8 +1,5 @@
 "use client";
 
-import { IoDocumentText } from "react-icons/io5";
-import Link from "next/link";
-import getPath from "@/app/utils/getPath";
 interface ListProps {
   // 임시 타입
   list: any[];

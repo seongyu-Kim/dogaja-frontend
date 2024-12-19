@@ -52,21 +52,24 @@ export default async function FindFriendId({ params }: PostIdProps) {
           </div>
           <div className="pb-20 border-b border-gray-400 break-words mt-5">
             <p>내용</p>
+            {/*<div dangerouslySetInnerHTML={{__html: content}}/>*/}
           </div>
         </div>
         <div className="flex flex-col gap-3 border-b border-gray-400 pb-6">
           <div className="flex items-center justify-between">
             <p>신고</p>
             <div className="flex gap-2">
-              <Button
-                style={{
-                  backgroundColor: "bg-mainColor",
-                  hoverColor: "hover:bg-mainHover",
-                  width: "w-[90px]",
-                }}
-              >
-                글 작성
-              </Button>
+              <Link href="./create">
+                <Button
+                  style={{
+                    backgroundColor: "bg-mainColor",
+                    hoverColor: "hover:bg-mainHover",
+                    width: "w-[90px]",
+                  }}
+                >
+                  글 작성
+                </Button>
+              </Link>
               {a && (
                 <Button
                   style={{
