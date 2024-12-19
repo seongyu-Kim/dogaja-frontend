@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Logo from "@/app/assets/Do_logo_non_text.png";
 import Image from 'next/image';
 import { FaRegAddressBook } from "react-icons/fa6";
@@ -19,14 +20,15 @@ export default function Navbar() {
 
   return (
     <nav className="w-full border-b-4 border-mainColor text-white p-4 flex justify-between items-center relative">
-      {/* 로고 */}
       <div>
-        <Image 
-          src={Logo}
-          alt="Logo" 
-          width={50} 
-          height={50} 
-        />
+      <Link href="/" passHref>
+          <Image 
+            src={Logo}
+            alt="Logo" 
+            width={50} 
+            height={50} 
+          />
+        </Link>
       </div>
 
       <ul className="flex gap-3">
