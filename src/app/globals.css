@@ -2,8 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
 body {
+    overflow: hidden;
     padding: 0;
     margin: 0;
     font-family: -apple-system, Paperlogy, sans-serif;
+}
+
+
+@layer components {
+  /* 커스텀 스크롤바 */
+  ::-webkit-scrollbar {
+    width: 8px; /* 스크롤바 너비 */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #d1d2d1; /* 트랙 배경색 */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #3CB731; /* 스크롤바 색상 */
+    border-radius: 3px; /* 모서리 둥글게 */
+  }
 }
