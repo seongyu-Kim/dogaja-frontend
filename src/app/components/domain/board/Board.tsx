@@ -4,18 +4,13 @@ import PathToCreate from "@/app/components/domain/board/PathToCreate";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/common/Pagination";
 import { useSearchParams } from "next/navigation";
+import { BoardPropTypes } from "@/app/type/commonBoardPropType";
 
-interface BoardPorps {
-  name: string;
-  // 임시 타입
-  list: any[];
-}
-
-export default function Board({ name, list }: BoardPorps) {
+export default function Board({ name, list }: BoardPropTypes) {
   const searchParams = useSearchParams();
   const itemsPerPage = 10;
 
-  const totalPages = Math.ceil(list.length / itemsPerPage);
+  const totalPages = Math.ceil(list!.length / itemsPerPage);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   //임시 타입 추후 배열에 맞게 변경
@@ -34,7 +29,7 @@ export default function Board({ name, list }: BoardPorps) {
   useEffect(() => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const newCurrentItems = list.slice(indexOfFirstItem, indexOfLastItem);
+    const newCurrentItems = list!.slice(indexOfFirstItem, indexOfLastItem);
     setCurrentItems(newCurrentItems);
   }, [currentPage, list]);
 
