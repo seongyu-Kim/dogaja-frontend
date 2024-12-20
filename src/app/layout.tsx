@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import Navbar from "./components/common/Navbar";
 import Sidebar from "./components/common/Sidebar";
 import Script from "next/script";
+import ToastProvider from "@/app/ToastProvider";
 
 const font = localFont({ src: "./fonts/Paperlogy-6SemiBold.ttf" });
 
@@ -24,7 +25,10 @@ export default function RootLayout({
         <Navbar />
         <div className="flex min-h-screen">
           <Sidebar />
-          <main className="p-4 w-full">{children}</main>
+          <main className="w-full">
+            <ToastProvider />
+            {children}
+          </main>
         </div>
         <script
           type="text/javascript"
