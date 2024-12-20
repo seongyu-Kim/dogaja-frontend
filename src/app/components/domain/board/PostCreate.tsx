@@ -38,7 +38,7 @@ export default function PostCreate() {
     <div className="flex justify-center">
       <form
         onSubmit={tests}
-        className="w-[300px] md:w-1/2 h-[100vh] items-center mt-10"
+        className="w-[300px] md:w-1/2 h-auto items-center mt-10"
       >
         <div className="border-b border-gray-400 pb-2 w-full flex flex-col items-center justify-center">
           <p className="text-3xl">글 작성</p>
