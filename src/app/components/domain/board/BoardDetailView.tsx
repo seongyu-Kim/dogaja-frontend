@@ -25,12 +25,14 @@ const testList = [
 ];
 
 export default async function BoardDetailView({ id }: { id: string }) {
+  //api 요청 할 때 category값에 따라서 id도 같이 보내주기 userId랑 비교해서 수정 삭제 버튼 필터
   const category = getBoardCategory();
   const categoryMap: Record<string, string> = {
     findFriend: "친구 구함",
     inquiry: "문의",
     review: "후기",
     together: "동행",
+    report: "신고",
   };
   const categoryName = category[0] ? categoryMap[category[0]] : "알 수 없음";
   return (
