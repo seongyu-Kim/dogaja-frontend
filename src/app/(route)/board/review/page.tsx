@@ -1,8 +1,4 @@
-"use client";
-
-import { useState } from "react";
 import Board from "@/app/components/domain/board/Board";
-import PaginationExample from "@/app/components/common/Pagination";
 
 const testList = [
   // 임시 테스트 리스트
@@ -54,33 +50,108 @@ const testList = [
     //임시
     commentCount: 125,
   },
+  {
+    id: 7,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 8,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 9,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 10,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 11,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 12,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 13,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 14,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 15,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 16,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 17,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
+  {
+    id: 18,
+    title: "3번",
+    name: "이거저거",
+    image_id: "aa",
+    //임시
+    commentCount: 125,
+  },
 ];
 
 export default function ReviewBoardPage() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const totalPages = Math.ceil(testList.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = testList.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
   return (
     <div className="flex flex-col items-center justify-center">
-      <Board name="후기" list={currentItems} />
-      <div className="mt-4">
-        <PaginationExample
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      </div>
+      <Board name="후기" list={testList} />
     </div>
   );
 }
