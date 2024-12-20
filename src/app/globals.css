@@ -2,7 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
 body {
+    overflow: hidden;
     padding: 0;
     margin: 0;
     font-family: -apple-system, Paperlogy, sans-serif;
@@ -16,4 +18,21 @@ body {
 .ql-toolbar {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+}
+
+
+@layer components {
+  /* 커스텀 스크롤바 */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #d1d2d1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #3CB731;
+    border-radius: 3px;
+  }
 }
