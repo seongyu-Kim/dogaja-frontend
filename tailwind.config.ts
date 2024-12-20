@@ -12,9 +12,9 @@ export default {
         "mainColor": "#3CB731",
         "mainRed": "#FF3A3E",
         "mainBlue": "#2676FF",
-        "mainHover": "#6AC662",
-        "mainRedHover": "#FC686B",
-        "mainBlueHover": "#5995FC"
+        "mainHover": "#35A42C",
+        "mainRedHover": "#E03437",
+        "mainBlueHover": "#2266DC"
       },
     },
   },

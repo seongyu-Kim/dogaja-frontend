@@ -33,14 +33,14 @@ export default function Navbar() {
 
       <ul className="flex gap-3">
         <li className="cursor-pointer">
-          <FaRegAddressBook className="text-mainColor text-2xl" />
+          <FaRegAddressBook className="text-mainColor text-2xl hover:scale-105 transition-all duration-300 ease-in-out" />
         </li>
         <li className="relative">
           <button
             className="cursor-pointer text-mainColor text-2xl focus:outline-none"
             onClick={toggleNotifications}
           >
-            <PiBellBold />
+            <PiBellBold className="hover:scale-105 transition-all duration-300 ease-in-out"/>
           </button>
           <SlideMenu 
             show={showNotifications} 
@@ -50,7 +50,7 @@ export default function Navbar() {
         </li>
 
         <li 
-          className="mr-2 hover:underline cursor-pointer text-mainColor font-bold"
+          className="mr-2 hover:underline cursor-pointer text-mainColor font-bold hover:scale-105 transition-all duration-300 ease-in-out"
           onClick={toggleLogoutMenu}
         >
           박주호님
