@@ -123,7 +123,7 @@ export default async function FindFriendId({ params }: PostIdProps) {
         {/*</div>*/}
         <CommentCreate />
       </div>
-      <SelectImage descriptionText="이미지 선택" />
+      <SelectImage descriptionText="한줄 후기" comment={true} />
     </div>
   );
 }

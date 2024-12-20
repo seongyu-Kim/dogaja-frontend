@@ -16,6 +16,7 @@ export default function SelectImage({
 }: SelectImageProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [commentText, setCommentText] = useState("");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -64,7 +65,10 @@ export default function SelectImage({
         {comment && (
           <div className="w-full h-[90%]">
             <p>여행 소감</p>
-            <textarea className="w-full h-full resize-none p-2 rounded-md border border-gray-400 focus:outline-none" />
+            <textarea
+              className="w-full h-full resize-none p-2 rounded-md border border-gray-400 focus:outline-none"
+              onChange={(e) => setCommentText(e.target.value)}
+            />
           </div>
         )}
       </div>
