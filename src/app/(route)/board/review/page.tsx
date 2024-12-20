@@ -1,4 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import Board from "@/app/components/domain/board/Board";
+import PaginationExample from "@/app/components/common/Pagination";
 
 const testList = [
   // 임시 테스트 리스트
@@ -52,10 +56,31 @@ const testList = [
   },
 ];
 
-export default async function ReviewBoardPage() {
+export default function ReviewBoardPage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const totalPages = Math.ceil(testList.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = testList.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
   return (
-    <div className="flex justify-center">
-      <Board name="후기" list={testList} />
+    <div className="flex flex-col items-center justify-center">
+      <Board name="후기" list={currentItems} />
+      <div className="mt-4">
+        <PaginationExample
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 }
