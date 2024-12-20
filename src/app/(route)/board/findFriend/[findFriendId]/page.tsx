@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FaArrowAltCircleLeft, FaComments } from "react-icons/fa";
 import Button from "@/app/components/common/Button";
 import CommentList from "@/app/components/domain/board/CommentList";
+import CommentCreate from "@/app/components/domain/board/CommentCreate";
 interface PostIdProps {
   params: { findFriendId: string };
 }
@@ -102,23 +103,24 @@ export default async function FindFriendId({ params }: PostIdProps) {
             <CommentList list={testList} />
           </div>
         </div>
-        <div className="h-[100px] mb-[100px] flex gap-2">
-          <textarea
-            className="w-full h-full resize-none p-2 rounded-md border border-gray-400 focus:outline-none"
-            placeholder="댓글을 입력해주세요"
-          />
-          <Button
-            style={{
-              backgroundColor: "bg-mainColor",
-              hoverColor: "hover:bg-mainHover",
-              height: "h-full",
-              width: "w-20",
-              padding: "py-2",
-            }}
-          >
-            댓글 작성
-          </Button>
-        </div>
+        {/*<div className="h-[100px] mb-[100px] flex gap-2">*/}
+        {/*  <textarea*/}
+        {/*    className="w-full h-full resize-none p-2 rounded-md border border-gray-400 focus:outline-none"*/}
+        {/*    placeholder="댓글을 입력해주세요"*/}
+        {/*  />*/}
+        {/*  <Button*/}
+        {/*    style={{*/}
+        {/*      backgroundColor: "bg-mainColor",*/}
+        {/*      hoverColor: "hover:bg-mainHover",*/}
+        {/*      height: "h-full",*/}
+        {/*      width: "w-20",*/}
+        {/*      padding: "py-2",*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    댓글 작성*/}
+        {/*  </Button>*/}
+        {/*</div>*/}
+        <CommentCreate />
       </div>
     </div>
   );
