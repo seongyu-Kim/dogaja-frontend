@@ -8,6 +8,7 @@ interface ListProps {
   list: any[];
 }
 // 추가로 라우터 주소, 받아야함
+// 제목, 닉네임 일정 길이 넘어가면 잘라서 뒤에... 붙이기
 export default function List({ list }: ListProps) {
   if (!list) {
     return null;
