@@ -23,10 +23,10 @@ export default function List({ list }: ListProps) {
             <Link
               href={route}
               key={item.id}
-              className="w-full py-2 border-b border-gray-400 hover:cursor-pointer "
+              className="w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
             >
-              <div className="w-full flex item-center justify-between h-[75px] px-1 gap-1">
-                <div className="w-[75px] h-[75px] hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
+              <div className="w-full flex item-center justify-between h-[50px] px-1 gap-1">
+                <div className="w-[50px] h-[50px] hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
                   {item.image_id ? (
                     <p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기
                   ) : (
@@ -36,7 +36,7 @@ export default function List({ list }: ListProps) {
                 <div className="flex w-[85%] items-center gap-3">
                   <p>{item.title}</p>
                   <p className="text-[10px] text-blue-700">
-                    {item.comentCount}
+                    {item.commentCount}
                   </p>
                 </div>
                 <div className="flex items-end justify-end w-[100px]">

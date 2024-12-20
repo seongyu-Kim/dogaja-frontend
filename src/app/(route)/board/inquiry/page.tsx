@@ -54,7 +54,7 @@ const testList = [
 
 export default async function InquiryBoardPage() {
   return (
-    <div>
+    <div className="flex justify-center">
       <Board name="문의" list={testList} />
     </div>
   );
