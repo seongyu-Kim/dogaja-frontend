@@ -4,6 +4,8 @@ import Button from "@/app/components/common/Button";
 import CommentList from "@/app/components/domain/board/CommentList";
 import CommentCreate from "@/app/components/domain/board/CommentCreate";
 import { getBoardCategory } from "@/app/utils/getBoardCategory";
+import { JSDOM } from "jsdom";
+import DOMPurify from "dompurify";
 
 const testList = [
   // 임시 테스트 리스트
@@ -65,6 +67,12 @@ export default async function BoardDetailView({ id }: { id: string }) {
 }
 //본문 영역
 function ContentArea() {
+  const window = new JSDOM("").window;
+  const purify = DOMPurify(window);
+  //임시 콘텐츠
+  const content = purify.sanitize(
+    "<p>콘텐츠입니다</p><br><button>클릭해주세요</button>",
+  );
   return (
     <>
       <h1 className="text-3xl break-words">제목</h1>
@@ -73,7 +81,7 @@ function ContentArea() {
       </div>
       <div className="pb-20 border-b border-gray-400 break-words mt-5">
         <p>내용</p>
-        {/*<div dangerouslySetInnerHTML={{__html: content}}/>*/}
+        <div dangerouslySetInnerHTML={{ __html: content }} />
       </div>
     </>
   );

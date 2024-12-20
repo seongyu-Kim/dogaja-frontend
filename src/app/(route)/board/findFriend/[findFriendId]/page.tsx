@@ -1,3 +1,4 @@
+"use client";
 import BoardDetailView from "@/app/components/domain/board/BoardDetailView";
 interface PostIdProps {
   params: {
