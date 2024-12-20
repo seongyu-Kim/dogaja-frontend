@@ -54,7 +54,7 @@ const testList = [
 
 export default async function FindFriendBoardPage() {
   return (
-    <div>
+    <div className="flex justify-center">
       <Board name="친구 구함" list={testList} />
     </div>
   );

@@ -54,7 +54,7 @@ const testList = [
 
 export default async function TogetherBoardPage() {
   return (
-    <div>
+    <div className="flex justify-center">
       <Board name="동행" list={testList} />
     </div>
   );
