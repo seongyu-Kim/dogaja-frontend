@@ -3,6 +3,7 @@ import { FaArrowAltCircleLeft, FaComments } from "react-icons/fa";
 import Button from "@/app/components/common/Button";
 import CommentList from "@/app/components/domain/board/CommentList";
 import CommentCreate from "@/app/components/domain/board/CommentCreate";
+import SelectImage from "@/app/components/common/SelectImage";
 interface PostIdProps {
   params: { findFriendId: string };
 }
@@ -122,6 +123,7 @@ export default async function FindFriendId({ params }: PostIdProps) {
         {/*</div>*/}
         <CommentCreate />
       </div>
+      <SelectImage />
     </div>
   );
 }
