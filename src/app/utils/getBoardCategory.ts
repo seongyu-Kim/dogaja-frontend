@@ -7,5 +7,5 @@ export function getBoardCategory() {
   const match = url.match(categoryRegex);
   const category = match ? match[1] : null;
 
-  return [category];
+  return category;
 }

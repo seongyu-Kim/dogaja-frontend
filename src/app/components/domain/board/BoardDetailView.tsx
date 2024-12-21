@@ -35,10 +35,9 @@ export default async function BoardDetailView({ id }: { id: string }) {
     together: "동행",
     report: "신고",
   };
-  const categoryName = category[0] ? categoryMap[category[0]] : "알 수 없음";
+  const categoryName = category ? categoryMap[category] : "알 수 없음";
   return (
     <div className="flex justify-center">
-      {/*<p>{category}</p>*/}
       <div className="flex flex-col w-[50%] h-auto gap-5 pt-10 px-3 bg-gray-100">
         <Link href="./">
           <p>{categoryName}</p>
