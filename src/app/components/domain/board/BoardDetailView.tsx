@@ -27,6 +27,7 @@ const testList = [
 
 export default async function BoardDetailView({ id }: { id: string }) {
   //api 요청 할 때 category값에 따라서 id도 같이 보내주기 userId랑 비교해서 수정 삭제 버튼 필터
+  //새로 고침시 카테고리 함수...이전 상태를 저장 하는 문제가 있음 headersList.get("referer")...추후 수정 예정
   const category = getBoardCategory();
   const categoryMap: Record<string, string> = {
     findFriend: "친구 구함",
