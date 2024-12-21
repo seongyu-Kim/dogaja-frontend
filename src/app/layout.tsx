@@ -17,13 +17,21 @@ export default function RootLayout({
   const pathname = usePathname();
 
   //등록 경로
-  const registeredRoutes = ["/", "/dashboard", "/board", "/map"];
+  const registeredRoutes = ["/", "/dashboard", "/board/", "/map"];
+
+  const isRegisteredRoute = registeredRoutes.some(
+    (route) =>
+      route.endsWith("/")
+        ? pathname.startsWith(route) // "board/"로 시작하는 모든 경로
+        : pathname === route, // 정확히 일치하는 경로
+  );
 
   //미등록 경로
   const isHidden =
     ["/login", "/sign-up", "/reset-password", "/find-password"].includes(
-      pathname
-    ) || !registeredRoutes.includes(pathname);
+      pathname,
+      // ) || !registeredRoutes.includes(pathname);
+    ) || !isRegisteredRoute;
 
   return (
     <html lang="ko">
