@@ -139,7 +139,7 @@ export default function ListPage() {
   const boardTitle = getBoardTitle(router);
   return (
     <div className="flex justify-center">
-      <Board name={`${boardTitle}`} list={testList} />
+      <Board name={`${boardTitle}`} list={testList} detailList={true} />
     </div>
   );
 }
