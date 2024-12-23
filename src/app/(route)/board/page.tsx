@@ -171,6 +171,8 @@ export default function BoardListPage() {
               <List
                 list={testList.sort((a, b) => a.id - b.id).slice(0, 10)}
                 preview={false}
+                // board 경로에서 각 게시물 리스트 클릭해서 해당 게시판 넘어갈 수 있게 boardType 추가
+                boardType={boardType}
               />
             </div>
           </div>
