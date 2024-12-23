@@ -2,12 +2,12 @@
 
 import Button from "@/app/components/common/Button";
 import Link from "next/link";
-import getPath from "@/app/utils/getPath";
+import { usePathname } from "next/navigation";
 
 export default function PathToCreate() {
-  const route = getPath("create");
+  const route = usePathname();
   return (
-    <Link href={route}>
+    <Link href={`${route}/create`}>
       <Button
         style={{
           backgroundColor: "bg-mainColor",

@@ -1,6 +1,6 @@
 import { IoDocumentText } from "react-icons/io5";
 import Link from "next/link";
-import getPath from "@/app/utils/getPath";
+import { usePathname } from "next/navigation";
 interface ListProps {
   // 임시 타입
   list: any[];
@@ -16,11 +16,11 @@ export default function List({ list }: ListProps) {
     <main className="w-[300px] md:w-auto">
       <ul className="flex flex-col items-center justify-center w-full">
         {list.map((item) => {
-          const route = getPath(`${item.id}`);
+          const route = usePathname();
 
           return (
             <Link
-              href={route}
+              href={`${route}/${item.id}`}
               key={item.id}
               className="w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
             >
