@@ -8,7 +8,10 @@ import Script from "next/script";
 import ToastProvider from "@/app/ToastProvider";
 import { usePathname } from "next/navigation";
 
-const font = localFont({ src: "./fonts/Paperlogy-6SemiBold.ttf" });
+const font = localFont({
+  src: "./fonts/Paperlogy-6SemiBold.ttf",
+  display: "swap",
+});
 
 export default function RootLayout({
   children,

@@ -11,12 +11,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 //임시 폼 액션 - 글 작성
-const tests = () => {
+export function tests() {
   return console.log("폼 제출");
-};
+}
 
-export default function PostCreate() {
-  //임시 라우터 추후 API 연동 할 때 게시판명 받아서 POST 요청
+export default function PostUpdate() {
+  //임시 라우터 추후 API 연동 할 때 게시판명, id 분리해서 사용 하거나 상위에서 params 받게해서 처리
   const router = usePathname();
   const [post, setPost] = useState({
     title: "",
@@ -44,7 +44,7 @@ export default function PostCreate() {
         className="w-[300px] md:w-1/2 h-auto items-center mt-10"
       >
         <div className="border-b border-gray-400 pb-2 w-full flex flex-col items-center justify-center">
-          <p className="text-3xl">글 작성</p>
+          <p className="text-3xl">글 수정</p>
         </div>
         <div className="flex flex-col my-10 gap-5">
           <div className="flex items-center justify-center gap-3 mb-2">

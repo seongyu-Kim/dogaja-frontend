@@ -1,4 +1,8 @@
+"use client";
+
 import Board from "@/app/components/domain/board/Board";
+import { usePathname } from "next/navigation";
+import getBoardTitle from "@/app/utils/getBoardTitle";
 
 const testList = [
   // 임시 테스트 리스트
@@ -7,7 +11,6 @@ const testList = [
     title: "1번",
     name: "여기저기",
     image_id: null,
-    //임시
     commentCount: 6,
   },
   {
@@ -15,7 +18,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -23,7 +25,6 @@ const testList = [
     title: "1번",
     name: "여기저기",
     image_id: null,
-    //임시
     commentCount: 6,
   },
   {
@@ -31,7 +32,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -39,7 +39,6 @@ const testList = [
     title: "1번",
     name: "여기저기",
     image_id: null,
-    //임시
     commentCount: 6,
   },
   {
@@ -47,7 +46,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -55,7 +53,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -63,7 +60,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -71,7 +67,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -79,7 +74,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -87,7 +81,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -95,7 +88,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -103,7 +95,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -111,7 +102,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -119,7 +109,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -127,7 +116,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -135,7 +123,6 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
   {
@@ -143,15 +130,16 @@ const testList = [
     title: "3번",
     name: "이거저거",
     image_id: "aa",
-    //임시
     commentCount: 125,
   },
 ];
 
-export default function ReviewBoardPage() {
+export default function ListPage() {
+  const router = usePathname();
+  const boardTitle = getBoardTitle(router);
   return (
-    <div className="flex flex-col items-center justify-center">
-      <Board name="후기" list={testList} />
+    <div className="flex justify-center">
+      <Board name={`${boardTitle}`} list={testList} detailList={true} />
     </div>
   );
 }

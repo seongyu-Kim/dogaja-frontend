@@ -1,11 +1,9 @@
 "use client";
 
-import List from "@/app/components/common/List";
-import PathToCreate from "@/app/components/domain/board/PathToCreate";
-import getPath from "@/app/utils/getPath";
 import Link from "next/link";
 import { IoDocumentText } from "react-icons/io5";
 import Button from "@/app/components/common/Button";
+import { usePathname } from "next/navigation";
 
 const testList = [
   // 임시 테스트 리스트
@@ -68,11 +66,11 @@ export default function ReportPage() {
           <div className="w-[300px] md:w-auto">
             <ul className="flex flex-col items-center justify-center w-full">
               {testList.map((item) => {
-                const route = getPath(`${item.id}`);
+                const route = usePathname();
 
                 return (
                   <Link
-                    href={route}
+                    href={`${route}/${item.id}`}
                     key={item.id}
                     className="w-full h-[100px] py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
                   >
