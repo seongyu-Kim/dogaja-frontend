@@ -2,9 +2,11 @@
 
 import Button from "@/app/components/common/Button";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 //id값 넘겨 받아서 api 연동 준비??
 export default function CommentCreate() {
   const [comment, setComment] = useState("");
+  const router = usePathname(); // 임시 /board/review/7 예시
   return (
     <form>
       <div className="h-[100px] mb-[100px] flex gap-2">
