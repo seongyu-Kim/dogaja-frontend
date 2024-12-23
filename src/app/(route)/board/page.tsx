@@ -152,7 +152,7 @@ const testList = [
   },
 ];
 
-const BoardListPage = () => {
+export default function BoardListPage() {
   return (
     <div className="flex flex-col items-center">
       <div className="grid grid-cols-2 gap-4 w-1/2">
@@ -163,18 +163,16 @@ const BoardListPage = () => {
                 {BOARD_TYPES[boardType as keyof typeof BOARD_TYPES].title}{" "}
                 게시판
               </p>
-              <div>
-                <List
-                  list={testList.sort((a, b) => a.id - b.id).slice(0, 10)}
-                  preview={false}
-                />
-              </div>
             </Link>
+            <div>
+              <List
+                list={testList.sort((a, b) => a.id - b.id).slice(0, 10)}
+                preview={false}
+              />
+            </div>
           </div>
         ))}
       </div>
     </div>
   );
-};
-
-export default BoardListPage;
+}
