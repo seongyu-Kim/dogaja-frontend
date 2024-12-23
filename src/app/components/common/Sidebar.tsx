@@ -31,7 +31,7 @@ export default function Sidebar() {
 
         {/* 게시판 */}
         <li className="p-2 mt-4 cursor-pointer">
-          <div 
+          <div
             className="flex flex-col items-center hover:underline hover:scale-105 transition-all duration-300 ease-in-out"
             onClick={toggleBoardMenu}
           >
@@ -60,7 +60,7 @@ export default function Sidebar() {
         </li>
 
         <li className="p-2 mt-4 hover:underline hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out">
-          <Link href="/mypage" className="flex flex-col items-center">
+          <Link href="/my-page" className="flex flex-col items-center">
             <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
               <FaRegUser className="text-xl" />
             </div>
