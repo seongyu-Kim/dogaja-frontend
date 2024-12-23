@@ -41,7 +41,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className={`${font.className} antialiased flex flex-col flex-1`}>
         {!isHidden && <Navbar />}
-        <div className="flex min-h-screen">
+        <div className="flex min-h-screen mt-16">
           {!isHidden && <Sidebar />}
           <main className="w-full">
             <ToastProvider />
