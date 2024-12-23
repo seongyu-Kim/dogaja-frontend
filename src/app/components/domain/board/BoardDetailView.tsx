@@ -59,6 +59,9 @@ export default async function BoardDetailView({ id }: { id: string }) {
         <div className="flex flex-col gap-5 mb-10">
           <ContentArea />
         </div>
+        <div>
+          <ButtonBox postId={id} />
+        </div>
         <CommentArea />
         <CommentCreate />
       </div>
@@ -91,7 +94,7 @@ function ContentArea() {
   );
 }
 //버튼 영역
-function ButtonBox() {
+function ButtonBox({ postId }: { postId: string }) {
   const a = true; //임시 추후 유저 데이터 값으로 버튼 필터링
   return (
     <div className="flex items-center justify-between">
@@ -109,15 +112,17 @@ function ButtonBox() {
           </Button>
         </Link>
         {a && (
-          <Button
-            style={{
-              backgroundColor: "bg-mainColor",
-              hoverColor: "hover:bg-mainHover",
-              width: "w-[90px]",
-            }}
-          >
-            수정
-          </Button>
+          <Link href={`./${postId}/update`}>
+            <Button
+              style={{
+                backgroundColor: "bg-mainColor",
+                hoverColor: "hover:bg-mainHover",
+                width: "w-[90px]",
+              }}
+            >
+              수정
+            </Button>
+          </Link>
         )}
         {a && (
           <Button
@@ -138,7 +143,6 @@ function ButtonBox() {
 function CommentArea() {
   return (
     <div className="flex flex-col gap-3 border-b border-gray-400 pb-6">
-      <ButtonBox />
       <div className="flex gap-3 items-center">
         <FaComments className="w-[35px] h-[35px] text-gray-400" />
         <p>{1} 댓글(댓글 배열 길이 넣기~)</p>

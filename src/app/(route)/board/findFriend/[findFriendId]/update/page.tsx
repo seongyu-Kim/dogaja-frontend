@@ -1,6 +1,6 @@
 "use client";
 
-// import Form from "@/app/components/common/Form";
+import Form from "@/app/components/common/Form";
 import Input from "@/app/components/common/Input";
 import { useState } from "react";
 import ReactQuill from "react-quill";
@@ -14,7 +14,7 @@ export function tests() {
   return console.log("폼 제출");
 }
 
-export default function PostCreate() {
+export default function UpdatePage() {
   const [post, setPost] = useState({
     title: "",
     description: "",
@@ -41,7 +41,7 @@ export default function PostCreate() {
         className="w-[300px] md:w-1/2 h-auto items-center mt-10"
       >
         <div className="border-b border-gray-400 pb-2 w-full flex flex-col items-center justify-center">
-          <p className="text-3xl">글 작성</p>
+          <p className="text-3xl">글 수정</p>
         </div>
         <div className="flex flex-col my-10 gap-5">
           <div className="flex items-center justify-center gap-3 mb-2">
