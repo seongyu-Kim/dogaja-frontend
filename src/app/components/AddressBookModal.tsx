@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Modal from "./Modal";
 import Button from "./common/Button";
 import RequestModal from "./RequestModal";
+import FriendAddModal from "./FriendAddModal";
 
 interface Friend {
   id: number;
@@ -17,7 +18,8 @@ const AddressBookModal: React.FC<{
   const [isRequestModalOpen, setRequestModalOpen] = useState(false);
   const [currentRequestType, setCurrentRequestType] = useState<'friend' | 'invite' | null>(null);
   const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
-
+  const [isFriendAddModalOpen, setFriendAddModalOpen] = useState(false);
+  
   const friends: Friend[] = [
     { id: 1, name: "한지수" },
     { id: 2, name: "김선규" },
@@ -35,9 +37,12 @@ const AddressBookModal: React.FC<{
     setCurrentRequestType('friend');
   };
 
+  // const handleAddFriend = () => {
+  //   setRequestModalOpen(true);
+  //   setCurrentRequestType('invite');
+  // };
   const handleAddFriend = () => {
-    setRequestModalOpen(true);
-    setCurrentRequestType('invite');
+    setFriendAddModalOpen(true);
   };
 
   const handleAccept = (id: number) => {
@@ -111,6 +116,10 @@ const AddressBookModal: React.FC<{
           userId={selectedFriendId}
         />
       )}
+      <FriendAddModal 
+        isOpen={isFriendAddModalOpen} 
+        onClose={() => setFriendAddModalOpen(false)} 
+      />
     </>
   );
 };

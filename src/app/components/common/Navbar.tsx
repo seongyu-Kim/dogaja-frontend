@@ -6,10 +6,16 @@ import Image from 'next/image';
 import Logo from "@/app/assets/Do_logo_non_text.png";
 import { FaRegAddressBook } from "react-icons/fa6";
 import { PiBellBold } from "react-icons/pi";
-import SlideMenu from './SlideMenu';
+import SlideMenu from './Slidemenu';
 import AddressBookModal from '../AddressBookModal';
 import RequestModal from "../RequestModal";
-import NotificationList, { Notification } from '../NotificationList'; // NotificationList 컴포넌트 import
+import NotificationList, { Notification } from '../NotificationList';
+
+// 추후 제거
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { LuSiren } from "react-icons/lu";
+import ScheduleSelectModal from '../ScheduleSelectModal';
+import ReportModal from '../ReportModal';
 
 export default function Navbar() {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -18,6 +24,12 @@ export default function Navbar() {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
 
+  // 추후 제거
+  const [selectScheduleModal, setSelectScheduleModal] = useState(false);
+  const [reportModal, setReportModal] = useState(false);
+  const handleCloseModal = () => setSelectScheduleModal(false);
+  const handleCloseModal2 = () => setReportModal(false);
+
   const notifications: Notification[] = [
     { id: 1, type: 'friend', userId: 123, name: "엘리스", code: "친구" },
     { id: 2, type: 'invite', userId: 234, name: "김토끼", code: "초대" },
@@ -25,7 +37,11 @@ export default function Navbar() {
 
   const toggleNotifications = () => setShowNotifications(prev => !prev);
   const toggleLogoutMenu = () => setShowLogoutMenu(prev => !prev);
-  const toggleAddressBookModal = () => setShowAddressBookModal(prev => !prev);
+  const openAddressBookModal = () => setShowAddressBookModal(prev => !prev);
+
+  // 추후 제거
+  const openScheduleModal = () => setSelectScheduleModal(prev => !prev);
+  const openReportModal = () => setReportModal(prev => !prev);
 
   const handleNotificationClick = (notification: Notification) => {
     setSelectedNotification(notification);
@@ -51,7 +67,15 @@ export default function Navbar() {
       </div>
 
       <ul className="flex gap-3">
-        <li className="cursor-pointer" onClick={toggleAddressBookModal}>
+        {/* 추후 제거 */}
+        <li className="cursor-pointer" onClick={openReportModal}>
+          <LuSiren className="text-mainColor text-2xl hover:scale-105 transition-all duration-300 ease-in-out" />
+        </li>
+        <li className="cursor-pointer" onClick={openScheduleModal}>
+          <IoIosAddCircleOutline className="text-mainColor text-2xl hover:scale-105 transition-all duration-300 ease-in-out" />
+        </li>
+
+        <li className="cursor-pointer" onClick={openAddressBookModal}>
           <FaRegAddressBook className="text-mainColor text-2xl hover:scale-105 transition-all duration-300 ease-in-out" />
         </li>
         <li className="relative">
@@ -85,7 +109,7 @@ export default function Navbar() {
 
       <AddressBookModal 
         isOpen={showAddressBookModal} 
-        onClose={toggleAddressBookModal} 
+        onClose={openAddressBookModal} 
       />
       {showRequestModal && selectedNotification && (
         <RequestModal
@@ -96,6 +120,10 @@ export default function Navbar() {
           userId={selectedNotification.userId}
         />
       )}
+      
+      {/* 추후 제거 */}
+      <ScheduleSelectModal isOpen={selectScheduleModal} onClose={handleCloseModal}/>
+      <ReportModal isOpen={reportModal} onClose={handleCloseModal2}/>
     </nav>
   );
 }

@@ -4,6 +4,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import Navbar from "./components/common/Navbar";
 import Sidebar from "./components/common/Sidebar";
+import Script from "next/script";
 import ToastProvider from "@/app/ToastProvider";
 import { usePathname } from "next/navigation";
 
