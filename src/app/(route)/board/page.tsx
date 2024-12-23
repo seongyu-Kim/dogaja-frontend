@@ -154,6 +154,8 @@ const testList = [
 
 export default function BoardListPage() {
   //추후 리스트 클릭시 해당 카테고리의 게시물 ID로 이동하게 수정
+  // 카테고리가 몇개가 생길지 모르니 List 컴포넌트를 BOARD_TYPES key 값 개수 만큼 추가 할 수 있게
+  // 각 게시판 마다 GET 요청해서 가져오는 부분 구현
   return (
     <div className="flex flex-col items-center mt-20">
       <div className="grid grid-cols-2 gap-4 w-1/2">
