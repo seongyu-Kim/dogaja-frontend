@@ -3,14 +3,19 @@ import React from "react";
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  handlePageChange: (page: number) => void;
 }
 
-const PaginationExample: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+export default function Pagination({
+  currentPage,
+  totalPages,
+  //임시 - 추후 아래 경고 수정해야함 prop 직렬화? 문제
+  handlePageChange,
+}: PaginationProps) {
   return (
     <div className="flex justify-center mt-4 space-x-2 mb-3">
       <button
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className="px-3 py-1 border rounded disabled:opacity-50"
       >
@@ -20,7 +25,7 @@ const PaginationExample: React.FC<PaginationProps> = ({ currentPage, totalPages,
       {Array.from({ length: totalPages }, (_, i) => (
         <button
           key={i}
-          onClick={() => onPageChange(i + 1)}
+          onClick={() => handlePageChange(i + 1)}
           className={`px-3 py-1 border rounded ${
             currentPage === i + 1 ? "bg-mainColor text-white" : ""
           }`}
@@ -30,7 +35,7 @@ const PaginationExample: React.FC<PaginationProps> = ({ currentPage, totalPages,
       ))}
 
       <button
-        onClick={() => onPageChange(currentPage + 1)}
+        onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className="px-3 py-1 border rounded disabled:opacity-50"
       >
@@ -38,6 +43,4 @@ const PaginationExample: React.FC<PaginationProps> = ({ currentPage, totalPages,
       </button>
     </div>
   );
-};
-
-export default PaginationExample;
+}

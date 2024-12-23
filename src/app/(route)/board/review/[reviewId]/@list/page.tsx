@@ -148,9 +148,9 @@ const testList = [
   },
 ];
 
-export default function ReviewBoardPage() {
+export default function ListPage() {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex justify-center">
       <Board name="후기" list={testList} />
     </div>
   );
