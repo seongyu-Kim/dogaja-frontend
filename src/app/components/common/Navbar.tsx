@@ -54,7 +54,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="w-full border-b-4 border-mainColor text-white p-4 flex justify-between items-center relative">
+    <nav className="fixed top-0 left-0 right-0 z-10 w-full border-b-4 border-mainColor text-white p-4 flex justify-between items-center bg-white">
       <div>
         <Link href="/" passHref>
           <Image 
