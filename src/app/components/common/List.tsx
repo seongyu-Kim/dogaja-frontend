@@ -7,6 +7,7 @@ interface ListProps {
   preview?: boolean;
   boardType?: string;
   detailList?: boolean;
+  postId?: string;
 }
 // 추가로 라우터 주소, 받아야함
 // 제목, 닉네임 일정 길이 넘어가면 잘라서 뒤에... 붙이기
@@ -15,6 +16,7 @@ export default function List({
   list,
   preview = true,
   detailList = false,
+  postId,
 }: ListProps) {
   if (!list) {
     return null;
@@ -30,7 +32,7 @@ export default function List({
             <Link
               href={`${detailList ? `./${item.id}` : `${route}/${item.id}`}`}
               key={item.id}
-              className="w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
+              className={`w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200 ${postId == item.id ? "bg-gray-300" : ""}`}
             >
               <div
                 className={`w-full flex item-center justify-between ${preview ? "h-[50px]" : "h-auto"} px-1 gap-1`}
@@ -45,6 +47,9 @@ export default function List({
                   </div>
                 )}
                 <div className="flex w-[85%] items-center gap-3">
+                  {postId == item.id && (
+                    <p className="font-semibold text-2xl">{">"}</p>
+                  )}
                   <p>{item.title}</p>
                   <p className="text-[10px] text-blue-700">
                     {item.commentCount}
