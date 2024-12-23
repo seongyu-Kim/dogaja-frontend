@@ -4,9 +4,10 @@ interface SlideMenuProps {
   show: boolean;
   items: string[];
   className?: string;
+  onClickItem?: (index: number) => void;
 }
 
-const SlideMenu: React.FC<SlideMenuProps> = ({ show, items, className }) => {
+const SlideMenu: React.FC<SlideMenuProps> = ({ show, items, className, onClickItem }) => {
   return (
     <>
       {show && (
@@ -23,6 +24,7 @@ const SlideMenu: React.FC<SlideMenuProps> = ({ show, items, className }) => {
                   className={`hover:underline cursor-pointer text-sm py-px ${
                     index !== items.length - 1 ? 'border-b border-mainColor' : ''
                   }`}
+                  onClick={() => onClickItem?.(index)}
                 >
                   {item}
                 </li>
