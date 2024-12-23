@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
-import Input from "./common/Input";
 import Button from "./common/Button";
 
 interface Friend {
@@ -18,6 +17,12 @@ const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ i
     setInputValue(e.target.value);
   };
 
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   const handleSearch = async () => {
     if (!inputValue.trim()) {
       setFriends([]);
@@ -27,7 +32,8 @@ const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ i
 
     setLoading(true);
     setHasSearched(true);
-    // 추후 친구 검색 로직 추가
+    
+    // 친구 검색 로직 (더미 데이터 사용)
     const dummyFriends = [
       { id: 1, nickname: "엘리스" },
       { id: 2, nickname: "김토끼" },
@@ -39,20 +45,14 @@ const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ i
     const filteredFriends = dummyFriends.filter(friend =>
       friend.nickname.includes(inputValue.trim())
     );
-    
+
     setFriends(filteredFriends);
     setLoading(false);
   };
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === "Enter") {
-      handleSearch(); // 엔터 키 입력 시 검색 실행
-    }
-  };
-
   const handleAddFriend = (friend: Friend) => {
     console.log(`친구 추가: ${friend.nickname}`);
-    // 추후 친구 추가 로직 추가
+    // 친구 추가 로직 추가
     closeModal();
   };
 
@@ -65,30 +65,34 @@ const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ i
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={closeModal} title="친구 추가">
-      <Input
-        type="text"
-        name="searchFriend"
-        placeholder="닉네임을 입력하세요"
-        value={inputValue}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        required
-        className="mb-4 mt-6 w-full border-mainColor placeholder-mainHover bg-mainColor bg-opacity-25"
-        />
+    <Modal 
+      isOpen={isOpen} 
+      onClose={closeModal} 
+      title="친구 추가" 
+      inputProps={{
+        type: "text",
+        name: "nickname",
+        placeholder: "닉네임을 입력하세요",
+        value: inputValue,
+        onChange: handleInputChange,
+        onKeyDown: handleKeyDown,
+      }} 
+      onSubmit={handleSearch}
+    >
       <Button
         onClick={handleSearch}
+        
         className="text-sm w-full"
         style={{
           backgroundColor: "bg-mainColor",
           hoverColor: "hover:bg-mainHover",
         }}
-        >
+      >
         검색
       </Button>
 
       {loading && <p className="mt-4">검색 중...</p>}
-      
+
       {hasSearched && !loading && friends.length === 0 && (
         <p className="mt-4 text-gray-500">검색 결과가 없습니다.</p>
       )}
