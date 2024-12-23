@@ -22,6 +22,11 @@ export default function getPath(pathName: string) {
       return `/board/review/${pathName}`;
     }
   }
+  if (segments.includes("admin")) {
+    if (segments.includes("report")) {
+      return `/admin/report/${pathName}`;
+    }
+  }
 
   // 기본 경로 처리
   segments[segments.length - 1] = pathName;
