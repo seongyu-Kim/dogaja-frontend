@@ -3,7 +3,6 @@ import { FaArrowAltCircleLeft, FaComments } from "react-icons/fa";
 import Button from "@/app/components/common/Button";
 import CommentList from "@/app/components/domain/board/CommentList";
 import CommentCreate from "@/app/components/domain/board/CommentCreate";
-import { getBoardCategory } from "@/app/utils/getBoardCategory";
 import DOMPurify from "isomorphic-dompurify";
 
 const testList = [
@@ -25,23 +24,19 @@ const testList = [
   },
 ];
 
-export default async function BoardDetailView({ id }: { id: string }) {
-  //api 요청 할 때 category값에 따라서 id도 같이 보내주기 userId랑 비교해서 수정 삭제 버튼 필터
-  //새로 고침시 카테고리 함수...이전 상태를 저장 하는 문제가 있음 headersList.get("referer")...추후 수정 예정
-  const category = getBoardCategory();
-  const categoryMap: Record<string, string> = {
-    findFriend: "친구 구함",
-    inquiry: "문의",
-    review: "후기",
-    together: "동행",
-    report: "신고",
-  };
-  const categoryName = category ? categoryMap[category] : "알 수 없음";
+export default async function BoardDetailView({
+  id,
+  boardTitle,
+}: {
+  id: string;
+  //임시 추후 분리 완료하면 ? 제거
+  boardTitle?: string;
+}) {
   return (
     <div className="flex justify-center">
       <div className="flex flex-col w-[50%] h-auto gap-5 pt-10 px-3 bg-gray-100">
         <Link href="./">
-          <p>{categoryName}</p>
+          <p>{boardTitle}</p>
         </Link>
         <Link href="./" className="flex gap-1 items-center">
           <Button
