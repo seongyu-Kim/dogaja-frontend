@@ -21,6 +21,7 @@ interface ButtonProps {
     border?: string;
     borderColor?: string;
   };
+  className?: string;
 }
 
 export default function Button({
@@ -28,6 +29,7 @@ export default function Button({
   disabled = false,
   onClick,
   style,
+  className = "",
   type = "button",
 }: ButtonProps) {
   const buttonStyle = `
@@ -47,6 +49,7 @@ export default function Button({
     ${style?.hoverTextColor ? `${style.hoverTextColor}` : ""}
     ${style?.border ? `${style.border}` : ""}
     ${style?.borderColor ? `${style.borderColor}` : ""}
+    ${className}
   `;
 
   return (

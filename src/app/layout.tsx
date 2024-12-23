@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
-import Navbar from "./components/common/Navbar";
-import Sidebar from "./components/common/Sidebar";
+import Navbar from "./components/common/NavBar";
+import Sidebar from "./components/common/SideBar";
 import Script from "next/script";
 import ToastProvider from "@/app/ToastProvider";
 
