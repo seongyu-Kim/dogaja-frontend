@@ -48,7 +48,7 @@ export default function List({
                 )}
                 <div className="flex w-[85%] items-center gap-3">
                   {postId == item.id && (
-                    <p className="font-semibold text-2xl">{">"}</p>
+                    <p className="font-semibold text-xl">{">"}</p>
                   )}
                   <p>{item.title}</p>
                   <p className="text-[10px] text-blue-700">
