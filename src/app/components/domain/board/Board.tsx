@@ -7,7 +7,7 @@ import Pagination from "@/app/components/common/Pagination";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { BoardPropTypes } from "@/app/type/commonBoardPropType";
 
-export default function Board({ name, list }: BoardPropTypes) {
+export default function Board({ name, list, detailList }: BoardPropTypes) {
   const searchParams = useSearchParams();
   const boardPath = usePathname();
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function Board({ name, list }: BoardPropTypes) {
     <div className="flex flex-col w-[50%] h-full items-center gap-20 pt-10 px-3 bg-gray-100">
       <p className="text-3xl">{name} 게시판</p>
       <main className="w-full">
-        <List list={currentItems} />
+        <List list={currentItems} detailList={detailList} />
         <div className="mt-2 flex justify-end">
           <PathToCreate />
         </div>
