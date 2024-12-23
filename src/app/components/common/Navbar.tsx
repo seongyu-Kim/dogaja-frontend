@@ -15,7 +15,7 @@ import NotificationList, { Notification } from '../NotificationList';
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { LuSiren } from "react-icons/lu";
 import ScheduleSelectModal from '../ScheduleSelectModal';
-import ReportModal from '../ReportModal';
+import DeclarationModal from '../DeclarationModal';
 
 export default function Navbar() {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -123,7 +123,7 @@ export default function Navbar() {
       
       {/* 추후 제거 */}
       <ScheduleSelectModal isOpen={selectScheduleModal} onClose={handleCloseModal}/>
-      <ReportModal isOpen={reportModal} onClose={handleCloseModal2}/>
+      <DeclarationModal isOpen={reportModal} onClose={handleCloseModal2}/>
     </nav>
   );
 }
