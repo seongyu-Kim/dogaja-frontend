@@ -137,6 +137,7 @@ const testList = [
 export default function ListPage() {
   const router = usePathname();
   const boardTitle = getBoardTitle(router);
+  const postId = router.split("/").slice(-1); // 임시 내가 보고 있는 게시물 리스트에서 표기
   return (
     <div className="flex justify-center">
       <Board name={`${boardTitle}`} list={testList} detailList={true} />

@@ -5,10 +5,12 @@ interface ListProps {
   // 임시 타입
   list: any[];
   preview?: boolean;
+  boardType?: string;
   detailList?: boolean;
 }
 // 추가로 라우터 주소, 받아야함
 // 제목, 닉네임 일정 길이 넘어가면 잘라서 뒤에... 붙이기
+// board 경로에서 각 게시물 리스트 클릭해서 해당 게시판 넘어갈 수 있게 boardType 추가
 export default function List({
   list,
   preview = true,
