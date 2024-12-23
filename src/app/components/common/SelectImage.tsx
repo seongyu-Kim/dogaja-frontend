@@ -99,6 +99,7 @@ function ButtonBox({
           type="file"
           className="hidden"
           onChange={onChange}
+          accept="image/png, image/jpg, image/jpeg"
         />
       </div>
       <div className="flex items-center gap-2">
