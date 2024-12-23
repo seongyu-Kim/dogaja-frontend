@@ -11,13 +11,4 @@ export const BOARD_TYPES = {
   together: {
     title: "동행",
   },
-  test: {
-    title: "테스트",
-  },
-  notitle: {
-    title: "notitle",
-  },
-  stop: {
-    title: "중단",
-  },
 } as const;
