@@ -4,6 +4,7 @@ import Button from "@/app/components/common/Button";
 import CommentList from "@/app/components/domain/board/CommentList";
 import CommentCreate from "@/app/components/domain/board/CommentCreate";
 import { getBoardCategory } from "@/app/utils/getBoardCategory";
+import DOMPurify from "isomorphic-dompurify";
 
 const testList = [
   // 임시 테스트 리스트
@@ -26,6 +27,7 @@ const testList = [
 
 export default async function BoardDetailView({ id }: { id: string }) {
   //api 요청 할 때 category값에 따라서 id도 같이 보내주기 userId랑 비교해서 수정 삭제 버튼 필터
+  //새로 고침시 카테고리 함수...이전 상태를 저장 하는 문제가 있음 headersList.get("referer")...추후 수정 예정
   const category = getBoardCategory();
   const categoryMap: Record<string, string> = {
     findFriend: "친구 구함",
@@ -34,7 +36,7 @@ export default async function BoardDetailView({ id }: { id: string }) {
     together: "동행",
     report: "신고",
   };
-  const categoryName = category[0] ? categoryMap[category[0]] : "알 수 없음";
+  const categoryName = category ? categoryMap[category] : "알 수 없음";
   return (
     <div className="flex justify-center">
       <div className="flex flex-col w-[50%] h-auto gap-5 pt-10 px-3 bg-gray-100">
@@ -65,6 +67,9 @@ export default async function BoardDetailView({ id }: { id: string }) {
 }
 //본문 영역
 function ContentArea() {
+  //임시 콘텐츠
+  const content =
+    "<p>콘텐츠입니다</p><br><button>클릭해주세요</button><br><img src='' alt='깨진이미지'/><br><script>alert('안녕하세요')</script>";
   return (
     <>
       <h1 className="text-3xl break-words">제목</h1>
@@ -73,7 +78,14 @@ function ContentArea() {
       </div>
       <div className="pb-20 border-b border-gray-400 break-words mt-5">
         <p>내용</p>
-        {/*<div dangerouslySetInnerHTML={{__html: content}}/>*/}
+        <div
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(content, {
+              ALLOWED_TAGS: [],
+              ALLOWED_ATTR: [],
+            }),
+          }}
+        />
       </div>
     </>
   );
