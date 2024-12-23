@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import Button from "./common/Button";
 
-const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ isOpen, onClose }) => {
+const DeclarationModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ isOpen, onClose }) => {
   const [reportReason, setReportReason] = useState("");
 
   const handleInputChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
@@ -53,4 +53,4 @@ const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ isOp
   );
 };
 
-export default ReportModal;
+export default DeclarationModal;
