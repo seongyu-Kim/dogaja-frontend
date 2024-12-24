@@ -1,46 +1,48 @@
 "use client";
 
-import Form from "@/app/components/common/Form";
 import Input from "@/app/components/common/Input";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { modules } from "@/app/utils/reactQuillOptions";
 import Button from "@/app/components/common/Button";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-//임시 폼 액션 - 글 작성
-export function tests() {
-  return console.log("폼 제출");
-}
+import { redirect, useParams } from "next/navigation";
+import { readPost, updatePost } from "@/app/actions";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 
 export default function PostUpdate() {
   //임시 라우터 추후 API 연동 할 때 게시판명, id 분리해서 사용 하거나 상위에서 params 받게해서 처리
-  const router = usePathname();
-  const [post, setPost] = useState({
-    title: "",
-    description: "",
-  });
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setPost({
-      ...post,
-      [name]: value,
-    });
-  };
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const boardId = useParams().boardId;
+  const isDisabled = !title || !title;
 
-  const handleDescriptionChange = (value: string) => {
-    setPost({
-      ...post,
-      description: value,
-    });
+  useEffect(() => {
+    const getPost = async () => {
+      const res = await readPost(Number(boardId));
+      if (res) {
+        setTitle(res.title);
+        setContent(res.content);
+      }
+    };
+    getPost();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    formData.append("content", content);
+    const res = await updatePost(formData, Number(boardId));
+    if (res !== 200) {
+      ErrorAlert("게시물 삭제 실패");
+    }
   };
 
   return (
     <div className="flex justify-center">
       <form
-        onSubmit={tests}
+        onSubmit={handleSubmit}
         className="w-[300px] md:w-1/2 h-auto items-center mt-10"
       >
         <div className="border-b border-gray-400 pb-2 w-full flex flex-col items-center justify-center">
@@ -51,18 +53,22 @@ export default function PostUpdate() {
             <p className="mr-1 hidden md:block">제목</p>
             <Input
               className="w-[95%]"
-              onChange={handleChange}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setTitle(e.target.value)
+              }
               type="text"
               name="title"
+              value={title}
               required={true}
               placeholder="제목을 입력해주세요"
             />
           </div>
           <div className="h-[500px]">
             <ReactQuill
-              onChange={handleDescriptionChange}
+              onChange={setContent}
               modules={modules}
               className="h-full"
+              value={content}
             />
           </div>
         </div>
@@ -85,6 +91,8 @@ export default function PostUpdate() {
               hoverColor: "hover:bg-mainHover",
               width: "w-[100px]",
             }}
+            disabled={isDisabled}
+            className={`${isDisabled && "bg-gray-400 hover:bg-gray-400"}`}
           >
             작성
           </Button>

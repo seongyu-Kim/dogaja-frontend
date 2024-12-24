@@ -9,10 +9,11 @@ import Button from "@/app/components/common/Button";
 import Link from "next/link";
 import { createPost } from "@/app/actions";
 import { useParams } from "next/navigation";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 
 export default function PostCreate() {
   //임시 라우터 추후 API 연동 할 때 게시판명 받아서 POST 요청
-  const router = useParams().boardType;
+  const boardType = useParams().boardType;
   const [post, setPost] = useState({
     title: "",
     content: "",
@@ -36,7 +37,10 @@ export default function PostCreate() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    await createPost(formData, router as string);
+    const res = await createPost(formData, boardType as string);
+    if (res !== 200) {
+      ErrorAlert("게시글 생성 실패");
+    }
   };
 
   return (
