@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Form from "@/app/components/common/Form";
 import Input from "@/app/components/common/Input";
 import Button from "@/app/components/common/Button";
 import Logo from "@/app/assets/Do_logo_non_text.png";
@@ -19,6 +18,7 @@ const SignUp: React.FC = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,6 +71,7 @@ const SignUp: React.FC = () => {
     }
 
     setError(null);
+    setIsLoading(true);
 
     try {
       const res = await mainApi({
@@ -101,13 +102,15 @@ const SignUp: React.FC = () => {
       } else {
         setError("회원가입에 실패하였습니다");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="flex items-center min-h-screen">
       <div className="max-w-md w-full mx-auto p-4 border rounded-md shadow-xl drop-shadow-sm h-[600px]">
-        <Form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Image src={Logo} alt="로고이미지" width={150} className="" />
           <p className="text-center text-3xl mt-7">회원가입</p>
           <div className="space-y-4 mt-4 w-10/12 mx-auto">
@@ -155,6 +158,9 @@ const SignUp: React.FC = () => {
               />
             </div>
           </div>
+          {error && (
+            <div className="ml-9 mt-1 text-sm text-red-500 ">{error}</div>
+          )}
 
           <div className="flex flex-col items-center mt-16">
             <Button
@@ -164,16 +170,12 @@ const SignUp: React.FC = () => {
                 width: "w-40",
               }}
               type="submit"
+              disabled={isLoading}
             >
               회원가입
             </Button>
           </div>
-        </Form>
-        {error && (
-          <div className="absolute text-sm top-[440px] left-14 text-red-500 text-center">
-            {error}
-          </div>
-        )}
+        </form>
       </div>
     </div>
   );
