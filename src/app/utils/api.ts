@@ -1,6 +1,6 @@
-const BASE_URL = `${process.env.REACT_APP_BASE_URL}`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}`;
 // .env 파일에 아래 내용 추가해주세요
-// REACT_APP_BASE_URL=http://kdt-react-node-1-team02.elicecoding.com:3000
+// NEXT_PUBLIC_BASE_URL=http://kdt-react-node-1-team02.elicecoding.com:3000
 export const API = {
   USER: {
     MY_INFO_GET: `${BASE_URL}/user/profile`,
