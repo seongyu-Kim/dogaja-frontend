@@ -46,8 +46,7 @@ export default function SelectImage({
 
   return (
     //  임시 추후 바로 아래 div w h 옵션 auto로 조정
-    <div className="flex flex-col gap-2 w-[350px] max-h-[400px] bg-gray-200 rounded-lg p-3 text-center overflow-hidden">
-      <p>{descriptionText}</p>
+    <div className="flex flex-col gap-2 w-full max-h-[400px] border rounded-lg p-3 text-center overflow-hidden">
       <div className="pb-3 border-b border-gray-400 w-full flex items-start gap-2 flex-grow">
         <div className="w-full h-full flex flex-col items-center justify-center gap-1">
           {imageFile ? (
@@ -55,7 +54,7 @@ export default function SelectImage({
               <img
                 src={preview!}
                 alt="이미지"
-                className="max-w-full max-h-[200px] object-cover rounded-[8px]"
+                className="max-w-full max-h-36 object-cover rounded-lg"
               />
             </div>
           ) : (
@@ -86,11 +85,11 @@ function ButtonBox({
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
-    <div className="w-full flex justify-between gap-2">
+    <div className="w-full flex justify-center gap-2">
       <div className="flex items-center justify-center">
         <label
           htmlFor="fileSelectImage"
-          className="bg-mainColor text-white w-auto p-1 rounded-md"
+          className="bg-mainColor text-white w-auto p-1 rounded-lg text-xs hover:bg-mainHover cursor-pointer"
         >
           이미지 선택
         </label>
@@ -100,32 +99,6 @@ function ButtonBox({
           className="hidden"
           onChange={onChange}
         />
-      </div>
-      <div className="flex items-center gap-2">
-        <Button
-          style={{
-            backgroundColor: "bg-mainColor",
-            hoverColor: "hover:bg-mainHover",
-            textSize: "text-sm",
-            height: "h-[30px]",
-            width: "w-[60px]",
-            padding: "p-1",
-          }}
-        >
-          저장
-        </Button>
-        <Button
-          style={{
-            backgroundColor: "bg-mainColor",
-            hoverColor: "hover:bg-mainHover",
-            textSize: "text-sm",
-            height: "h-[30px]",
-            width: "w-[60px]",
-            padding: "p-1",
-          }}
-        >
-          수정
-        </Button>
       </div>
     </div>
   );
