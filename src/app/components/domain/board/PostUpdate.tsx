@@ -7,7 +7,7 @@ import "react-quill/dist/quill.snow.css";
 import { modules } from "@/app/utils/reactQuillOptions";
 import Button from "@/app/components/common/Button";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { readPost, updatePost } from "@/app/actions";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 
@@ -34,9 +34,6 @@ export default function PostUpdate() {
     const formData = new FormData(e.target as HTMLFormElement);
     formData.append("content", content);
     const res = await updatePost(formData, Number(boardId));
-    if (res === 200) {
-      SuccessAlert("게시물 수정 완료");
-    }
     if (res !== 200) {
       ErrorAlert("게시물 삭제 실패");
     }

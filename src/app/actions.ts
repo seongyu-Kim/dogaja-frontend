@@ -120,10 +120,10 @@ export const updatePost = async (formData: FormData, id: number) => {
       data: body,
     });
     if (res.status === 200) {
-      return res.status;
+      return redirect("./");
     }
   } catch (e) {
-    // console.error(e);
+    console.error(e);
   }
 };
 //게시글 삭제
