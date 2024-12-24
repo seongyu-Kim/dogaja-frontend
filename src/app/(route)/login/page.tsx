@@ -1,24 +1,36 @@
 "use client";
 
 import React, { useState } from "react";
-import Form from "@/app/components/common/Form";
 import Input from "@/app/components/common/Input";
 import Button from "@/app/components/common/Button";
 import Logo from "@/app/assets/Do_logo_non_text.png";
 import Image from "next/image";
 import Link from "next/link";
-// import { mainApi } from "@/app/utils/mainApi";
+import { useRouter } from "next/navigation";
+import { mainApi } from "@/app/utils/mainApi";
+import { API } from "@/app/utils/api";
+import { SuccessAlert } from "@/app/utils/toastAlert";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const emailPattern =
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+
     if (!email) {
       setError("이메일을 입력해주세요.");
+      return;
+    }
+
+    if (!emailPattern.test(email)) {
+      setError("올바르지 않은 이메일 형식입니다");
       return;
     }
     if (!password) {
@@ -26,34 +38,39 @@ const Login: React.FC = () => {
       return;
     }
 
-    // if (email !== "example" || password !== "1234") {
-    //   setError("이메일 혹은 비밀번호가 일치하지 않습니다.");
-    //   return;
-    // }
     setError(null);
+    setIsLoading(true);
 
-    //로그인 API
-    // try {
-    //   const res = await mainApi({
-    //     url: "api/login",
-    //     method: "POST",
-    //     data: { email, password },
-    //   });
+    try {
+      const res = await mainApi<{ accessToken: string }>({
+        url: API.AUTH.LOGIN,
+        method: "POST",
+        data: { email, password, role: "user" },
+      });
 
-    //   if (res.status === 200) {
-    //     localStorage.setItem("token", res.data.token);
-    //   } else {
-    //     setError("이메일 혹은 비밀번호가 일치하지 않습니다.");
-    //   }
-    // } catch (e) {
-    //   console.error("로그인 실패", e);
-    // }
+      if (res.status === 201) {
+        SuccessAlert("로그인 성공");
+        localStorage.setItem("token", res.data.accessToken);
+        router.push("/dashboard");
+      }
+    } catch (e) {
+      console.error("로그인 실패", e);
+      if (e.status === 401) {
+        setError("등록되지 않은 사용자입니다.");
+      } else if (e.status === 404) {
+        setError("비밀번호가 일치하지 않습니다.");
+      } else {
+        setError("로그인 중 오류가 발생했습니다.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="flex items-center min-h-screen">
       <div className="max-w-md w-full mx-auto p-4 border rounded-md shadow-xl drop-shadow-sm h-[600px] relative">
-        <Form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Image
             src={Logo}
             alt="로고이미지"
@@ -98,6 +115,9 @@ const Login: React.FC = () => {
               </Link>
             </div>
           </div>
+          {error && (
+            <div className="ml-9 -mt-4 text-sm text-red-500">{error}</div>
+          )}
 
           <div className="flex flex-col items-center mt-16">
             <Button
@@ -107,6 +127,7 @@ const Login: React.FC = () => {
                 width: "w-52",
               }}
               type="submit"
+              disabled={isLoading}
             >
               로그인
             </Button>
@@ -115,12 +136,7 @@ const Login: React.FC = () => {
           <div className="text-sm mt-1 text-gray-500 text-center">
             <Link href="/sign-up">회원가입</Link>
           </div>
-        </Form>
-        {error && (
-          <div className="absolute text-sm top-[380px] left-14 text-red-500 text-center">
-            {error}
-          </div>
-        )}
+        </form>
       </div>
     </div>
   );

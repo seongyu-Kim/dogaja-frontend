@@ -4,6 +4,7 @@ import Button from "@/app/components/common/Button";
 import React, { useState } from "react";
 import { ErrorAlert } from "@/app/utils/toastAlert";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
+import { fileSize } from "@/app/utils/byteToSize";
 
 interface SelectImageProps {
   comment?: boolean;
@@ -20,10 +21,11 @@ export default function SelectImage({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (!file) return;
 
     // 파일 크기 체크 (예: 5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    if (fileSize.byteToMb(file.size) > 5) {
       ErrorAlert("파일 크기는 5MB를 초과할 수 없습니다.");
       return;
     }
@@ -98,6 +100,7 @@ function ButtonBox({
           type="file"
           className="hidden"
           onChange={onChange}
+          accept="image/png, image/jpg, image/jpeg"
         />
       </div>
     </div>

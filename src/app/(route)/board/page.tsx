@@ -4,6 +4,8 @@ import Link from "next/link";
 import { BOARD_TYPES } from "@/app/utils/board-config";
 import List from "@/app/components/common/List";
 
+type BOARD_TYPES_KEY = keyof typeof BOARD_TYPES;
+
 const testList = [
   // 임시 테스트 리스트
   {
@@ -163,14 +165,15 @@ export default function BoardListPage() {
           <div key={boardType} className="p-4 border rounded-md">
             <Link href={`/board/${boardType}`}>
               <p className="border-b border-gray-400 text-3xl">
-                {BOARD_TYPES[boardType as keyof typeof BOARD_TYPES].title}{" "}
-                게시판
+                {BOARD_TYPES[boardType as BOARD_TYPES_KEY].title} 게시판
               </p>
             </Link>
             <div>
               <List
                 list={testList.sort((a, b) => a.id - b.id).slice(0, 10)}
                 preview={false}
+                // board 경로에서 각 게시물 리스트 클릭해서 해당 게시판 넘어갈 수 있게 boardType 추가
+                boardType={boardType}
               />
             </div>
           </div>

@@ -1,23 +1,14 @@
 export const BOARD_TYPES = {
-  findFriend: {
+  friend: {
     title: "친구찾기",
   },
-  inquiry: {
+  ask: {
     title: "문의",
   },
   review: {
     title: "후기",
   },
-  together: {
+  with: {
     title: "동행",
-  },
-  test: {
-    title: "테스트",
-  },
-  notitle: {
-    title: "notitle",
-  },
-  stop: {
-    title: "중단",
   },
 } as const;

@@ -10,9 +10,5 @@ interface PostIdProps {
 export default async function FindFriendId({ params }: PostIdProps) {
   const { boardId, boardType } = params;
   const title = getBoardTitle(boardType);
-  return (
-    <>
-      <BoardDetailView id={boardId} boardTitle={title} />
-    </>
-  );
+  return <BoardDetailView postId={boardId} boardTitle={title} />;
 }

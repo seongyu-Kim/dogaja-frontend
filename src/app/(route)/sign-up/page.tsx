@@ -1,21 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import Form from "@/app/components/common/Form";
 import Input from "@/app/components/common/Input";
 import Button from "@/app/components/common/Button";
 import Logo from "@/app/assets/Do_logo_non_text.png";
 import Image from "next/image";
-// import { mainApi } from "@/app/utils/mainApi";
+import { useRouter } from "next/navigation";
+import { mainApi } from "@/app/utils/mainApi";
+import { API } from "@/app/utils/api";
+import { SuccessAlert } from "@/app/utils/toastAlert";
 
 const SignUp: React.FC = () => {
   const [info, setInfo] = useState({
     email: "",
-    nickname: "",
+    name: "",
     password: "",
     confirmPassword: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,12 +45,12 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    if (!info.nickname) {
+    if (!info.name) {
       setError("닉네임을 입력해주세요");
       return;
     }
 
-    if (info.nickname.length < 3 || info.nickname.length > 15) {
+    if (info.name.length < 3 || info.name.length > 15) {
       setError("닉네임은 3자 이상 15자 이하여야 합니다");
       return;
     }
@@ -56,8 +60,8 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    if (info.password.length < 6 || info.password.length > 20) {
-      setError("비밀번호는 6자 이상 20자 이하여야 합니다");
+    if (info.password.length < 8 || info.password.length > 20) {
+      setError("비밀번호는 8자 이상 20자 이하여야 합니다");
       return;
     }
 
@@ -67,32 +71,46 @@ const SignUp: React.FC = () => {
     }
 
     setError(null);
+    setIsLoading(true);
 
-    // try {
-    //   const res = await mainApi({
-    //     url: "api/signup",
-    //     method: "POST",
-    //     data: {
-    //       email: info.email,
-    //       nickname: info.nickname,
-    //       password: info.password,
-    //     },
-    //   });
+    try {
+      const res = await mainApi({
+        url: API.USER.SIGNUP,
+        method: "POST",
+        data: {
+          email: info.email,
+          name: info.name,
+          password: info.password,
+          confirmPassword: info.confirmPassword,
+        },
+      });
 
-    //   if (response.status === 200) {
-    //     console.log("회원가입 성공");
-    //     //로그인 페이지로 이동
-    //     //토스티파이 회원가입 성공알림
-    //   }
-    // } catch (e) {
-    //   console.error("회원가입 실패", e);
-    // }
+      if (res.status === 201) {
+        console.log("회원가입 성공");
+        SuccessAlert("회원가입 성공");
+
+        setTimeout(() => {
+          router.push("/login");
+        }, 1200);
+      }
+
+      //
+    } catch (e: unknown) {
+      console.error("회원가입 실패", e);
+      if (e.status === 409) {
+        setError("이미 존재하는 이메일입니다.");
+      } else {
+        setError("회원가입에 실패하였습니다");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="flex items-center min-h-screen">
       <div className="max-w-md w-full mx-auto p-4 border rounded-md shadow-xl drop-shadow-sm h-[600px]">
-        <Form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Image src={Logo} alt="로고이미지" width={150} className="" />
           <p className="text-center text-3xl mt-7">회원가입</p>
           <div className="space-y-4 mt-4 w-10/12 mx-auto">
@@ -111,8 +129,8 @@ const SignUp: React.FC = () => {
               <label className="ml-2">닉네임</label>
               <Input
                 type="text"
-                name="nickname"
-                value={info.nickname}
+                name="name"
+                value={info.name}
                 onChange={handleChange}
                 className="focus:ring-1 focus:ring-green-300"
               />
@@ -140,6 +158,9 @@ const SignUp: React.FC = () => {
               />
             </div>
           </div>
+          {error && (
+            <div className="ml-9 mt-1 text-sm text-red-500 ">{error}</div>
+          )}
 
           <div className="flex flex-col items-center mt-16">
             <Button
@@ -149,16 +170,12 @@ const SignUp: React.FC = () => {
                 width: "w-40",
               }}
               type="submit"
+              disabled={isLoading}
             >
               회원가입
             </Button>
           </div>
-        </Form>
-        {error && (
-          <div className="absolute text-sm top-[440px] left-14 text-red-500 text-center">
-            {error}
-          </div>
-        )}
+        </form>
       </div>
     </div>
   );
