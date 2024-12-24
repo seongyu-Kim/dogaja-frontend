@@ -1,9 +1,10 @@
-"use client";
+"use server";
 
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
-import { BoardListType } from "@/app/type/boardListType";
+import { BoardListType, ReadBoardType } from "@/app/type/boardListType";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { redirect } from "next/navigation";
 
 // 예시
 // export async function test() {
@@ -42,7 +43,6 @@ export const getFriendBoardList = async () => {
     }
   } catch (e) {
     console.error("친구 게시판 리스트 조회 오류", e);
-    ErrorAlert("친구 게시판 리스트 조회 오류");
   }
 };
 
@@ -58,7 +58,6 @@ export const getAskBoardList = async () => {
     }
   } catch (e) {
     console.error("문의 게시판 리스트 조회 오류", e);
-    ErrorAlert("문의 게시판 리스트 조회 오류");
   }
 };
 
@@ -74,7 +73,6 @@ export const getReviewBoardList = async () => {
     }
   } catch (e) {
     console.error("후기 게시판 리스트 조회 오류", e);
-    ErrorAlert("후기 게시판 리스트 조회 오류");
   }
 };
 
@@ -90,35 +88,59 @@ export const getWithBoardList = async () => {
     }
   } catch (e) {
     console.error("동행 게시판 리스트 조회 오류", e);
-    ErrorAlert("동행 게시판 리스트 조회 오류");
   }
 };
 
+//추후 토큰 값 가져와서 사용
 export const createPost = async (formData: FormData, type: string) => {
-  if (!formData || !type) {
-    return;
-  }
-  console.log("실행");
-  console.log(type);
   const { POST_CREATE } = API.BOARD;
-  console.log(POST_CREATE);
   const body = {
     title: formData.get("title") as string,
     content: formData.get("content") as string,
     type: type,
   };
-  console.log(body);
   try {
     const res = await mainApi({
       url: POST_CREATE,
       method: "POST",
       data: body,
+      withAuth: true,
     });
     if (res.status === 200) {
-      SuccessAlert("게시물 생성 성공!");
+      redirect("./");
     }
   } catch (e) {
-    console.log("게시글 생성 실패 오류", e);
-    ErrorAlert("게시글 생성 실패");
+    console.error("게시글 생성 실패 오류", e);
+  }
+};
+
+//게시글 상세보기
+export const readPost = async (id: number) => {
+  const { POST_READ } = API.BOARD;
+  try {
+    const res = await mainApi({
+      url: POST_READ(String(id)),
+      method: "GET",
+    });
+    if (res.status === 200) {
+      return res.data as ReadBoardType;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+//댓글 생성
+export const createComment = async (formData: FormData, id: string) => {
+  const { COMMENT_CREATE } = API.COMMENT;
+  try {
+    await mainApi({
+      url: COMMENT_CREATE(id),
+      method: "POST",
+      data: { content: formData.get("content") as string },
+      withAuth: true,
+    });
+  } catch (e) {
+    console.error(e);
   }
 };

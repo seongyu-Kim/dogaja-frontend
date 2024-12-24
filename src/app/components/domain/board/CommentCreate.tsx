@@ -2,20 +2,29 @@
 
 import Button from "@/app/components/common/Button";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { createComment } from "@/app/actions";
 //id값 넘겨 받아서 api 연동 준비??
-export default function CommentCreate() {
-  const [comment, setComment] = useState("");
-  const router = usePathname(); // 임시 /board/review/7 예시
+export default function CommentCreate({ id }: { id: string }) {
+  const [content, setcontent] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    await createComment(formData, id);
+  };
+  //임시 - 로그인(유저정보)정보 없으면 null 반환하게
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="h-[100px] mb-[100px] flex gap-2">
         <textarea
-          onChange={(e) => setComment(e.target.value)}
+          name="content"
+          onChange={(e) => setcontent(e.target.value)}
           className="w-full h-full resize-none p-2 rounded-md border border-gray-400 focus:outline-none"
           placeholder="댓글을 입력해주세요"
         />
         <Button
+          disabled={!content}
+          type="submit"
           style={{
             backgroundColor: "bg-mainColor",
             hoverColor: "hover:bg-mainHover",
@@ -23,6 +32,7 @@ export default function CommentCreate() {
             width: "w-20",
             padding: "py-2",
           }}
+          className={`${!content && "bg-gray-400 hover:bg-gray-400"}`}
         >
           댓글 작성
         </Button>

@@ -17,6 +17,7 @@ export default function PostCreate() {
     title: "",
     content: "",
   });
+  const isDisabled = !post.title || !post.content;
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPost({
@@ -33,7 +34,6 @@ export default function PostCreate() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("폼제출");
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     await createPost(formData, router as string);
@@ -87,6 +87,8 @@ export default function PostCreate() {
               hoverColor: "hover:bg-mainHover",
               width: "w-[100px]",
             }}
+            disabled={isDisabled}
+            className={`${isDisabled && "bg-gray-400 hover:bg-gray-400"}`}
           >
             작성
           </Button>
