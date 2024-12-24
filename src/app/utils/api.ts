@@ -1,4 +1,4 @@
-const BASE_URL = `${process.env.REACT_APP_BASE_URL}`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}`;
 // .env 파일에 아래 내용 추가해주세요
 // REACT_APP_BASE_URL=http://kdt-react-node-1-team02.elicecoding.com:3000
 export const API = {
@@ -28,10 +28,10 @@ export const API = {
     BOARD_ASK_GET: `${BASE_URL}/ask`,
     BOARD_REVIEW_GET: `${BASE_URL}/post/review`,
     BOARD_WITH_GET: `${BASE_URL}/post/with`,
-    BOARD_CREATE: `${BASE_URL}/post/create`,
-    BOARD_READ: (id: string) => `${BASE_URL}/post/${id}`,
-    BOARD_UPDATE: (id: string) => `${BASE_URL}/post/${id}`,
-    BOARD_DELETE: (id: string) => `${BASE_URL}/post/${id}`,
+    POST_CREATE: `${BASE_URL}/post/create`,
+    POST_READ: (id: string) => `${BASE_URL}/post/${id}`,
+    POST_UPDATE: (id: string) => `${BASE_URL}/post/${id}`,
+    POST_DELETE: (id: string) => `${BASE_URL}/post/${id}`,
   },
   COMMENT: {
     COMMENT_CREATE: (id: string) => `${BASE_URL}/comment/${id}`,

@@ -1,26 +1,21 @@
 "use client";
 
-import Form from "@/app/components/common/Form";
 import Input from "@/app/components/common/Input";
-import { useState } from "react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { modules } from "@/app/utils/reactQuillOptions";
 import Button from "@/app/components/common/Button";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-//임시 폼 액션 - 글 작성
-const tests = () => {
-  return console.log("폼 제출");
-};
+import { createPost } from "@/app/actions";
+import { useParams } from "next/navigation";
 
 export default function PostCreate() {
   //임시 라우터 추후 API 연동 할 때 게시판명 받아서 POST 요청
-  const router = usePathname();
+  const router = useParams().boardType;
   const [post, setPost] = useState({
     title: "",
-    description: "",
+    content: "",
   });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,14 +28,21 @@ export default function PostCreate() {
   const handleDescriptionChange = (value: string) => {
     setPost({
       ...post,
-      description: value,
+      content: value,
     });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("폼제출");
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    await createPost(formData, router as string);
   };
 
   return (
     <div className="flex justify-center">
       <form
-        onSubmit={tests}
+        onSubmit={handleSubmit}
         className="w-[300px] md:w-1/2 h-auto items-center mt-10"
       >
         <div className="border-b border-gray-400 pb-2 w-full flex flex-col items-center justify-center">
