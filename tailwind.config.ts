@@ -9,8 +9,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        "mainColor": "#3CB731",
+        "mainRed": "#FF3A3E",
+        "mainBlue": "#2676FF",
+        "mainHover": "#35A42C",
+        "mainRedHover": "#E03437",
+        "mainBlueHover": "#2266DC"
       },
     },
   },

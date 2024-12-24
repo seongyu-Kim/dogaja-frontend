@@ -1,0 +1,8 @@
+.rdrCalendarWrapper {
+  border: 1px solid gray;
+  border-radius: 10px;
+}
+
+.rdrDateDisplayWrapper {
+  display: none;
+}
