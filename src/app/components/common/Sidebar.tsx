@@ -44,16 +44,16 @@ export default function Sidebar() {
           {isBoardOpen && (
             <ul className="mt-2.5 text-center text-xs">
               <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
-                <Link href="/board/findFriend">친구 구함</Link>
+                <Link href="/board/friend">친구 구함</Link>
               </li>
               <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
-                <Link href="/board/inquiry">문의</Link>
+                <Link href="/board/ask">문의</Link>
               </li>
               <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
                 <Link href="/board/review">후기</Link>
               </li>
               <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
-                <Link href="/board/together">동행</Link>
+                <Link href="/board/with">동행</Link>
               </li>
             </ul>
           )}
