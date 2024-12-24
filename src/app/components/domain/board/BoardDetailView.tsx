@@ -6,6 +6,7 @@ import CommentCreate from "@/app/components/domain/board/CommentCreate";
 import DOMPurify from "isomorphic-dompurify";
 import { readPost } from "@/app/actions";
 import { CommentType } from "@/app/type/boardListType";
+import BoardDetailViewButtonBox from "@/app/components/domain/board/BoardDetailViewButtonBox";
 
 export default async function BoardDetailView({
   postId,
@@ -44,7 +45,7 @@ export default async function BoardDetailView({
           <ContentArea title={title} content={content} name={name} />
         </div>
         <div>
-          <ButtonBox postId={String(id)} />
+          <BoardDetailViewButtonBox postId={String(id)} />
         </div>
         <CommentArea list={comment} />
         <CommentCreate id={postId} />
@@ -79,52 +80,6 @@ function ContentArea({
         />
       </div>
     </>
-  );
-}
-//버튼 영역
-function ButtonBox({ postId }: { postId: string }) {
-  const a = true; //임시 추후 유저 데이터 값으로 버튼 필터링
-  return (
-    <div className="flex items-center justify-between">
-      <p>신고</p>
-      <div className="flex gap-2">
-        <Link href="./create">
-          <Button
-            style={{
-              backgroundColor: "bg-mainColor",
-              hoverColor: "hover:bg-mainHover",
-              width: "w-[90px]",
-            }}
-          >
-            글 작성
-          </Button>
-        </Link>
-        {a && (
-          <Link href={`./${postId}/update`}>
-            <Button
-              style={{
-                backgroundColor: "bg-mainColor",
-                hoverColor: "hover:bg-mainHover",
-                width: "w-[90px]",
-              }}
-            >
-              수정
-            </Button>
-          </Link>
-        )}
-        {a && (
-          <Button
-            style={{
-              backgroundColor: "bg-mainColor",
-              hoverColor: "hover:bg-mainHover",
-              width: "w-[90px]",
-            }}
-          >
-            삭제
-          </Button>
-        )}
-      </div>
-    </div>
   );
 }
 // 댓글 영역
