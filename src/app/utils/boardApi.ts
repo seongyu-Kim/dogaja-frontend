@@ -11,7 +11,6 @@ export const createPost = async (formData: FormData, type: string) => {
     content: formData.get("content") as string,
     type: type,
   };
-  console.log(body.content);
   try {
     const res = await mainApi({
       url: POST_CREATE,
@@ -34,12 +33,12 @@ export const updatePost = async (formData: FormData, id: number) => {
     title: formData.get("title") as string,
     content: formData.get("content") as string,
   };
-  console.log(body);
   try {
     const res = await mainApi({
       url: POST_UPDATE(String(id)),
       method: "PUT",
       data: body,
+      withAuth: true,
     });
     if (res.status === 200) {
       return redirect("./");
@@ -55,6 +54,7 @@ export const deletePost = async (id: number) => {
     const res = await mainApi({
       url: POST_DELETE(String(id)),
       method: "DELETE",
+      withAuth: true,
     });
     if (res.status === 200) {
       return res.status;
@@ -63,6 +63,7 @@ export const deletePost = async (id: number) => {
     console.error(e);
   }
 };
+
 //댓글 생성
 export const createComment = async (formData: FormData, id: string) => {
   const { COMMENT_CREATE } = API.COMMENT;
@@ -77,6 +78,7 @@ export const createComment = async (formData: FormData, id: string) => {
     console.error(e);
   }
 };
+
 //댓글 수정
 export const updateComment = async (
   formData: FormData,
@@ -98,6 +100,7 @@ export const updateComment = async (
     console.error(e);
   }
 };
+
 //댓글 삭제
 export const deleteComment = async (commentId: string, postId: string) => {
   const { COMMENT_DELETE } = API.COMMENT;
@@ -105,6 +108,24 @@ export const deleteComment = async (commentId: string, postId: string) => {
     const res = await mainApi({
       url: COMMENT_DELETE(postId, commentId),
       method: "DELETE",
+      withAuth: true,
+    });
+    if (res.status === 200) {
+      return res.status;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+//특정 신고 삭제
+export const deleteReport = async (reportId: number) => {
+  const { REPORT_DELETE } = API.REPORT;
+  try {
+    const res = await mainApi({
+      url: REPORT_DELETE(String(reportId)),
+      method: "DELETE",
+      withAuth: true,
     });
     if (res.status === 200) {
       return res.status;
