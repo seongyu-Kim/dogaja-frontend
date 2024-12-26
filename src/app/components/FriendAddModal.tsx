@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import Button from "./common/Button";
+
+import { API } from "@/app/utils/api";
+import { mainApi } from "@/app/utils/mainApi";
+import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 
 interface Friend {
   id: number;
@@ -50,10 +54,25 @@ const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ i
     setLoading(false);
   };
 
-  const handleAddFriend = (friend: Friend) => {
-    console.log(`친구 추가: ${friend.nickname}`);
-    // 친구 추가 로직 추가
-    closeModal();
+  const handleAddFriend = async (friend: Friend) => {
+    const { FRIENDS_REQUEST_POST } = API.FRIENDS;
+    try {
+      const res = await mainApi({
+        url: FRIENDS_REQUEST_POST,
+        method: "POST",
+        data: { friendName: friend.nickname },
+      });
+
+      if (res.status === 200) {
+        SuccessAlert("친구 요청이 전송되었습니다.");
+        closeModal();
+      } else {
+        ErrorAlert("친구 요청 전송에 실패했습니다.");
+      }
+    } catch (e) {
+      console.error(e);
+      ErrorAlert("친구 요청 전송 중 오류가 발생했습니다.");
+    }
   };
 
   const closeModal = () => {
