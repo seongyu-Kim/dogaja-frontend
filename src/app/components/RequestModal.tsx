@@ -28,14 +28,6 @@ const RequestModal: React.FC<RequestModalProps> = ({
 }) => {
 
   const [friends, setFriends] = useState<Friend[]>([]);
-
-  // const friends: Friend[] = [
-    //   { id: 1, name: "엘리스" },
-    //   { id: 2, name: "김토끼" },
-    //   { id: 3, name: "이토끼" },
-    //   { id: 4, name: "박토끼" },
-    //   { id: 5, name: "최토끼" },
-    // ];
     
   useEffect(() => {
     if (isOpen) {
