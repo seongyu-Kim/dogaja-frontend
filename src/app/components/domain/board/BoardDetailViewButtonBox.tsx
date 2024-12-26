@@ -5,13 +5,18 @@ import Button from "@/app/components/common/Button";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 
 import { deletePost } from "@/app/utils/boardApi";
+import React, { useState } from "react";
+import DeclarationModal from "@/app/components/DeclarationModal";
 
 export default function BoardDetailViewButtonBox({
   postId,
 }: {
   postId: string;
 }) {
-  const a = true; //임시 추후 유저 데이터 값으로 버튼 필터링
+  const [reportModal, setReportModal] = useState(false);
+
+  const handleOpenModal = () => setReportModal((prev) => !prev);
+  const handleCloseModal = () => setReportModal(false);
   const handleDeleteClick = async () => {
     const deleteCheck = confirm("게시글을 삭제하시겠습니까?");
     if (deleteCheck) {
@@ -24,9 +29,10 @@ export default function BoardDetailViewButtonBox({
       }
     }
   };
+  const a = true; //임시 추후 유저 데이터 값으로 버튼 필터링
   return (
     <div className="flex items-center justify-between">
-      <p>신고</p>
+      <p onClick={handleOpenModal}>신고</p>
       <div className="flex gap-2">
         <Link href="./create">
           <Button
@@ -65,6 +71,7 @@ export default function BoardDetailViewButtonBox({
           </>
         )}
       </div>
+      <DeclarationModal isOpen={reportModal} onClose={handleCloseModal} />
     </div>
   );
 }
