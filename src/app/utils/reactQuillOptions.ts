@@ -1,3 +1,8 @@
+import Quill from "quill";
+import ImageResize from "quill-image-resize";
+
+Quill.register("modules/imageResize", ImageResize);
+
 const imageHandler = () => {
   const input = document.createElement("input");
   input.setAttribute("type", "file");
@@ -34,5 +39,9 @@ export const modules = {
     handlers: {
       image: imageHandler, // 이미지 핸들러 연결
     },
+  },
+  imageResize: {
+    // 이미지 리사이즈 모듈 옵션 (필요 시 커스터마이징)
+    modules: ["Resize", "DisplaySize", "Toolbar"],
   },
 };
