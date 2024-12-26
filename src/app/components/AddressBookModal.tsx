@@ -20,17 +20,9 @@ const AddressBookModal: React.FC<{
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
   const [isRequestModalOpen, setRequestModalOpen] = useState(false);
-  const [currentRequestType, setCurrentRequestType] = useState<'friend' | 'invite' | null>(null);
   const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
   const [isFriendAddModalOpen, setFriendAddModalOpen] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
-
-  // const friends: Friend[] = [
-  //   { id: 1, name: "한지수" },
-  //   { id: 2, name: "김선규" },
-  //   { id: 3, name: "이수엽" },
-  //   { id: 4, name: "이희재" },
-  // ];
 
   useEffect(() => {
     getFriendList();
@@ -72,26 +64,10 @@ const AddressBookModal: React.FC<{
   const handleConfirm = (id: number) => {
     setSelectedFriendId(id);
     setRequestModalOpen(true);
-    setCurrentRequestType('friend');
   };
-
-  // const handleAddFriend = () => {
-  //   setRequestModalOpen(true);
-  //   setCurrentRequestType('invite');
-  // };
 
   const handleAddFriend = () => {
     setFriendAddModalOpen(true);
-  };
-
-  const handleAccept = (id: number) => {
-    console.log(`수락: 친구 ID ${id}`);
-    setRequestModalOpen(false);
-  };
-
-  const handleRefuse = (id: number) => {
-    console.log(`거절: 친구 ID ${id}`);
-    setRequestModalOpen(false);
   };
 
   return (
@@ -149,9 +125,8 @@ const AddressBookModal: React.FC<{
         <RequestModal
           isOpen={isRequestModalOpen}
           onClose={() => setRequestModalOpen(false)}
-          title={currentRequestType === 'friend' ? "친구 요청" : "초대 요청"}
-          // 초대 요청을 나중에 친구 추가 모달로 변경하고, 초대 요청 모달은 알림창에서 뜨도록..
-          explanation={currentRequestType === 'friend' ? "친구 요청에 수락하시겠습니까?" : "일정 초대 요청에 수락하시겠습니까?"}
+          title="친구 요청"
+          explanation="친구 요청에 수락하시겠습니까?"
           userId={selectedFriendId}
         />
       )}
