@@ -21,10 +21,11 @@ export default function CommentUpdate({
           placeholder="댓글을 입력해주세요"
         />
         <Button
+          disabled={!value}
           type="submit"
           style={{
-            backgroundColor: "bg-mainColor",
-            hoverColor: "hover:bg-mainHover",
+            backgroundColor: `${value ? "bg-mainColor" : "bg-gray-400"}`,
+            hoverColor: `${value ? "hover:bg-mainHover" : ""}`,
             height: "h-full",
             width: "w-20",
             padding: "py-2",
