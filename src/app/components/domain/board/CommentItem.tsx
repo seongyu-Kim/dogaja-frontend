@@ -46,6 +46,10 @@ export default function CommentItem({
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!updateContent) {
+      ErrorAlert("필드를 채워주세요");
+      return;
+    }
     const formData = new FormData(e.target as HTMLFormElement);
     const res = await updateComment(formData, commentId, postId);
     if (res === 200) {

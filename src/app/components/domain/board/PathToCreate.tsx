@@ -2,12 +2,13 @@
 
 import Button from "@/app/components/common/Button";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 
 export default function PathToCreate() {
-  const route = usePathname();
+  const { boardType, boardId } = useParams();
+  const path = boardId ? "./create" : `${boardType}/create`;
   return (
-    <Link href={`${route}/create`}>
+    <Link href={path}>
       <Button
         style={{
           backgroundColor: "bg-mainColor",
