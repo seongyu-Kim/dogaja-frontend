@@ -27,8 +27,8 @@ export default function CommentCreate({ id }: { id: string }) {
           disabled={!content}
           type="submit"
           style={{
-            backgroundColor: "bg-mainColor",
-            hoverColor: "hover:bg-mainHover",
+            backgroundColor: `${content ? "bg-mainColor" : "bg-gray-400"}`,
+            hoverColor: `${content ? "hover:bg-mainHover" : ""}`,
             height: "h-full",
             width: "w-20",
             padding: "py-2",
