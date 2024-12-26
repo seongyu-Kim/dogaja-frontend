@@ -31,7 +31,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <>
       {(!isHidden || isMainPage) && <Navbar />}
-      <div className="flex min-h-screen mt-16">
+      <div className="flex min-h-screen mt-14">
         {!isHidden && !isMainPage && <Sidebar />}
         <main className="w-full">
           <ToastProvider />
