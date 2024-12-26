@@ -63,7 +63,7 @@ export default function CommentItem({
 
   return (
     <li className="w-full p-2 mb-5">
-      <div className="flex items-center justify-between bg-gray-300 p-1 rounded-[4px] break-words w-full">
+      <div className="flex items-center justify-between bg-gray-300 p-1 rounded-[4px] break-all w-full">
         <p className="text-sm">{user.name}</p>
         {isOwnComment && (
           <div>
@@ -90,7 +90,7 @@ export default function CommentItem({
           </div>
         )}
       </div>
-      <div className="py-1 break-words">
+      <div className="py-1 break-all">
         {editing ? (
           <CommentUpdate
             value={updateContent}

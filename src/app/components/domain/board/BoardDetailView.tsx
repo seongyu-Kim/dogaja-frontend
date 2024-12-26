@@ -65,11 +65,11 @@ function ContentArea({
 }) {
   return (
     <>
-      <h1 className="text-3xl break-words">{title}</h1>
-      <div className="flex bg-gray-300 p-1 rounded-[4px] break-words">
+      <h1 className="text-3xl break-all">{title}</h1>
+      <div className="flex bg-gray-300 p-1 rounded-[4px] break-all">
         <p>{name}</p>
       </div>
-      <div className="pb-20 border-b border-gray-400 break-words mt-5">
+      <div className="pb-20 border-b border-gray-400 break-all mt-5">
         <div
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(content, {
