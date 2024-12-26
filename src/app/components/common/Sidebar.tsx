@@ -2,15 +2,18 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   FaRegListAlt,
   FaRegUser,
   FaRegCalendarAlt,
-  FaLongArrowAltLeft,
 } from "react-icons/fa";
+import { FaCompass  } from "react-icons/fa6";
+
 
 export default function Sidebar() {
   const [isBoardOpen, setIsBoardOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggleBoardMenu = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -20,14 +23,16 @@ export default function Sidebar() {
   return (
     <aside className="w-20 border-r-4 border-mainColor text-mainColor h-auto">
       <ul className="flex flex-col text-center text-xs">
-        <li className="p-2 pb-4 hover:underline hover:scale-105 cursor-pointer border-b-2 border-mainColor transition-all duration-300 ease-in-out">
-          <Link href="/map" className="flex flex-col items-center">
-            <div className="flex items-center justify-center p-2">
-              <FaLongArrowAltLeft className="text-xl" />
+        {pathname !== "/dashboard" && (
+        <li className="mt-4 p-2 pb-2 hover:underline hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out">
+          <Link href="/dashboard" className="flex flex-col items-center">
+            <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
+              <FaCompass  className="text-xl" />
             </div>
           </Link>
-          map으로
+          장소 정보 보기
         </li>
+        )}
 
         {/* 게시판 */}
         <li className="p-2 mt-4 cursor-pointer">
