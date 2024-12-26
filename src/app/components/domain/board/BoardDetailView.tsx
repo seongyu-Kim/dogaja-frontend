@@ -4,9 +4,9 @@ import Button from "@/app/components/common/Button";
 import CommentList from "@/app/components/domain/board/CommentList";
 import CommentCreate from "@/app/components/domain/board/CommentCreate";
 import DOMPurify from "isomorphic-dompurify";
-import { readPost } from "@/app/actions";
 import { CommentType } from "@/app/type/boardListType";
 import BoardDetailViewButtonBox from "@/app/components/domain/board/BoardDetailViewButtonBox";
+import { readPost } from "@/app/actions";
 
 export default async function BoardDetailView({
   postId,

@@ -40,4 +40,9 @@ export const API = {
     COMMENT_DELETE: (id: string, commentId: string) =>
       `${BASE_URL}/comment/${id}/${commentId}`,
   },
+  REPORT: {
+    REPORT_GET: `${BASE_URL}/report`,
+    REPORT_DELETE: (id: string) => `${BASE_URL}/report/${id}`,
+    REPORT_CREATE: (id: string) => `${BASE_URL}/report/${id}`,
+  },
 };

@@ -4,6 +4,10 @@ import Link from "next/link";
 import { IoDocumentText } from "react-icons/io5";
 import Button from "@/app/components/common/Button";
 import { usePathname } from "next/navigation";
+import { API } from "@/app/utils/api";
+import { ErrorAlert } from "@/app/utils/toastAlert";
+import { mainApi } from "@/app/utils/mainApi";
+import { useEffect, useState } from "react";
 
 const testList = [
   // 임시 테스트 리스트
@@ -58,6 +62,34 @@ const testList = [
 ];
 
 export default function ReportPage() {
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    getReportList();
+  }, []);
+
+  //신고 게시판 목록 불러오기
+  const getReportList = async () => {
+    const { REPORT_GET } = API.REPORT;
+    try {
+      const res = await mainApi({
+        url: REPORT_GET,
+        method: "GET",
+      });
+      if (res.status === 200) {
+        setList(res.data);
+      }
+    } catch (e) {
+      console.error(e);
+      ErrorAlert("리스트 조회 실패");
+    }
+  };
+
+  if (list.length === 0) {
+    //임시 - 테스트 리스트
+    setList(testList);
+    return <p className="text-center">신고 목록이 없습니다</p>;
+  }
   return (
     <div className="flex justify-center">
       <div className="flex flex-col w-[50%] h-full items-center gap-20 pt-10 px-3 bg-gray-100">
@@ -65,7 +97,7 @@ export default function ReportPage() {
         <main className="w-full">
           <div className="w-[300px] md:w-auto">
             <ul className="flex flex-col items-center justify-center w-full">
-              {testList.map((item) => {
+              {list.map((item) => {
                 const route = usePathname();
 
                 return (
