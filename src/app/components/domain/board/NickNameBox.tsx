@@ -38,7 +38,12 @@ export default function NickNameBox({ name }: Props) {
       </p>
       {toggleWindow && (
         <div ref={toggleWindowRef}>
-          <NicknameClickToggleWindow x={position.x} y={position.y} />
+          <NicknameClickToggleWindow
+            name={name}
+            onClose={setToggleWindow}
+            x={position.x}
+            y={position.y}
+          />
         </div>
       )}
     </>

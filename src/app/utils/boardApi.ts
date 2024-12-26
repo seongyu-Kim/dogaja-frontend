@@ -134,3 +134,21 @@ export const deleteReport = async (reportId: number) => {
     console.error(e);
   }
 };
+
+//닉네임 친구 요청
+export const requestFriend = async (friendName: string) => {
+  const { FRIENDS_REQUEST_POST } = API.FRIENDS;
+  try {
+    const res = await mainApi({
+      url: FRIENDS_REQUEST_POST,
+      method: "POST",
+      data: { friendName: friendName },
+      withAuth: true,
+    });
+    if (res.status === 200) {
+      return res.status;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};

@@ -1,9 +1,33 @@
+import { requestFriend } from "@/app/utils/boardApi";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+
 interface Props {
+  name: string;
+  onClose: (state: boolean) => void;
   x: number;
   y: number;
 }
 
-export default function NicknameClickToggleWindow({ x, y }: Props) {
+export default function NicknameClickToggleWindow({
+  name,
+  onClose,
+  x,
+  y,
+}: Props) {
+  const handleRequestFriendClick = async () => {
+    if (!name) return;
+    const requestConfirm = confirm(`${name}님에게 친구 요청을 보내시겠습니까?`);
+    if (requestConfirm) {
+      const res = await requestFriend(name);
+      if (res === 200) {
+        SuccessAlert(`${name}님에게 친구 요청을 보냈습니다`);
+        onClose(false);
+        return;
+      }
+      onClose(false);
+      ErrorAlert("친구 요청 실패");
+    }
+  };
   return (
     <ul
       style={{
@@ -22,7 +46,9 @@ export default function NicknameClickToggleWindow({ x, y }: Props) {
     z-[1000]
   `}
     >
-      <li>친구 추가</li>
+      <li className="cursor-pointer" onClick={handleRequestFriendClick}>
+        친구 추가
+      </li>
     </ul>
   );
 }
