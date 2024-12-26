@@ -14,7 +14,7 @@ export const API = {
     LOGOUT: `${BASE_URL}/auth/logout`,
     RESET_PASSWORD_REQUEST: `${BASE_URL}/auth/password/request-reset`,
     RESET_PASSWORD: (token: string) =>
-      `${BASE_URL}/auth/password/reset/${token}`,
+      `${BASE_URL}/auth/reset-password/${token}`,
   },
   BOOKMARK: {
     BOOKMARK_ALL_GET: `${BASE_URL}/bookmark`,
