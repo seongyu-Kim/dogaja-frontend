@@ -30,18 +30,14 @@ export default function Navbar() {
   const [name, setName] = useState<string>('');
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  // const notifications: Notification[] = [
-  //   { id: 1, type: 'friend', userId: 123, name: "엘리스", code: "친구" },
-  //   { id: 2, type: 'invite', userId: 234, name: "김토끼", code: "초대" },
-  // ];
 
   useEffect(() => {
-    getUserName();
-    getFriendRequests();
+    // getUserName();
+    // getFriendRequests();
 
     // 임시 로그인 상태 설정
-    // setIsLoggedIn(true);
-    // setName("elice");
+    setIsLoggedIn(true);
+    setName("elice");
   }, []);
   
   const getUserName = async () => {
@@ -104,13 +100,8 @@ export default function Navbar() {
   const openAddressBookModal = () => setShowAddressBookModal(prev => !prev);
 
   const handleNotificationClick = (notification: Notification) => {
-    setSelectedNotification(notification);
-    setShowRequestModal(true);
-  };
-
-  const closeRequestModal = () => {
-    setShowRequestModal(false);
-    setSelectedNotification(null);
+    // 초대 알림 클릭 시 /post/{id}로 이동
+    router.push(`/post/${notification.id}`);
   };
 
   return (
@@ -174,15 +165,6 @@ export default function Navbar() {
         isOpen={showAddressBookModal} 
         onClose={openAddressBookModal} 
       />
-      {showRequestModal && selectedNotification && (
-        <RequestModal
-          isOpen={showRequestModal}
-          onClose={closeRequestModal}
-          title={selectedNotification.type === 'friend' ? "친구 요청" : "초대 요청"}
-          explanation={`${selectedNotification.name}님이 ${selectedNotification.code} 요청을 하셨습니다.`}
-          userId={selectedNotification.userId}
-        />
-      )}
       
     </nav>
   );

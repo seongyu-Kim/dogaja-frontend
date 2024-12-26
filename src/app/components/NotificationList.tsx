@@ -30,9 +30,8 @@ const NotificationList: React.FC<NotificationListProps> = ({
               onClick={() => onNotificationClick(notification)}
             >
               <span className="flex-1">
-                {notification.type === 'friend' && '🖐 '}
-                {notification.type === 'invite' && '🎉 '}
-                {notification.name}님의 {notification.code} 요청
+                {notification.type === 'friend' && `🖐 ${notification.name}님의 친구 요청`}
+                {notification.type === 'invite' && `🎉 ${notification.name}님이 일정에 초대했습니다.`}
               </span>
             </li>
           ))}
