@@ -2,9 +2,12 @@
 
 import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
-import { redirect } from "next/navigation";
+import { AxiosResponse } from "axios";
 
-export const createPost = async (formData: FormData, type: string) => {
+export const createPost = async (
+  formData: FormData,
+  type: string,
+): Promise<AxiosResponse<any> | undefined> => {
   const { POST_CREATE } = API.BOARD;
   const body = {
     title: formData.get("title") as string,
@@ -18,10 +21,9 @@ export const createPost = async (formData: FormData, type: string) => {
       data: body,
       withAuth: true,
     });
-    if (res.status === 200) {
-      return redirect("./");
+    if (res.status === 201) {
+      return res;
     }
-    return res.status;
   } catch (e) {
     console.error("게시글 생성 실패 오류", e);
   }
@@ -41,7 +43,7 @@ export const updatePost = async (formData: FormData, id: number) => {
       withAuth: true,
     });
     if (res.status === 200) {
-      return redirect("./");
+      return res.status;
     }
   } catch (e) {
     console.error(e);

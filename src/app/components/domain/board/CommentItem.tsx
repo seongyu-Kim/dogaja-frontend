@@ -103,7 +103,7 @@ export default function CommentItem({
             onSubmit={handleSubmit}
           />
         ) : (
-          <p className="text-sm">{content}</p>
+          <p className="text-sm whitespace-pre-wrap">{content}</p>
         )}
       </div>
     </li>

@@ -22,7 +22,9 @@ export default async function BoardDetailView({
   if (!post) {
     return null;
   }
+
   const { id, title, content, name, comment } = post;
+
   return (
     <div className="flex justify-center">
       <div className="flex flex-col w-[50%] h-auto gap-5 pt-10 px-3 bg-gray-100">
@@ -74,8 +76,8 @@ function ContentArea({
         <div
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(content, {
-              ALLOWED_TAGS: [],
-              ALLOWED_ATTR: [],
+              // ALLOWED_TAGS: [],
+              // ALLOWED_ATTR: [],
             }),
           }}
         />
@@ -85,14 +87,17 @@ function ContentArea({
 }
 // 댓글 영역
 function CommentArea({ list }: { list: CommentType[] }) {
+  const defaultCommentList = list.filter(
+    (item) => item.id !== null && item.id !== undefined && item.user.name,
+  );
   return (
     <div className="flex flex-col gap-3 border-b border-gray-400 pb-6">
       <div className="flex gap-3 items-center">
         <FaComments className="w-[35px] h-[35px] text-gray-400" />
-        <p>{list.length} 댓글</p>
+        <p>{defaultCommentList.length} 댓글</p>
       </div>
       <div>
-        <CommentList list={list} />
+        <CommentList list={defaultCommentList} />
       </div>
     </div>
   );

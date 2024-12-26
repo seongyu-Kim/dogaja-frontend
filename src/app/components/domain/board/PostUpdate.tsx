@@ -7,8 +7,8 @@ import "react-quill/dist/quill.snow.css";
 import { modules } from "@/app/utils/reactQuillOptions";
 import Button from "@/app/components/common/Button";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { ErrorAlert } from "@/app/utils/toastAlert";
+import { useParams, useRouter } from "next/navigation";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import { updatePost } from "@/app/utils/boardApi";
 import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
@@ -20,6 +20,7 @@ export default function PostUpdate() {
   const [content, setContent] = useState("");
   const [disabled, setDisabled] = useState(true);
   const boardId = useParams().boardId;
+  const router = useRouter();
 
   //게시글 상세보기
   const getPostId = async (id: number) => {
@@ -61,6 +62,11 @@ export default function PostUpdate() {
     const formData = new FormData(e.target as HTMLFormElement);
     formData.append("content", content);
     const res = await updatePost(formData, Number(boardId));
+    if (res === 200) {
+      SuccessAlert("게시글 수정 성공");
+      router.push("./");
+      return;
+    }
     if (res !== 200) {
       ErrorAlert("게시물 수정 실패");
     }
