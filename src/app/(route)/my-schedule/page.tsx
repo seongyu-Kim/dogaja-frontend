@@ -185,7 +185,7 @@ function Description({ list }: any) {
                 <div>
                   <p>장소 : {item.location}</p>
                   <div className="flex gap-5">
-                    <p className="break-words">
+                    <p className="break-all">
                       기간 : {formattedStartDate} ~ {formattedEndDate}
                     </p>
                     <p className="text-gray-500">
