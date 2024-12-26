@@ -37,12 +37,14 @@ export default function RootLayout({
       // ) || !registeredRoutes.includes(pathname);
     ) || !isRegisteredRoute;
 
+    const isMainPage = pathname === "/";
+
   return (
     <html lang="ko">
       <body className={`${font.className} antialiased flex flex-col flex-1`}>
-        {!isHidden && <Navbar />}
+      {(!isHidden || isMainPage) && <Navbar />}
         <div className="flex min-h-screen mt-16">
-          {!isHidden && <Sidebar />}
+        {!isHidden && !isMainPage && <Sidebar />}
           <main className="w-full">
             <ToastProvider />
             {children}
