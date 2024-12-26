@@ -9,7 +9,6 @@ export default function CommentCreate({ id }: { id: string }) {
   const [content, setcontent] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     await createComment(formData, id);
   };

@@ -7,8 +7,8 @@ import "react-quill/dist/quill.snow.css";
 import { modules } from "@/app/utils/reactQuillOptions";
 import Button from "@/app/components/common/Button";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { ErrorAlert } from "@/app/utils/toastAlert";
+import { useParams, useRouter } from "next/navigation";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import { createPost } from "@/app/utils/boardApi";
 
 export default function PostCreate() {
@@ -17,6 +17,7 @@ export default function PostCreate() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [disabled, setDisabled] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     setDisabled(!title.trim() || !content.trim());
@@ -35,7 +36,14 @@ export default function PostCreate() {
     const formData = new FormData(e.target as HTMLFormElement);
     formData.append("content", content);
     const res = await createPost(formData, boardType as string);
-    if (res !== 200) {
+    console.log("123", res);
+    if (!res) return;
+    if (res.status === 201) {
+      SuccessAlert("게시글 생성 성공");
+      router.push(`${res.data.postId}`);
+      return;
+    }
+    if (res.status !== 200) {
       ErrorAlert("게시글 생성 실패");
     }
   };
