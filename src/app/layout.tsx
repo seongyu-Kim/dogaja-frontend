@@ -4,7 +4,6 @@ import "./globals.css";
 import localFont from "next/font/local";
 import Navbar from "./components/common/Navbar";
 import Sidebar from "./components/common/Sidebar";
-import Script from "next/script";
 import ToastProvider from "@/app/ToastProvider";
 import { usePathname } from "next/navigation";
 
@@ -20,31 +19,27 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
-  //등록 경로
-  const registeredRoutes = ["/", "/dashboard", "/board/", "/map"];
+  // Nav, Sidebar 보여줄 경로
+  const registeredRoutes = ["/", "/dashboard", "/board", "/map"];
 
-  const isRegisteredRoute = registeredRoutes.some(
-    (route) =>
-      route.endsWith("/")
-        ? pathname.startsWith(route) // "board/"로 시작하는 모든 경로
-        : pathname === route, // 정확히 일치하는 경로
+  const isRegisteredRoute = registeredRoutes.some((route) =>
+    route.endsWith("/") ? pathname.startsWith(route) : pathname === route
   );
 
-  //미등록 경로
+  // Nav,Sidebar 숨길 경로
   const isHidden =
-    ["/login", "/sign-up", "/reset-password", "/find-password"].includes(
-      pathname,
-      // ) || !registeredRoutes.includes(pathname);
+    ["/login", "/sign-up", "/reset-password", "/find-password"].some((route) =>
+      pathname.startsWith(route)
     ) || !isRegisteredRoute;
 
-    const isMainPage = pathname === "/";
+  const isMainPage = pathname === "/";
 
   return (
     <html lang="ko">
       <body className={`${font.className} antialiased flex flex-col flex-1`}>
-      {(!isHidden || isMainPage) && <Navbar />}
+        {(!isHidden || isMainPage) && <Navbar />}
         <div className="flex min-h-screen mt-16">
-        {!isHidden && !isMainPage && <Sidebar />}
+          {!isHidden && !isMainPage && <Sidebar />}
           <main className="w-full">
             <ToastProvider />
             {children}
