@@ -1,19 +1,21 @@
 "use client";
 
 import React, { useState } from "react";
-import Form from "@/app/components/common/Form";
 import Input from "@/app/components/common/Input";
 import Button from "@/app/components/common/Button";
 import Logo from "@/app/assets/Do_logo_non_text.png";
 import Image from "next/image";
 import Link from "next/link";
+import { mainApi } from "@/app/utils/mainApi";
+import { API } from "@/app/utils/api";
 
 const FindPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email) {
@@ -21,20 +23,33 @@ const FindPassword: React.FC = () => {
       return;
     }
 
-    if (email !== "test") {
-      setError("등록되지 않은 이메일입니다.");
-      return;
-    }
+    setLoading(true);
 
-    setMessage("등록하신 메일로 재설정 링크가 발송되었습니다.");
-    setEmail("");
-    setError("");
+    try {
+      const res = await mainApi({
+        url: API.AUTH.RESET_PASSWORD_REQUEST,
+        method: "POST",
+        data: { email },
+      });
+
+      if (res.status === 201) {
+        setMessage("등록하신 이메일로 재설정 링크가 발송되었습니다.");
+        setEmail("");
+        setError("");
+      }
+    } catch (e) {
+      if (e.status === 404) {
+        setError("등록되지 않은 이메일입니다.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex items-center min-h-screen">
       <div className="max-w-md w-full mx-auto p-4 border rounded-md shadow-xl drop-shadow-sm h-[600px] relative">
-        <Form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Image src={Logo} alt="로고이미지" width={150} />
           <p className="text-center text-3xl mt-7">비밀번호 찾기</p>
           <p className="text-center text-gray-600 mt-2">
@@ -62,6 +77,9 @@ const FindPassword: React.FC = () => {
               </div>
             </div>
           )}
+          {error && (
+            <div className="ml-9 mt-1 text-sm text-red-500">{error}</div>
+          )}
 
           {!message && (
             <div className="flex flex-col items-center mt-28">
@@ -72,6 +90,7 @@ const FindPassword: React.FC = () => {
                   width: "w-52",
                 }}
                 type="submit"
+                disabled={loading}
               >
                 메일 보내기
               </Button>
@@ -81,13 +100,7 @@ const FindPassword: React.FC = () => {
           <div className="text-sm mt-1 text-gray-500 text-center">
             <Link href="/login">로그인 페이지로 돌아가기</Link>
           </div>
-        </Form>
-
-        {error && (
-          <div className="absolute text-sm top-[340px] left-14 text-red-500 text-center">
-            {error}
-          </div>
-        )}
+        </form>
       </div>
     </div>
   );
