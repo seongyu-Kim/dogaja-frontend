@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Button from "@/app/components/common/Button";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
-import { deletePost } from "@/app/actions";
+
+import { deletePost } from "@/app/utils/boardApi";
 
 export default function BoardDetailViewButtonBox({
   postId,

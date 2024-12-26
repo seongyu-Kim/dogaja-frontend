@@ -2,7 +2,8 @@
 
 import Button from "@/app/components/common/Button";
 import { useState } from "react";
-import { createComment } from "@/app/actions";
+
+import { createComment } from "@/app/utils/boardApi";
 //id값 넘겨 받아서 api 연동 준비??
 export default function CommentCreate({ id }: { id: string }) {
   const [content, setcontent] = useState("");

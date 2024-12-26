@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CommentUpdate from "@/app/components/domain/board/CommentUpdate";
-import { deleteComment, updateComment } from "@/app/actions";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { deleteComment, updateComment } from "@/app/utils/boardApi";
 
 interface CommentItemProps {
   id: number;
