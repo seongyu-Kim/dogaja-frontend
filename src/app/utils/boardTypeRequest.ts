@@ -1,4 +1,5 @@
 import { BOARD_TYPES } from "@/app/utils/board-config";
+
 import {
   getAskBoardList,
   getFriendBoardList,

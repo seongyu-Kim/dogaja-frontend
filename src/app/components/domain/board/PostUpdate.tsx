@@ -7,20 +7,43 @@ import "react-quill/dist/quill.snow.css";
 import { modules } from "@/app/utils/reactQuillOptions";
 import Button from "@/app/components/common/Button";
 import Link from "next/link";
-import { redirect, useParams } from "next/navigation";
-import { readPost, updatePost } from "@/app/actions";
-import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { useParams } from "next/navigation";
+import { ErrorAlert } from "@/app/utils/toastAlert";
+import { updatePost } from "@/app/utils/boardApi";
+import { API } from "@/app/utils/api";
+import { mainApi } from "@/app/utils/mainApi";
+import { ReadBoardType } from "@/app/type/boardListType";
 
 export default function PostUpdate() {
   //임시 라우터 추후 API 연동 할 때 게시판명, id 분리해서 사용 하거나 상위에서 params 받게해서 처리
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [disabled, setDisabled] = useState(true);
   const boardId = useParams().boardId;
-  const isDisabled = !title || !title;
+
+  //게시글 상세보기
+  const getPostId = async (id: number) => {
+    const { POST_READ } = API.BOARD;
+    try {
+      const res = await mainApi({
+        url: POST_READ(String(id)),
+        method: "GET",
+      });
+      if (res.status === 200) {
+        return res.data as ReadBoardType;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    setDisabled(!title.trim() || !content.trim());
+  }, [title, content]);
 
   useEffect(() => {
     const getPost = async () => {
-      const res = await readPost(Number(boardId));
+      const res = await getPostId(Number(boardId));
       if (res) {
         setTitle(res.title);
         setContent(res.content);
@@ -31,11 +54,15 @@ export default function PostUpdate() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (disabled) {
+      ErrorAlert("모든 필드를 다 채워주세요");
+      return;
+    }
     const formData = new FormData(e.target as HTMLFormElement);
     formData.append("content", content);
     const res = await updatePost(formData, Number(boardId));
     if (res !== 200) {
-      ErrorAlert("게시물 삭제 실패");
+      ErrorAlert("게시물 수정 실패");
     }
   };
 
@@ -87,12 +114,11 @@ export default function PostUpdate() {
           <Button
             type="submit"
             style={{
-              backgroundColor: "bg-mainColor",
-              hoverColor: "hover:bg-mainHover",
+              backgroundColor: `${disabled ? "bg-gray-400" : "bg-mainColor"}`,
+              hoverColor: `${disabled ? "" : "hover:bg-mainHover"}`,
               width: "w-[100px]",
             }}
-            disabled={isDisabled}
-            className={`${isDisabled && "bg-gray-400 hover:bg-gray-400"}`}
+            disabled={disabled}
           >
             작성
           </Button>
