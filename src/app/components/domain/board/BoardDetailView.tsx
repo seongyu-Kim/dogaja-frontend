@@ -7,6 +7,7 @@ import DOMPurify from "isomorphic-dompurify";
 import { CommentType } from "@/app/type/boardListType";
 import BoardDetailViewButtonBox from "@/app/components/domain/board/BoardDetailViewButtonBox";
 import { readPost } from "@/app/actions";
+import NickNameBox from "@/app/components/domain/board/NickNameBox";
 
 export default async function BoardDetailView({
   postId,
@@ -67,7 +68,7 @@ function ContentArea({
     <>
       <h1 className="text-3xl break-all">{title}</h1>
       <div className="flex bg-gray-300 p-1 rounded-[4px] break-all">
-        <p>{name}</p>
+        <NickNameBox name={name} />
       </div>
       <div className="pb-20 border-b border-gray-400 break-all mt-5">
         <div

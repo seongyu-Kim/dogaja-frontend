@@ -45,4 +45,12 @@ export const API = {
     REPORT_DELETE: (id: string) => `${BASE_URL}/report/${id}`,
     REPORT_CREATE: (id: string) => `${BASE_URL}/report/${id}`,
   },
+  FRIEND: {
+    FRIEND_RECEIVED_LIST_GET: `${BASE_URL}/friends/requests/received`,
+    FRIEND_REQUEST: `${BASE_URL}/friends/request`,
+    FRIEND_REQUEST_ACCEPT: (id: string) =>
+      `${BASE_URL}/friends/requests/${id}/respond`,
+    FRIEND_LIST_GET: `${BASE_URL}/friends/list`,
+    FRIEND_DELETE: (friendId: string) => `${BASE_URL}/friends/${friendId}`,
+  },
 };

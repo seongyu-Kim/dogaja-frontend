@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CommentUpdate from "@/app/components/domain/board/CommentUpdate";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import { deleteComment, updateComment } from "@/app/utils/boardApi";
+import NickNameBox from "@/app/components/domain/board/NickNameBox";
 
 interface CommentItemProps {
   id: number;
@@ -68,7 +69,7 @@ export default function CommentItem({
   return (
     <li className="w-full p-2 mb-5">
       <div className="flex items-center justify-between bg-gray-300 p-1 rounded-[4px] break-all w-full">
-        <p className="text-sm">{user.name}</p>
+        <NickNameBox name={user.name} />
         {isOwnComment && (
           <div>
             {!editing ? (
