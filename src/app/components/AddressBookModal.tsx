@@ -1,10 +1,14 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import Button from "./common/Button";
 import RequestModal from "./RequestModal";
 import FriendAddModal from "./FriendAddModal";
+
+import { API } from "@/app/utils/api";
+import { mainApi } from "@/app/utils/mainApi";
+import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 
 interface Friend {
   id: number;
@@ -19,16 +23,50 @@ const AddressBookModal: React.FC<{
   const [currentRequestType, setCurrentRequestType] = useState<'friend' | 'invite' | null>(null);
   const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
   const [isFriendAddModalOpen, setFriendAddModalOpen] = useState(false);
-  
-  const friends: Friend[] = [
-    { id: 1, name: "한지수" },
-    { id: 2, name: "김선규" },
-    { id: 3, name: "이수엽" },
-    { id: 4, name: "이희재" },
-  ];
+  const [friends, setFriends] = useState<Friend[]>([]);
 
-  const handleDelete = (id: number) => {
-    console.log(`삭제 요청: 친구 ID ${id}`);
+  // const friends: Friend[] = [
+  //   { id: 1, name: "한지수" },
+  //   { id: 2, name: "김선규" },
+  //   { id: 3, name: "이수엽" },
+  //   { id: 4, name: "이희재" },
+  // ];
+
+  useEffect(() => {
+    getFriendList();
+  }, []);
+  
+  const getFriendList = async () => {
+    const { FRIENDS_LIST_GET } = API.FRIENDS;
+    try {
+      const res = await mainApi({
+        url: FRIENDS_LIST_GET,
+        method: "GET",
+      });
+      if (res.status === 200) {
+        setFriends(res.data.friends || []);
+      }
+    } catch (e) {
+      console.error(e);
+      ErrorAlert("친구목록 가져오기에 실패했습니다.");
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    const { FRIENDS_DELETE } = API.FRIENDS;
+    try {
+      const res = await mainApi({
+        url: FRIENDS_DELETE,
+        method: "DELETE",
+      });
+      if (res.status === 200) {
+        setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== id));
+        SuccessAlert("친구 목록에서 삭제되었습니다.");
+      }
+    } catch (e) {
+      console.error(e);
+      ErrorAlert("친구 삭제에 실패했습니다.");
+    }
   };
 
   const handleConfirm = (id: number) => {
@@ -41,6 +79,7 @@ const AddressBookModal: React.FC<{
   //   setRequestModalOpen(true);
   //   setCurrentRequestType('invite');
   // };
+
   const handleAddFriend = () => {
     setFriendAddModalOpen(true);
   };
