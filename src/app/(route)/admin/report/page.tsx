@@ -12,18 +12,21 @@ import { deletePost, deleteReport } from "@/app/utils/boardApi";
 import getBoardTitle from "@/app/utils/getBoardTitle";
 import Pagination from "@/app/components/common/Pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useUserStore } from "@/app/store/userStore";
+import notFound from "@/app/not-found";
 
 const itemsPerPage = 10;
 
 export default function ReportPage() {
   const [list, setList] = useState<ReportListType[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentItems, setCurrentItems] = useState<ReportListType[]>([]);
+  const { user } = useUserStore();
 
   const searchParams = useSearchParams();
   const boardPath = usePathname();
   const router = useRouter();
   const totalPages = list ? Math.ceil(list.length / itemsPerPage) : 0;
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [currentItems, setCurrentItems] = useState<ReportListType[]>([]);
 
   useEffect(() => {
     getReportList();
@@ -45,8 +48,6 @@ export default function ReportPage() {
       : [];
     setCurrentItems(newCurrentItems);
   }, [currentPage, list]);
-
-  ////
 
   //신고 게시판 목록 불러오기
   const getReportList = async () => {
@@ -110,6 +111,10 @@ export default function ReportPage() {
       ErrorAlert("신고 삭제 실패");
     }
   };
+
+  if (!user || !user.admin) {
+    return notFound({});
+  }
 
   return (
     <div className="flex justify-center">

@@ -5,6 +5,7 @@ import { API } from "@/app/utils/api";
 type User = {
   name: string;
   email: string;
+  admin: boolean;
 } | null;
 
 type UserState = {

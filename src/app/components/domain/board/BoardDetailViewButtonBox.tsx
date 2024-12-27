@@ -8,13 +8,17 @@ import { deletePost } from "@/app/utils/boardApi";
 import React, { useState } from "react";
 import DeclarationModal from "@/app/components/DeclarationModal";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/app/store/userStore";
 
 export default function BoardDetailViewButtonBox({
   postId,
+  name,
 }: {
   postId: string;
+  name: string;
 }) {
   const [reportModal, setReportModal] = useState(false);
+  const { user } = useUserStore();
   const router = useRouter();
 
   const handleOpenModal = () => setReportModal((prev) => !prev);
@@ -33,23 +37,24 @@ export default function BoardDetailViewButtonBox({
       }
     }
   };
-  const a = true; //임시 추후 유저 데이터 값으로 버튼 필터링
   return (
     <div className="flex items-center justify-between">
       <p onClick={handleOpenModal}>신고</p>
       <div className="flex gap-2">
-        <Link href="./create">
-          <Button
-            style={{
-              backgroundColor: "bg-mainColor",
-              hoverColor: "hover:bg-mainHover",
-              width: "w-[90px]",
-            }}
-          >
-            글 작성
-          </Button>
-        </Link>
-        {a && (
+        {user && (
+          <Link href="./create">
+            <Button
+              style={{
+                backgroundColor: "bg-mainColor",
+                hoverColor: "hover:bg-mainHover",
+                width: "w-[90px]",
+              }}
+            >
+              글 작성
+            </Button>
+          </Link>
+        )}
+        {user && (user.name === name || user.admin) && (
           <>
             <Link href={`./${postId}/update`}>
               <Button
