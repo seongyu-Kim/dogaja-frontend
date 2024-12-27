@@ -1,10 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaUserEdit, FaStar, FaBookmark, FaListAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import Input from "@/app/components/common/Input";
 import Button from "@/app/components/common/Button";
+import { mainApi } from "@/app/utils/mainApi";
+import { API } from "@/app/utils/api";
+import { useUserStore } from "@/app/store/userStore";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { useRouter } from "next/navigation";
 
 const myPosts = [
   { id: 1, title: "대방어 먹고싶다", content: "서울 대방어 맛집 소개" },
@@ -32,44 +37,141 @@ const initialFavoritePosts = [
 ];
 
 const MyPage = () => {
-  const [nickname, setNickname] = useState<string>("사용자");
-  const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [isEditingName, setIsEditingName] = useState<boolean>(false);
+  const [currentPassword, setCurrentPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
-  const [isEditingNickname, setIsEditingNickname] = useState<boolean>(false);
-  const [isPasswordVerified, setIsPasswordVerified] = useState<boolean>(false);
-  const [favoritePosts, setFavoritePosts] = useState(initialFavoritePosts);
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isChangingPassword, setIsChangingPassword] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<string>("");
+  const [favoritePosts, setFavoritePosts] = useState(initialFavoritePosts);
 
-  const handleNicknameEdit = () => {
-    setIsEditingNickname(true);
-  };
+  const router = useRouter();
+  const { user, fetchUser } = useUserStore();
 
-  const handleNicknameSave = () => {
-    setIsEditingNickname(false);
-  };
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
-  const handlePasswordVerification = () => {
-    if (password === "test") {
-      setIsPasswordVerified(true);
-    } else {
-      alert("비밀번호가 일치하지 않습니다.");
+  useEffect(() => {
+    if (user) {
+      setName(user?.name || "알 수 없는 사용자");
+    }
+  }, [user]);
+
+  //닉변
+  const handleNameChange = async () => {
+    try {
+      const res = await mainApi({
+        url: API.USER.NAME_UPDATE,
+        method: "PUT",
+        data: { name },
+        withAuth: true,
+      });
+
+      if (res.status === 200) {
+        setIsEditingName(false);
+        await fetchUser();
+        SuccessAlert("닉네임이 변경되었습니다.");
+      }
+    } catch (e) {
+      console.log(e);
+      if (e.status === 404) {
+        ErrorAlert("유저를 찾을 수 없습니다.");
+      } else if (e.status === 409) {
+        ErrorAlert("이미 존재하는 닉네임입니다.");
+      } else {
+        ErrorAlert("닉네임 변경에 실패하였습니다.");
+      }
     }
   };
 
-  const handlePasswordChange = () => {
-    if (isPasswordVerified) {
-      if (newPassword !== confirmNewPassword) {
+  //비밀번호 변경
+  const handlePasswordChange = async () => {
+    if (!currentPassword) {
+      setPasswordError("현재 비밀번호를 입력해주세요");
+      return;
+    }
+
+    if (!newPassword) {
+      setPasswordError("새 비밀번호를 입력해주세요");
+      return;
+    }
+
+    if (newPassword.length < 8 || newPassword.length > 20) {
+      setPasswordError("비밀번호는 8자 이상 20자 이하여야 합니다");
+      return;
+    }
+
+    if (!confirmPassword) {
+      setPasswordError("새 비밀번호 확인을 입력해주세요");
+      return;
+    }
+
+    if (isChangingPassword) {
+      if (newPassword !== confirmPassword) {
         setPasswordError("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
         return;
       }
 
-      setPasswordError("");
-      alert("비밀번호가 변경되었습니다.");
-      setPassword("");
-      setNewPassword("");
-      setConfirmNewPassword("");
-      setIsPasswordVerified(false);
+      try {
+        const res = await mainApi({
+          url: API.USER.PASSWORD_UPDATE,
+          method: "PUT",
+          data: {
+            currentPassword,
+            newPassword,
+            confirmPassword,
+          },
+          withAuth: true,
+        });
+
+        if (res.status === 200) {
+          setPasswordError("");
+          setCurrentPassword("");
+          setNewPassword("");
+          setConfirmPassword("");
+          setIsChangingPassword(false);
+          SuccessAlert("비밀번호가 변경되었습니다.");
+        }
+      } catch (e) {
+        if (e.status === 400) {
+          setPasswordError("현재 비밀번호가 일치하지 않습니다.");
+        } else if (e.status === 422) {
+          setPasswordError("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        } else if (e.status === 404) {
+          setPasswordError("유저를 찾을 수 없습니다.");
+        } else {
+          setPasswordError("비밀번호 변경에 실패하였습니다");
+        }
+      }
+    }
+  };
+
+  //회원탈퇴
+  const handleUserDelete = async () => {
+    if (window.confirm("정말로 계정을 탈퇴하시겠습니까?")) {
+      try {
+        const res = await mainApi({
+          url: API.USER.USER_DELETE,
+          method: "DELETE",
+          withAuth: true,
+        });
+
+        if (res.status === 200) {
+          SuccessAlert("회원탈퇴가 완료되었습니다.");
+
+          setTimeout(() => {
+            router.push("/");
+          }, 1200);
+        }
+      } catch (e) {
+        if (e.status === 404) {
+          ErrorAlert("유저를 찾을 수 없습니다.");
+        } else {
+          ErrorAlert("회원탈퇴에 실패하였습니다.");
+        }
+      }
     }
   };
 
@@ -79,12 +181,6 @@ const MyPage = () => {
         post.id === id ? { ...post, isChecked: !post.isChecked } : post
       )
     );
-  };
-
-  const handleAccountDeletion = () => {
-    if (window.confirm("정말로 계정을 탈퇴하시겠습니까?")) {
-      alert("계정이 탈퇴되었습니다.");
-    }
   };
 
   return (
@@ -98,27 +194,52 @@ const MyPage = () => {
           {/* 닉변 */}
           <div className="p-3">
             <label className="block text-gray-700">닉네임</label>
-            {isEditingNickname ? (
+            {isEditingName ? (
               <div className="flex items-center space-x-2">
                 <Input
                   type="text"
                   name="nickname"
-                  value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
+                  value={name}
+                  className="pl-2"
+                  onChange={(e) => setName(e.target.value)}
                 />
                 <Button
-                  className="bg-[#36A42C] hover:bg-[#3CB731] text-white"
-                  onClick={handleNicknameSave}
+                  style={{
+                    hoverColor: "hover:bg-[#3CB731]",
+                    backgroundColor: "bg-[#6AC662]",
+                    textSize: "text-sm",
+                    padding: "px-3 py-1",
+                  }}
+                  onClick={handleNameChange}
                 >
                   저장
+                </Button>
+                <Button
+                  style={{
+                    hoverColor: "hover:bg-[#FF3A3E]",
+                    backgroundColor: "bg-[#E03437]",
+                    textSize: "text-sm",
+                    padding: "px-3 py-1",
+                  }}
+                  onClick={() => {
+                    setIsEditingName(false);
+                    setName(user?.name || "알 수 없는 사용자");
+                  }}
+                >
+                  닫기
                 </Button>
               </div>
             ) : (
               <div className="flex items-center space-x-2">
-                <span>{nickname}</span>
+                <span>{name || "알 수 없는 사용자"}</span>
                 <Button
-                  className="bg-[#36A42C] hover:bg-[#3CB731] text-white"
-                  onClick={handleNicknameEdit}
+                  style={{
+                    hoverColor: "hover:bg-[#3CB731]",
+                    backgroundColor: "bg-[#6AC662]",
+                    textSize: "text-sm",
+                    padding: "px-3 py-1",
+                  }}
+                  onClick={() => setIsEditingName(true)}
                 >
                   <MdEdit className="w-5 h-auto" />
                 </Button>
@@ -126,70 +247,88 @@ const MyPage = () => {
             )}
           </div>
 
-          {/* 비밀번호 */}
+          {/* 비밀번호 변경 */}
           <div className="p-3">
-            <label className="block text-gray-700">비밀번호 인증</label>
-            <div className="flex items-center space-x-2">
-              <Input
-                type="password"
-                name="password"
-                placeholder="현재 비밀번호"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+            <label className="block text-gray-700">비밀번호 변경</label>
+            {!isChangingPassword ? (
               <Button
-                className="bg-[#36A42C] hover:bg-[#3CB731] text-white"
-                onClick={handlePasswordVerification}
+                style={{
+                  hoverColor: "hover:bg-[#3CB731]",
+                  backgroundColor: "bg-[#6AC662]",
+                  textSize: "text-sm",
+                  padding: "px-3 py-1",
+                }}
+                onClick={() => setIsChangingPassword(true)}
               >
-                확인
+                비밀번호 변경
               </Button>
-            </div>
-          </div>
-
-          {isPasswordVerified && (
-            <div className="p-3">
-              <label className="block text-gray-700">새 비밀번호</label>
-              <div className="flex items-center space-x-2">
+            ) : (
+              <div className="flex flex-col space-y-2">
                 <Input
                   type="password"
                   name="password"
+                  placeholder="현재 비밀번호"
+                  value={currentPassword}
+                  className="pl-2"
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                />
+                <Input
+                  type="password"
+                  name="newPassword"
                   placeholder="새 비밀번호"
                   value={newPassword}
+                  className="pl-2"
                   onChange={(e) => setNewPassword(e.target.value)}
                 />
-              </div>
-
-              <label className="block text-gray-700 mt-3">
-                새 비밀번호 확인
-              </label>
-              <div className="flex items-center space-x-2">
                 <Input
                   type="password"
                   name="confirmPassword"
                   placeholder="새 비밀번호 확인"
-                  value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  value={confirmPassword}
+                  className="pl-2"
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
+                {passwordError && (
+                  <p className="text-red-500 text-sm">{passwordError}</p>
+                )}
+                <div className="flex justify-center gap-2">
+                  <Button
+                    style={{
+                      hoverColor: "hover:bg-[#3CB731]",
+                      backgroundColor: "bg-[#6AC662]",
+                      textSize: "text-sm",
+                      padding: "px-3 py-1",
+                    }}
+                    onClick={handlePasswordChange}
+                  >
+                    변경
+                  </Button>
+                  <Button
+                    style={{
+                      hoverColor: "hover:bg-[#FF3A3E]",
+                      backgroundColor: "bg-[#E03437]",
+                      textSize: "text-sm",
+                      padding: "px-3 py-1",
+                    }}
+                    onClick={() => {
+                      setIsChangingPassword(false);
+                      setCurrentPassword("");
+                      setNewPassword("");
+                      setConfirmPassword("");
+                    }}
+                  >
+                    닫기
+                  </Button>
+                </div>
               </div>
-
-              {passwordError && (
-                <p className="text-red-500 text-sm mt-1">{passwordError}</p>
-              )}
-
-              <Button
-                className="bg-[#36A42C] hover:bg-[#3CB731] text-white mt-4"
-                onClick={handlePasswordChange}
-              >
-                변경
-              </Button>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* 탈퇴하기 버튼 */}
           <div className="absolute bottom-4 right-4">
             <Button
-              className="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2"
-              onClick={handleAccountDeletion}
+              className="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1"
+              onClick={handleUserDelete}
             >
               탈퇴하기
             </Button>
