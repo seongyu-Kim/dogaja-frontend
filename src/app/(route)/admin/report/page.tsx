@@ -43,6 +43,7 @@ export default function ReportPage() {
     );
     if (deletePostConfirm) {
       const res = await deletePost(postId);
+      await deleteReport(id);
       if (res === 200) {
         SuccessAlert("게시글 삭제 성공");
         return;
@@ -103,10 +104,23 @@ export default function ReportPage() {
                       </div>
                     </Link>
                     <div className="flex absolute right-0 gap-2">
-                      <Button onClick={() => handlePostDelete(id, postID)}>
+                      <Button
+                        onClick={() => handlePostDelete(id, postID)}
+                        style={{
+                          backgroundColor: "bg-mainRed",
+                          hoverColor: "hover:bg-mainRedHover",
+                        }}
+                        className="z-40"
+                      >
                         게시글 삭제
                       </Button>
-                      <Button onClick={() => handleReportDelete(id)}>
+                      <Button
+                        onClick={() => handleReportDelete(id)}
+                        style={{
+                          backgroundColor: "bg-mainRed",
+                          hoverColor: "hover:bg-mainRedHover",
+                        }}
+                      >
                         신고 목록에서 삭제
                       </Button>
                     </div>
