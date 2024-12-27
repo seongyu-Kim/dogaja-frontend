@@ -3,13 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  FaRegListAlt,
-  FaRegUser,
-  FaRegCalendarAlt,
-} from "react-icons/fa";
-import { FaCompass  } from "react-icons/fa6";
-
+import { FaRegListAlt, FaRegUser, FaRegCalendarAlt } from "react-icons/fa";
+import { FaCompass } from "react-icons/fa6";
 
 export default function Sidebar() {
   const [isBoardOpen, setIsBoardOpen] = useState(false);
@@ -24,14 +19,14 @@ export default function Sidebar() {
     <aside className="w-20 border-r-4 border-mainColor text-mainColor h-auto">
       <ul className="flex flex-col text-center text-xs">
         {pathname !== "/dashboard" && (
-        <li className="mt-4 p-2 pb-2 hover:underline hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out">
-          <Link href="/dashboard" className="flex flex-col items-center">
-            <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
-              <FaCompass  className="text-xl" />
-            </div>
-          </Link>
-          장소 정보 보기
-        </li>
+          <li className="mt-4 p-2 pb-2 hover:underline hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out">
+            <Link href="/dashboard" className="flex flex-col items-center">
+              <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
+                <FaCompass className="text-xl" />
+              </div>
+            </Link>
+            장소 정보 보기
+          </li>
         )}
 
         {/* 게시판 */}
@@ -48,6 +43,9 @@ export default function Sidebar() {
           {/* 하위 목록 */}
           {isBoardOpen && (
             <ul className="mt-2.5 text-center text-xs">
+              <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
+                <Link href="/board">둘러보기</Link>
+              </li>
               <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
                 <Link href="/board/friend">친구 구함</Link>
               </li>

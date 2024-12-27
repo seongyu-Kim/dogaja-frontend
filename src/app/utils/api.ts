@@ -25,7 +25,7 @@ export const API = {
   BOARD: {
     BOARD_ALL_GET: `${BASE_URL}/post`,
     BOARD_FRIEND_GET: `${BASE_URL}/post/friend`,
-    BOARD_ASK_GET: `${BASE_URL}/ask`,
+    BOARD_ASK_GET: `${BASE_URL}/post/ask`,
     BOARD_REVIEW_GET: `${BASE_URL}/post/review`,
     BOARD_WITH_GET: `${BASE_URL}/post/with`,
     POST_CREATE: `${BASE_URL}/post/create`,
