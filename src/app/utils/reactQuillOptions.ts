@@ -1,4 +1,6 @@
 import Quill from "quill";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import ImageResize from "quill-image-resize";
 import { storage } from "../../../firebaseConfig"; // Firebase 초기화 파일 경로
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -41,9 +43,6 @@ const imageHandler = () => {
 
       uploadTask.on(
         "state_changed",
-        (snapshot) => {
-          // 업로드 상태에 대한 처리 (선택 사항)
-        },
         (error) => {
           console.error("업로드 실패:", error);
         },

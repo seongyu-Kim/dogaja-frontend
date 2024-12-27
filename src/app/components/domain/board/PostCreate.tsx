@@ -56,7 +56,6 @@ export default function PostCreate() {
       >
         <div className="border-b border-gray-400 pb-2 w-full flex flex-col items-center justify-center">
           <p className="text-3xl">글 작성</p>
-          <p className="break-all">{content}</p>
         </div>
         <div className="flex flex-col my-10 gap-5">
           <div className="flex items-center justify-center gap-3 mb-2">
