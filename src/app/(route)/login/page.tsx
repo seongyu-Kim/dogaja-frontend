@@ -10,12 +10,14 @@ import { useRouter } from "next/navigation";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { SuccessAlert } from "@/app/utils/toastAlert";
+import { useUserStore } from "@/app/store/userStore";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { fetchUser } = useUserStore();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,6 +53,7 @@ const Login: React.FC = () => {
       if (res.status === 201) {
         SuccessAlert("로그인 성공");
         localStorage.setItem("token", res.data.accessToken);
+        await fetchUser();
         router.push("/dashboard");
       }
     } catch (e) {
