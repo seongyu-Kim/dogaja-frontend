@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { FaArrowAltCircleLeft, FaComments } from "react-icons/fa";
 import Button from "@/app/components/common/Button";
-import CommentList from "@/app/components/domain/board/CommentList";
 import CommentCreate from "@/app/components/domain/board/CommentCreate";
 import DOMPurify from "isomorphic-dompurify";
-import { CommentType } from "@/app/type/boardListType";
 import BoardDetailViewButtonBox from "@/app/components/domain/board/BoardDetailViewButtonBox";
 import { readPost } from "@/app/actions";
 import NickNameBox from "@/app/components/domain/board/NickNameBox";
+import CommentArea from "@/app/components/domain/board/CommentArea";
 
 export default async function BoardDetailView({
   postId,
@@ -48,10 +47,9 @@ export default async function BoardDetailView({
           <ContentArea title={title} content={content} name={name} />
         </div>
         <div>
-          <BoardDetailViewButtonBox postId={String(id)} />
+          <BoardDetailViewButtonBox postId={String(id)} name={name} />
         </div>
-        <CommentArea list={comment} />
-        <CommentCreate id={postId} />
+        <CommentArea list={comment} postId={postId} />
       </div>
     </div>
   );
@@ -83,22 +81,5 @@ function ContentArea({
         />
       </div>
     </>
-  );
-}
-// 댓글 영역
-function CommentArea({ list }: { list: CommentType[] }) {
-  const defaultCommentList = list.filter(
-    (item) => item.id !== null && item.id !== undefined && item.user.name,
-  );
-  return (
-    <div className="flex flex-col gap-3 border-b border-gray-400 pb-6">
-      <div className="flex gap-3 items-center">
-        <FaComments className="w-[35px] h-[35px] text-gray-400" />
-        <p>{defaultCommentList.length} 댓글</p>
-      </div>
-      <div>
-        <CommentList list={defaultCommentList} />
-      </div>
-    </div>
   );
 }
