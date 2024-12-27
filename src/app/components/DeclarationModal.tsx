@@ -12,10 +12,16 @@ interface DeclarationModalProps {
   reportId: string;
 }
 
-const DeclarationModal: React.FC<DeclarationModalProps> = ({ isOpen, onClose, reportId }) => {
+const DeclarationModal: React.FC<DeclarationModalProps> = ({
+  isOpen,
+  onClose,
+  reportId,
+}) => {
   const [reportReason, setReportReason] = useState("");
 
-  const handleInputChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+  const handleInputChange: React.ChangeEventHandler<HTMLTextAreaElement> = (
+    e,
+  ) => {
     setReportReason(e.target.value);
   };
 
@@ -32,12 +38,13 @@ const DeclarationModal: React.FC<DeclarationModalProps> = ({ isOpen, onClose, re
         url: REPORT_CREATE,
         method: "POST",
         data: { reason: reportReason },
+        withAuth: true,
       });
 
-      if (res.status === 200) {
+      if (res.status === 201) {
         SuccessAlert("신고가 접수되었습니다.");
         onClose();
-      } 
+      }
     } catch (e) {
       console.error(e);
       ErrorAlert("신고 접수가 실패되었습니다.");
@@ -51,10 +58,10 @@ const DeclarationModal: React.FC<DeclarationModalProps> = ({ isOpen, onClose, re
   }, [isOpen]);
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onClose={onClose} 
-      title="신고 내용" 
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="신고 내용"
       explanation="해당 게시물을 신고하시겠습니까?"
     >
       <textarea
@@ -72,7 +79,7 @@ const DeclarationModal: React.FC<DeclarationModalProps> = ({ isOpen, onClose, re
           backgroundColor: "bg-mainRed",
           hoverColor: "hover:bg-mainRedHover",
         }}
-        >
+      >
         신고
       </Button>
     </Modal>

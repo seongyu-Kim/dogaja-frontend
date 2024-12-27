@@ -71,7 +71,11 @@ export default function BoardDetailViewButtonBox({
           </>
         )}
       </div>
-      <DeclarationModal isOpen={reportModal} onClose={handleCloseModal} />
+      <DeclarationModal
+        isOpen={reportModal}
+        onClose={handleCloseModal}
+        reportId={postId}
+      />
     </div>
   );
 }
