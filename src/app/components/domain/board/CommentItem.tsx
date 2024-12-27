@@ -81,7 +81,7 @@ export default function CommentItem({
         {isOwnComment && (
           <div>
             {loginUser &&
-              (loginUser.name === user.name || loginUser.admin) &&
+              (loginUser.admin || loginUser.name === user.name) &&
               (!editing ? (
                 <div className="flex items-center gap-2 mr-2">
                   <button className="text-sm" onClick={() => onEditClick(id)}>
