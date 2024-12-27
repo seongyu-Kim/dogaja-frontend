@@ -8,6 +8,8 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { BoardPropTypes } from "@/app/type/commonBoardPropType";
 import { BoardListType } from "@/app/type/boardListType";
 
+const itemsPerPage = 10;
+
 export default function Board({
   name,
   list,
@@ -17,12 +19,10 @@ export default function Board({
   const searchParams = useSearchParams();
   const boardPath = usePathname();
   const router = useRouter();
-  const itemsPerPage = 10;
 
   const totalPages = list ? Math.ceil(list.length / itemsPerPage) : 0;
 
   const [currentPage, setCurrentPage] = useState<number>(1);
-  //임시 타입 추후 배열에 맞게 변경
   const [currentItems, setCurrentItems] = useState<BoardListType[]>([]);
 
   useEffect(() => {
