@@ -111,7 +111,7 @@ export default function MySchedulePage() {
         <div className="flex items-center justify-between">
           <p className="text-3xl">일정 관리</p>
           {/*임시 추후 일정 생성 create 페이지로 이동*/}
-          <Link href="/">
+          <Link href="/my-schedule/planner">
             <Button
               style={{
                 backgroundColor: "bg-mainColor",
