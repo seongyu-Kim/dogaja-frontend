@@ -22,13 +22,12 @@ export default function CommentList({ list }: ListProps) {
     setEditingCommentId(null); // 수정 취소 시 상태 초기화
   };
 
-  if (!list) {
-    return <p>댓글이 없습니다.</p>;
+  if (list.length === 0) {
+    return <p className="text-center">댓글이 없습니다.</p>;
   }
 
   return (
     <main className="w-[300px] md:w-auto">
-      <p>{}</p>
       <ul className="flex flex-col items-center justify-center w-full">
         {list.map((item) => {
           const { id, content, user } = item;
