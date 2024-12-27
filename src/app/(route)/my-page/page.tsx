@@ -84,6 +84,7 @@ const MyPage = () => {
         ErrorAlert("닉네임 변경에 실패하였습니다.");
       }
     }
+  };
 
   //비밀번호 변경
   const handlePasswordChange = async () => {
