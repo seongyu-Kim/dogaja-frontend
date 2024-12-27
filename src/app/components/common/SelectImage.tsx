@@ -48,8 +48,8 @@ export default function SelectImage({
 
   return (
     //  임시 추후 바로 아래 div w h 옵션 auto로 조정
-    <div className="flex flex-col gap-2 w-full max-h-[400px] border rounded-lg p-3 text-center overflow-hidden">
-      <div className="pb-3 border-b border-gray-400 w-full flex items-start gap-2 flex-grow">
+    <div className="flex flex-col gap-2 w-full min-h-44 max-w-32 min-w-20 border rounded-lg p-1.5 text-center overflow-hidden">
+      <div className="pb-1 border-b border-gray-400 w-full flex items-start flex-grow">
         <div className="w-full h-full flex flex-col items-center justify-center gap-1">
           {imageFile ? (
             <div className="w-full flex items-center justify-center">
@@ -73,7 +73,7 @@ export default function SelectImage({
           </div>
         )}
       </div>
-      <div className="flex-shrink-0 mt-2">
+      <div className="flex-shrink-0">
         <ButtonBox onChange={handleImageChange} />
       </div>
     </div>
@@ -87,13 +87,13 @@ function ButtonBox({
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
-    <div className="w-full flex justify-center gap-2">
+    <div className="w-full flex justify-center">
       <div className="flex items-center justify-center">
         <label
           htmlFor="fileSelectImage"
           className="bg-mainColor text-white w-auto p-1 rounded-lg text-xs hover:bg-mainHover cursor-pointer"
         >
-          이미지 선택
+          업로드
         </label>
         <input
           id="fileSelectImage"

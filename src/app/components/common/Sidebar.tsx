@@ -72,7 +72,7 @@ export default function Sidebar() {
         </li>
 
         <li className="p-2 mt-4 hover:underline hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out">
-          <Link href="/schedule" className="flex flex-col items-center">
+          <Link href="/my-schedule" className="flex flex-col items-center">
             <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
               <FaRegCalendarAlt className="text-xl" />
             </div>
