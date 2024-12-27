@@ -158,6 +158,7 @@ const MyPage = () => {
         });
 
         if (res.status === 200) {
+          localStorage.removeItem("token");
           SuccessAlert("회원탈퇴가 완료되었습니다.");
 
           setTimeout(() => {
