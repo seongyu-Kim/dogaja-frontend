@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CommentUpdate from "@/app/components/domain/board/CommentUpdate";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import { deleteComment, updateComment } from "@/app/utils/boardApi";
+import NickNameBox from "@/app/components/domain/board/NickNameBox";
 
 interface CommentItemProps {
   id: number;
@@ -46,6 +47,10 @@ export default function CommentItem({
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!updateContent) {
+      ErrorAlert("필드를 채워주세요");
+      return;
+    }
     const formData = new FormData(e.target as HTMLFormElement);
     const res = await updateComment(formData, commentId, postId);
     if (res === 200) {
@@ -63,8 +68,8 @@ export default function CommentItem({
 
   return (
     <li className="w-full p-2 mb-5">
-      <div className="flex items-center justify-between bg-gray-300 p-1 rounded-[4px] break-words w-full">
-        <p className="text-sm">{user.name}</p>
+      <div className="flex items-center justify-between bg-gray-300 p-1 rounded-[4px] break-all w-full">
+        <NickNameBox name={user.name} />
         {isOwnComment && (
           <div>
             {!editing ? (
@@ -90,7 +95,7 @@ export default function CommentItem({
           </div>
         )}
       </div>
-      <div className="py-1 break-words">
+      <div className="py-1 break-all">
         {editing ? (
           <CommentUpdate
             value={updateContent}
@@ -98,7 +103,7 @@ export default function CommentItem({
             onSubmit={handleSubmit}
           />
         ) : (
-          <p className="text-sm">{content}</p>
+          <p className="text-sm whitespace-pre-wrap">{content}</p>
         )}
       </div>
     </li>

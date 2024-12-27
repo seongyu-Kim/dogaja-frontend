@@ -25,13 +25,20 @@ export const API = {
   BOARD: {
     BOARD_ALL_GET: `${BASE_URL}/post`,
     BOARD_FRIEND_GET: `${BASE_URL}/post/friend`,
-    BOARD_ASK_GET: `${BASE_URL}/ask`,
+    BOARD_ASK_GET: `${BASE_URL}/post/ask`,
     BOARD_REVIEW_GET: `${BASE_URL}/post/review`,
     BOARD_WITH_GET: `${BASE_URL}/post/with`,
     POST_CREATE: `${BASE_URL}/post/create`,
     POST_READ: (id: string) => `${BASE_URL}/post/${id}`,
     POST_UPDATE: (id: string) => `${BASE_URL}/post/${id}`,
     POST_DELETE: (id: string) => `${BASE_URL}/post/${id}`,
+  },
+  FRIENDS: {
+    FRIENDS_REQUEST_GET: `${BASE_URL}/friends/requests/received`,
+    FRIENDS_LIST_GET: `${BASE_URL}/friends/list`,
+    FRIENDS_REQUEST_POST: `${BASE_URL}/friends/request`,
+    FRIENDS_REQUEST_PATCH: `${BASE_URL}/friends/requests/{id}/respond`,
+    FRIENDS_DELETE: `${BASE_URL}/friends/{friendId}`,
   },
   COMMENT: {
     COMMENT_CREATE: (id: string) => `${BASE_URL}/comment/${id}`,

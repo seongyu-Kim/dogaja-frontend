@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import Button from "./common/Button";
+
+import { API } from "@/app/utils/api";
+import { mainApi } from "@/app/utils/mainApi";
+import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 
 interface Friend {
   id: number;
@@ -23,23 +27,65 @@ const RequestModal: React.FC<RequestModalProps> = ({
   userId,
 }) => {
 
-  const friends: Friend[] = [
-    { id: 1, name: "엘리스" },
-    { id: 2, name: "김토끼" },
-    { id: 3, name: "이토끼" },
-    { id: 4, name: "박토끼" },
-    { id: 5, name: "최토끼" },
-  ];
+  const [friends, setFriends] = useState<Friend[]>([]);
+    
+  useEffect(() => {
+    if (isOpen) {
+      getFriendRequests();
+    }
+  }, [isOpen]);
+
+  const getFriendRequests = async () => {
+    const { FRIENDS_REQUEST_GET } = API.FRIENDS;
+    try {
+      const res = await mainApi({
+        url: FRIENDS_REQUEST_GET,
+        method: "GET",
+      });
+      if (res.status === 200) {
+        setFriends(res.data.requests);
+      }
+    } catch (e) {
+      console.error(e);
+      ErrorAlert("친구요청 가져오기에 실패했습니다.");
+    }
+  };
+
+  const handleAcceptance = async (id: number) => {
+    const { FRIENDS_REQUEST_PATCH } = API.FRIENDS;
+    try {
+      const res = await mainApi({
+        url: FRIENDS_REQUEST_PATCH,
+        method: "PATCH",
+        data: { status: "accepted" },
+      });
+      if (res.status === 200) {
+        setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== id));
+      }
+    } catch (e) {
+      console.error(e);
+      ErrorAlert("친구요청 수락에 실패했습니다.");
+    }
+  };
+
+  const handleRefusal = async (id: number) => {
+    const { FRIENDS_REQUEST_PATCH } = API.FRIENDS;
+    try {
+      const res = await mainApi({
+        url: FRIENDS_REQUEST_PATCH,
+        method: "PATCH",
+        data: { status: "rejected" },
+      });
+      if (res.status === 200) {
+        setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== id));
+      }
+    } catch (e) {
+      console.error(e);
+      ErrorAlert("친구요청 거절에 실패했습니다.");
+    }
+  };
 
   const filteredFriends = friends.filter(friend => friend.id === userId);
-
-  const handleAcceptance = (id: number) => {
-    console.log(`수락: 친구 ID ${id}`);
-  };
-
-  const handleRefusal = (id: number) => {
-    console.log(`거절: 친구 ID ${id}`);
-  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} explanation={explanation}>

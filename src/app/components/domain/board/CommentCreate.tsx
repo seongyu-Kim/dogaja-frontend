@@ -9,7 +9,6 @@ export default function CommentCreate({ id }: { id: string }) {
   const [content, setcontent] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     await createComment(formData, id);
   };
@@ -27,8 +26,8 @@ export default function CommentCreate({ id }: { id: string }) {
           disabled={!content}
           type="submit"
           style={{
-            backgroundColor: "bg-mainColor",
-            hoverColor: "hover:bg-mainHover",
+            backgroundColor: `${content ? "bg-mainColor" : "bg-gray-400"}`,
+            hoverColor: `${content ? "hover:bg-mainHover" : ""}`,
             height: "h-full",
             width: "w-20",
             padding: "py-2",

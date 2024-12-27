@@ -15,6 +15,7 @@ interface ListProps {
 export default function List({
   list,
   preview = true,
+  boardType,
   detailList = false,
   postId,
 }: ListProps) {
@@ -28,10 +29,11 @@ export default function List({
         {/*image_id는 임시 값 추후 수정*/}
         {list.map(({ id, image_id, title, commentsCount, name }) => {
           const route = usePathname();
+          const path = `${boardType ? `board/${boardType}/${id}` : detailList ? `./${id}` : `${route}/${id}`}`;
 
           return (
             <Link
-              href={`${detailList ? `./${id}` : `${route}/${id}`}`}
+              href={path}
               key={id}
               className={`w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200 ${postId == id ? "bg-gray-300" : ""}`}
             >

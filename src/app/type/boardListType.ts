@@ -22,3 +22,12 @@ export interface CommentType {
     name: string;
   };
 }
+
+export interface ReportListType {
+  id: number;
+  postID: number;
+  title: string;
+  type: string;
+  reason: string;
+  name: string;
+}
