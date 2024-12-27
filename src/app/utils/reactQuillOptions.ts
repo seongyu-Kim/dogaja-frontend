@@ -4,31 +4,10 @@ import Quill from "quill";
 import ImageResize from "quill-image-resize";
 import { storage } from "../../../firebaseConfig"; // Firebase 초기화 파일 경로
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { fileSize } from "@/app/utils/byteToSize";
 
 Quill.register("modules/imageResize", ImageResize);
 
-// const imageHandler = () => {
-//   const input = document.createElement("input");
-//   input.setAttribute("type", "file");
-//   input.setAttribute("accept", "image/*");
-//
-//   input.addEventListener("change", async () => {
-//     const file = input.files?.[0];
-//     if (file) {
-//       // 이미지 업로드를 위한 서버 통신 또는 Base64 처리
-//       const reader = new FileReader();
-//       reader.onload = () => {
-//         const editor = document.querySelector(".ql-editor");
-//         const img = document.createElement("img");
-//         img.setAttribute("src", reader.result as string);
-//         editor?.appendChild(img);
-//       };
-//       reader.readAsDataURL(file);
-//     }
-//   });
-//
-//   input.click();
-// };
 const imageHandler = () => {
   const input = document.createElement("input");
   input.setAttribute("type", "file");
@@ -38,6 +17,10 @@ const imageHandler = () => {
     const file = input.files?.[0];
     if (file) {
       // Firebase Storage에 업로드할 경로 설정
+      if (fileSize.byteToMb(file.size) > 5) {
+        alert("이미지 크기는 5MB를 초과할 수 없습니다.");
+        return;
+      }
       const storageRef = ref(storage, `images/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
