@@ -7,6 +7,7 @@ import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import { deletePost } from "@/app/utils/boardApi";
 import React, { useState } from "react";
 import DeclarationModal from "@/app/components/DeclarationModal";
+import { useRouter } from "next/navigation";
 
 export default function BoardDetailViewButtonBox({
   postId,
@@ -14,6 +15,7 @@ export default function BoardDetailViewButtonBox({
   postId: string;
 }) {
   const [reportModal, setReportModal] = useState(false);
+  const router = useRouter();
 
   const handleOpenModal = () => setReportModal((prev) => !prev);
   const handleCloseModal = () => setReportModal(false);
@@ -23,6 +25,8 @@ export default function BoardDetailViewButtonBox({
       const res = await deletePost(Number(postId));
       if (res === 200) {
         SuccessAlert("게시글이 삭제되었습니다");
+        router.push("./");
+        return;
       }
       if (res !== 200) {
         ErrorAlert("게시글 삭제 실패");
