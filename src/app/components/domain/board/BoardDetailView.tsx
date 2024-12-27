@@ -27,7 +27,7 @@ export default async function BoardDetailView({
   return (
     <div className="flex justify-center">
       <div className="flex flex-col w-[50%] h-auto gap-5 pt-10 px-3 bg-gray-100">
-        <Link href="./">
+        <Link href="./" className="max-w-[10%]">
           <p>{boardTitle}</p>
         </Link>
         <Link href="./" className="flex gap-1 items-center">
