@@ -6,6 +6,8 @@ import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 
+import { FaPlus } from "react-icons/fa";
+
 interface Friend {
   id: number;
   nickname: string;
@@ -126,10 +128,10 @@ const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ i
                   {friend.nickname}
                 </span>
                 <button
-                  className="bg-mainColor text-sm hover:bg-mainHover text-white px-2 py-1 rounded"
+                  className="bg-mainColor text-sm hover:bg-mainHover text-white px-1.5 py-1.5 rounded"
                   onClick={() => handleAddFriend(friend)}
                 >
-                  요청
+                  <FaPlus />
                 </button>
               </li>
             ))}
