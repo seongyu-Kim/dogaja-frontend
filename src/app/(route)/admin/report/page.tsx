@@ -74,50 +74,45 @@ export default function ReportPage() {
             <ul className="flex flex-col items-center justify-center w-full">
               {list.length === 0 && <p>신고 목록이 없습니다</p>}
               {/*image_id는 임시 데이터*/}
-              {list.map(
-                ({ id, postID, image_id, title, type, reason, name }) => {
-                  const category = getBoardTitle(type);
-                  return (
-                    <div
-                      key={id}
-                      className="relative flex justify-between w-full min-h-[100px] max-h-auto py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
-                    >
-                      <Link
-                        href={`/board/${type}/${postID}`}
-                        className="w-full"
-                      >
-                        <div className="w-full flex item-center h-full px-1 gap-1">
-                          <div className="w-[10%] h-full hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
-                            {image_id ? (
-                              <p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기
-                            ) : (
-                              <IoDocumentText className="w-[55px] h-[55px] text-gray-400" />
-                            )}
-                          </div>
-                          <div className="flex w-[59%]">
-                            <div>
-                              <p>
-                                ID : {id} 신고자 : {name}
-                              </p>
-                              <p className="break-all">게시판 : {category}</p>
-                              <p className="break-all">게시물 명 : {title}</p>
-                              <p className="break-all">신고 사유 : {reason}</p>
-                            </div>
+              {list.map(({ id, postID, title, type, reason, name }) => {
+                const category = getBoardTitle(type);
+                return (
+                  <div
+                    key={id}
+                    className="relative flex justify-between w-full min-h-[100px] max-h-auto py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
+                  >
+                    <Link href={`/board/${type}/${postID}`} className="w-full">
+                      <div className="w-full flex item-center h-full px-1 gap-1">
+                        <div className="w-[10%] h-full hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
+                          {/*{image_id ? (*/}
+                          {/*<p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기 */}
+                          {/*} ) : ( */}
+                          <IoDocumentText className="w-[55px] h-[55px] text-gray-400" />
+                          {/*)}*/}
+                        </div>
+                        <div className="flex w-[59%]">
+                          <div>
+                            <p>
+                              ID : {id} 신고자 : {name}
+                            </p>
+                            <p className="break-all">게시판 : {category}</p>
+                            <p className="break-all">게시물 명 : {title}</p>
+                            <p className="break-all">신고 사유 : {reason}</p>
                           </div>
                         </div>
-                      </Link>
-                      <div className="flex absolute right-0 gap-2">
-                        <Button onClick={() => handlePostDelete(id, postID)}>
-                          게시글 삭제
-                        </Button>
-                        <Button onClick={() => handleReportDelete(id)}>
-                          신고 목록에서 삭제
-                        </Button>
                       </div>
+                    </Link>
+                    <div className="flex absolute right-0 gap-2">
+                      <Button onClick={() => handlePostDelete(id, postID)}>
+                        게시글 삭제
+                      </Button>
+                      <Button onClick={() => handleReportDelete(id)}>
+                        신고 목록에서 삭제
+                      </Button>
                     </div>
-                  );
-                },
-              )}
+                  </div>
+                );
+              })}
             </ul>
           </div>
         </main>

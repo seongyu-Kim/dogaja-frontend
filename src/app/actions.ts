@@ -49,10 +49,10 @@ export const getReviewBoardList = async () => {
 };
 //추후 토큰 값 가져와서 사용
 export const getWithBoardList = async () => {
-  const { BOARD_REVIEW_GET } = API.BOARD;
+  const { BOARD_WITH_GET } = API.BOARD;
   try {
     const res = await mainApi({
-      url: BOARD_REVIEW_GET,
+      url: BOARD_WITH_GET,
       method: "GET",
     });
     if (res.status === 200) {
