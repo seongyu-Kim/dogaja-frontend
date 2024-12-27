@@ -7,6 +7,7 @@ import Pagination from "@/app/components/common/Pagination";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { BoardPropTypes } from "@/app/type/commonBoardPropType";
 import { BoardListType } from "@/app/type/boardListType";
+import { useUserStore } from "@/app/store/userStore";
 
 const itemsPerPage = 10;
 
@@ -16,14 +17,13 @@ export default function Board({
   detailList,
   postId,
 }: BoardPropTypes) {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentItems, setCurrentItems] = useState<BoardListType[]>([]);
+  const { user } = useUserStore();
   const searchParams = useSearchParams();
   const boardPath = usePathname();
   const router = useRouter();
-
   const totalPages = list ? Math.ceil(list.length / itemsPerPage) : 0;
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [currentItems, setCurrentItems] = useState<BoardListType[]>([]);
 
   useEffect(() => {
     // 쿼리 파라미터에서 'page' 값을 가져와서 currentPage를 설정
@@ -63,9 +63,11 @@ export default function Board({
         ) : (
           <p className="text-center">게시글이 없습니다</p>
         )}
-        <div className="mt-2 flex justify-end">
-          <PathToCreate />
-        </div>
+        {user && (
+          <div className="mt-2 flex justify-end">
+            <PathToCreate />
+          </div>
+        )}
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
