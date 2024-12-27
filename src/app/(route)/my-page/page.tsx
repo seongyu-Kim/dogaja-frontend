@@ -8,7 +8,8 @@ import Button from "@/app/components/common/Button";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { useUserStore } from "@/app/store/userStore";
-import { SuccessAlert } from "@/app/utils/toastAlert";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { useRouter } from "next/navigation";
 
 const myPosts = [
   { id: 1, title: "대방어 먹고싶다", content: "서울 대방어 맛집 소개" },
@@ -45,6 +46,7 @@ const MyPage = () => {
   const [passwordError, setPasswordError] = useState<string>("");
   const [favoritePosts, setFavoritePosts] = useState(initialFavoritePosts);
 
+  const router = useRouter();
   const { user, fetchUser } = useUserStore();
 
   useEffect(() => {
@@ -58,9 +60,30 @@ const MyPage = () => {
   }, [user]);
 
   //닉변
-  // const handleNameChange = async () => {
+  const handleNameChange = async () => {
+    try {
+      const res = await mainApi({
+        url: API.USER.NAME_UPDATE,
+        method: "PUT",
+        data: { name },
+        withAuth: true,
+      });
 
-  // }
+      if (res.status === 200) {
+        setIsEditingName(false);
+        await fetchUser();
+        SuccessAlert("닉네임이 변경되었습니다.");
+      }
+    } catch (e) {
+      console.log(e);
+      if (e.status === 404) {
+        ErrorAlert("유저를 찾을 수 없습니다.");
+      } else if (e.status === 409) {
+        ErrorAlert("이미 존재하는 닉네임입니다.");
+      } else {
+        ErrorAlert("닉네임 변경에 실패하였습니다.");
+      }
+    }
 
   //비밀번호 변경
   const handlePasswordChange = async () => {
@@ -124,18 +147,40 @@ const MyPage = () => {
     }
   };
 
+  //회원탈퇴
+  const handleUserDelete = async () => {
+    if (window.confirm("정말로 계정을 탈퇴하시겠습니까?")) {
+      try {
+        const res = await mainApi({
+          url: API.USER.USER_DELETE,
+          method: "DELETE",
+          withAuth: true,
+        });
+
+        if (res.status === 200) {
+          localStorage.removeItem("token");
+          SuccessAlert("회원탈퇴가 완료되었습니다.");
+
+          setTimeout(() => {
+            router.push("/");
+          }, 1200);
+        }
+      } catch (e) {
+        if (e.status === 404) {
+          ErrorAlert("유저를 찾을 수 없습니다.");
+        } else {
+          ErrorAlert("회원탈퇴에 실패하였습니다.");
+        }
+      }
+    }
+  };
+
   const toggleFavoriteChecked = (id: number) => {
     setFavoritePosts((prevPosts) =>
       prevPosts.map((post) =>
         post.id === id ? { ...post, isChecked: !post.isChecked } : post
       )
     );
-  };
-
-  const handleAccountDeletion = () => {
-    if (window.confirm("정말로 계정을 탈퇴하시겠습니까?")) {
-      alert("계정이 탈퇴되었습니다.");
-    }
   };
 
   return (
@@ -165,7 +210,7 @@ const MyPage = () => {
                     textSize: "text-sm",
                     padding: "px-3 py-1",
                   }}
-                  onClick={() => setIsEditingName(false)}
+                  onClick={handleNameChange}
                 >
                   저장
                 </Button>
@@ -283,7 +328,7 @@ const MyPage = () => {
           <div className="absolute bottom-4 right-4">
             <Button
               className="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1"
-              onClick={handleAccountDeletion}
+              onClick={handleUserDelete}
             >
               탈퇴하기
             </Button>
