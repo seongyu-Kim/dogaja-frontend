@@ -26,18 +26,30 @@ const imageHandler = () => {
 
       uploadTask.on(
         "state_changed",
+        null, // 진행 상태를 처리할 콜백 (필요 없으면 null로 설정)
         (error) => {
-          console.error("업로드 실패:", error);
+          console.error("업로드 실패:", error); // 에러 처리
         },
-        () => {
-          // 업로드 완료 후 퍼블릭 URL 가져오기
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        async () => {
+          try {
+            // 업로드 완료 후 다운로드 URL 가져오기
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            // console.log("다운로드 URL:", downloadURL);
+
+            // 에디터에 이미지 삽입
             const editor = document.querySelector(".ql-editor");
+            if (!editor) {
+              console.error("에디터 요소를 찾을 수 없습니다.");
+              return;
+            }
+
             const img = document.createElement("img");
-            img.setAttribute("src", downloadURL); // Firebase에서 제공하는 URL
+            img.setAttribute("src", downloadURL);
             img.setAttribute("style", "max-width: 100%; height: auto;");
-            editor?.appendChild(img); // 에디터에 이미지 삽입
-          });
+            editor.appendChild(img);
+          } catch (err) {
+            console.error("다운로드 URL 가져오기 실패:", err);
+          }
         },
       );
     }

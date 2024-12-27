@@ -36,7 +36,6 @@ export default function PostCreate() {
     const formData = new FormData(e.target as HTMLFormElement);
     formData.append("content", content);
     const res = await createPost(formData, boardType as string);
-    console.log("123", res);
     if (!res) return;
     if (res.status === 201) {
       SuccessAlert("게시글 생성 성공");
