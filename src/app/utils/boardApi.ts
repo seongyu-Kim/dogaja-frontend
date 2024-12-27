@@ -70,12 +70,15 @@ export const deletePost = async (id: number) => {
 export const createComment = async (formData: FormData, id: string) => {
   const { COMMENT_CREATE } = API.COMMENT;
   try {
-    await mainApi({
+    const res = await mainApi({
       url: COMMENT_CREATE(id),
       method: "POST",
       data: { content: formData.get("content") as string },
       withAuth: true,
     });
+    if (res.status === 201) {
+      return res.status;
+    }
   } catch (e) {
     console.error(e);
   }

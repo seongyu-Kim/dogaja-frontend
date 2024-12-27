@@ -10,13 +10,43 @@ import { useEffect, useState } from "react";
 import { ReportListType } from "@/app/type/boardListType";
 import { deletePost, deleteReport } from "@/app/utils/boardApi";
 import getBoardTitle from "@/app/utils/getBoardTitle";
+import Pagination from "@/app/components/common/Pagination";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+const itemsPerPage = 10;
 
 export default function ReportPage() {
   const [list, setList] = useState<ReportListType[]>([]);
 
+  const searchParams = useSearchParams();
+  const boardPath = usePathname();
+  const router = useRouter();
+  const totalPages = list ? Math.ceil(list.length / itemsPerPage) : 0;
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentItems, setCurrentItems] = useState<ReportListType[]>([]);
+
   useEffect(() => {
     getReportList();
   }, []);
+
+  useEffect(() => {
+    // 쿼리 파라미터에서 'page' 값을 가져와서 currentPage를 설정
+    const page = parseInt(searchParams.get("page") || "1");
+    if (page !== currentPage) {
+      setCurrentPage(page);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const newCurrentItems = list
+      ? list.slice(indexOfFirstItem, indexOfLastItem)
+      : [];
+    setCurrentItems(newCurrentItems);
+  }, [currentPage, list]);
+
+  ////
 
   //신고 게시판 목록 불러오기
   const getReportList = async () => {
@@ -37,14 +67,29 @@ export default function ReportPage() {
     }
   };
 
+  // 페이지 변경 시 URL 업데이트
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      if (boardPath.split("/").length === 3) {
+        router.push(`${boardPath}?page=${page}`);
+        return;
+      }
+      router.push(
+        `${boardPath.split("/").slice(0, -1).join("/")}?page=${page}`,
+      );
+    }
+  };
+
   const handlePostDelete = async (id: number, postId: number) => {
     const deletePostConfirm = confirm(
       `ID:${id}번 해당 게시물을 삭제하시겠습니까?`,
     );
     if (deletePostConfirm) {
       const res = await deletePost(postId);
+      await deleteReport(id);
       if (res === 200) {
         SuccessAlert("게시글 삭제 성공");
+        setList((prevList) => prevList.filter((item) => item.id !== id));
         return;
       }
       ErrorAlert("게시글 삭제 실패");
@@ -59,6 +104,7 @@ export default function ReportPage() {
       const res = await deleteReport(id);
       if (res === 200) {
         SuccessAlert("신고 삭제 성공");
+        setList((prevList) => prevList.filter((item) => item.id !== id));
         return;
       }
       ErrorAlert("신고 삭제 실패");
@@ -72,9 +118,9 @@ export default function ReportPage() {
         <main className="w-full">
           <div className="w-[300px] md:w-auto">
             <ul className="flex flex-col items-center justify-center w-full">
-              {list.length === 0 && <p>신고 목록이 없습니다</p>}
+              {currentItems.length === 0 && <p>신고 목록이 없습니다</p>}
               {/*image_id는 임시 데이터*/}
-              {list.map(({ id, postID, title, type, reason, name }) => {
+              {currentItems.map(({ id, postID, title, type, reason, name }) => {
                 const category = getBoardTitle(type);
                 return (
                   <div
@@ -103,10 +149,23 @@ export default function ReportPage() {
                       </div>
                     </Link>
                     <div className="flex absolute right-0 gap-2">
-                      <Button onClick={() => handlePostDelete(id, postID)}>
+                      <Button
+                        onClick={() => handlePostDelete(id, postID)}
+                        style={{
+                          backgroundColor: "bg-mainRed",
+                          hoverColor: "hover:bg-mainRedHover",
+                        }}
+                        className="z-40"
+                      >
                         게시글 삭제
                       </Button>
-                      <Button onClick={() => handleReportDelete(id)}>
+                      <Button
+                        onClick={() => handleReportDelete(id)}
+                        style={{
+                          backgroundColor: "bg-mainRed",
+                          hoverColor: "hover:bg-mainRedHover",
+                        }}
+                      >
                         신고 목록에서 삭제
                       </Button>
                     </div>
@@ -115,6 +174,11 @@ export default function ReportPage() {
               })}
             </ul>
           </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+          />
         </main>
       </div>
     </div>

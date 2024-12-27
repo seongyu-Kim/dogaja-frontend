@@ -3,6 +3,7 @@ import CommentUpdate from "@/app/components/domain/board/CommentUpdate";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import { deleteComment, updateComment } from "@/app/utils/boardApi";
 import NickNameBox from "@/app/components/domain/board/NickNameBox";
+import { useRouter } from "next/navigation";
 
 interface CommentItemProps {
   id: number;
@@ -27,6 +28,7 @@ export default function CommentItem({
   onCancelEdit,
 }: CommentItemProps) {
   const [updateContent, setUpdateContent] = useState<string>(content);
+  const router = useRouter();
   const commentId = String(id);
 
   const handleDeleteClick = async () => {
@@ -35,6 +37,8 @@ export default function CommentItem({
       const res = await deleteComment(commentId, postId);
       if (res === 200) {
         SuccessAlert("댓글이 삭제되었습니다");
+        router.refresh();
+        return;
       }
       if (res !== 200) {
         ErrorAlert("댓글 삭제 실패");
@@ -47,6 +51,7 @@ export default function CommentItem({
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!updateContent) {
       ErrorAlert("필드를 채워주세요");
       return;
@@ -54,6 +59,7 @@ export default function CommentItem({
     const formData = new FormData(e.target as HTMLFormElement);
     const res = await updateComment(formData, commentId, postId);
     if (res === 200) {
+      router.refresh();
       SuccessAlert("댓글이 수정되었습니다");
       onCancelEdit();
       return;
