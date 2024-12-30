@@ -117,8 +117,8 @@ export default function ReportPage() {
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col w-[50%] h-full items-center gap-20 pt-10 px-3 bg-gray-100">
+    <div className="flex justify-center h-full">
+      <div className="flex flex-col w-[50%] h-full items-center gap-20 pt-10 px-3 border-x border-mainColor">
         <p className="text-3xl">신고 게시물 목록</p>
         <main className="w-full">
           <div className="w-[300px] md:w-auto">
@@ -134,18 +134,17 @@ export default function ReportPage() {
                   >
                     <Link href={`/board/${type}/${postID}`} className="w-full">
                       <div className="w-full flex item-center h-full px-1 gap-1">
-                        <div className="w-[10%] h-full hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
+                        <div className="w-[10%] h-full hidden md:flex items-center justify-center">
                           {/*{image_id ? (*/}
                           {/*<p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기 */}
                           {/*} ) : ( */}
-                          <IoDocumentText className="w-[55px] h-[55px] text-gray-400" />
+                          <IoDocumentText className="w-[35px] h-[35px] text-gray-400" />
                           {/*)}*/}
                         </div>
                         <div className="flex w-[59%]">
                           <div>
-                            <p>
-                              ID : {id} 신고자 : {name}
-                            </p>
+                            <p>ID : {id}</p>
+                            <p>신고자 : {name}</p>
                             <p className="break-all">게시판 : {category}</p>
                             <p className="break-all">게시물 명 : {title}</p>
                             <p className="break-all">신고 사유 : {reason}</p>
