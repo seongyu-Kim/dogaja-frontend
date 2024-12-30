@@ -14,7 +14,7 @@ const itemsPerPage = 5;
 export default function MySchedulePage() {
   const [list, setList] = useState<ScheduleType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [currentItems, setCurrentItems] = useState<any[]>([]);
+  const [currentItems, setCurrentItems] = useState<ScheduleType[]>([]);
   const searchParams = useSearchParams();
   const boardPath = usePathname();
   const router = useRouter();
@@ -100,91 +100,89 @@ export default function MySchedulePage() {
   );
 }
 //임시 추후 타입 지정
-function Description({ list }: any) {
+function Description({ list }: { list: ScheduleType[] }) {
   return (
     <ul className="flex flex-col items-center justify-center w-full">
-      {/*임시 추후 타입 지정*/}
-      {list!.map((item: any) => {
-        const route = usePathname();
-        const formattedStartDate = new Date(item.startDate).toLocaleString(
-          "ko-KR",
-          {
-            dateStyle: "medium",
-            timeStyle: "short",
-          },
-        );
-        const formattedEndDate = new Date(item.endDate).toLocaleString(
-          "ko-KR",
-          {
-            dateStyle: "medium",
-            timeStyle: "short",
-          },
-        );
-        const nights = Math.ceil(
-          (new Date(item.endDate).getTime() -
-            new Date(item.startDate).getTime()) /
-            (1000 * 60 * 60 * 24),
-        );
-        const days = nights + 1;
-        const members = item.members?.join(", ") || "동행자 없음";
-        //링크 주소 추후 조회 수정 페이지 경로로 던져주기
-        return (
-          //   임시 추후 일정 상세 보기 페이지로 이동
-          <Link
-            href={`${route}/${item.id}`}
-            key={item.id}
-            className="w-full h-[150px] py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
-          >
-            <div className="w-full flex item-center h-full px-1 gap-1">
-              <div className="w-[10%] h-full hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
-                {item.image_id ? (
-                  <p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기
-                ) : (
-                  <IoDocumentText className="w-[55px] h-[55px] text-gray-400" />
-                )}
-              </div>
-              <div className="flex w-[59%]">
-                <div>
-                  <p>장소 : {item.location}</p>
-                  <div className="flex gap-5">
-                    <p className="break-all">
-                      기간 : {formattedStartDate} ~ {formattedEndDate}
-                    </p>
-                    <p className="text-gray-500">
-                      {nights}박 {days}일
-                    </p>
-                  </div>
-                  <p>동행자 : {members}</p>
-                  <p>한줄 후기 : {item.comment}</p>
+      {list!.map(
+        ({ id, title, location, period, review, image, user, friendList }) => {
+          const route = usePathname();
+          const date = period.split("~");
+          const start = new Date(date[0]);
+          const end = new Date(date[1]);
+          const days =
+            (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
+          //링크 주소 추후 조회 수정 페이지 경로로 던져주기
+          return (
+            //   임시 추후 일정 상세 보기 페이지로 이동
+            <Link
+              href={`${route}/${id}`}
+              key={id}
+              className="w-full h-[150px] py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
+            >
+              <div className="w-full flex item-center h-full px-1 gap-1">
+                <div className="w-[10%] h-full hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
+                  {image ? (
+                    <p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기
+                  ) : (
+                    <IoDocumentText className="w-[55px] h-[55px] text-gray-400" />
+                  )}
                 </div>
-              </div>
-              <div className="flex gap-2 ml-auto">
-                {/*임시 추후 일정 관리 수정 페이지로 이동 id 값 가지고*/}
-                <Link href={"./"}>
+                <div className="flex w-[59%]">
+                  <div>
+                    <p>{title}</p>
+                    <p>장소 : {location}</p>
+                    <div className="flex gap-5">
+                      <p className="break-all">
+                        기간 : {date[0]} ~ {date[1]}
+                      </p>
+                      <p className="text-gray-500">{days}일</p>
+                    </div>
+                    {friendList && friendList.length > 0 ? (
+                      friendList.map(
+                        ({
+                          userId,
+                          name,
+                        }: {
+                          userId: string;
+                          name: string;
+                        }) => {
+                          return <p key={userId}>동행자 : {name}</p>;
+                        },
+                      )
+                    ) : (
+                      <p>동행자가 없습니다.</p>
+                    )}
+                    <p>{review ? `${review}` : "후기가 없습니다"}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2 ml-auto">
+                  {/*임시 추후 일정 관리 수정 페이지로 이동 id 값 가지고*/}
+                  <Link href={"./"}>
+                    <Button
+                      style={{
+                        backgroundColor: "bg-mainBlue",
+                        hoverColor: "hover:bg-mainBlueHover",
+                        width: "w-[100px]",
+                      }}
+                    >
+                      수정
+                    </Button>
+                  </Link>
                   <Button
                     style={{
-                      backgroundColor: "bg-mainBlue",
-                      hoverColor: "hover:bg-mainBlueHover",
+                      backgroundColor: "bg-mainRed",
+                      hoverColor: "hover:bg-mainRedHover",
                       width: "w-[100px]",
                     }}
                   >
-                    수정
+                    삭제
                   </Button>
-                </Link>
-                <Button
-                  style={{
-                    backgroundColor: "bg-mainRed",
-                    hoverColor: "hover:bg-mainRedHover",
-                    width: "w-[100px]",
-                  }}
-                >
-                  삭제
-                </Button>
+                </div>
               </div>
-            </div>
-          </Link>
-        );
-      })}
+            </Link>
+          );
+        },
+      )}
     </ul>
   );
 }
