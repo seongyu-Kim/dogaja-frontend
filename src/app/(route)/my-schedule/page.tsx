@@ -124,7 +124,7 @@ function Description({
   return (
     <ul className="flex flex-col items-center justify-center w-full gap-4">
       {list!.map(
-        ({ id, title, user, location, period, review, image, friendList }) => {
+        ({ id, title, user, location, period, review, image, friends }) => {
           const route = usePathname();
           const [start, end, day] = days(period);
           return (
@@ -156,18 +156,10 @@ function Description({
                         </p>
                         <p className="text-gray-500">{day}일</p>
                       </div>
-                      {friendList && friendList.length > 0 ? (
-                        friendList.map(
-                          ({
-                            userId,
-                            name,
-                          }: {
-                            userId: string;
-                            name: string;
-                          }) => {
-                            return <p key={userId}>동행자 : {name}</p>;
-                          },
-                        )
+                      {friends && friends.length > 0 ? (
+                        <p>
+                          동행자: {friends.map(({ name }) => name).join(", ")}
+                        </p>
                       ) : (
                         <p>동행자가 없습니다.</p>
                       )}
