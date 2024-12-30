@@ -30,7 +30,7 @@ export default function List({
       <ul className="flex flex-col items-center justify-center w-full">
         {/*image_id는 임시 값 추후 수정*/}
         {list.map(({ id, image_id, title, commentsCount, name }) => {
-          const path = `${boardType ? `board/${boardType}/${id}?page=${searchParams}` : detailList ? `./${id}?page=${searchParams}` : `${route}/${id}?page=${searchParams}`}`;
+          const path = `${boardType ? `board/${boardType}/${id}` : detailList ? `./${id}?page=${searchParams}` : `${route}/${id}?page=${searchParams}`}`;
 
           return (
             <Link
