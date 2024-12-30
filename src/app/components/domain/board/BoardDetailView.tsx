@@ -57,10 +57,7 @@ function ContentArea({
       <div className="pb-20 border-b border-gray-400 break-all mt-5">
         <div
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(content, {
-              // ALLOWED_TAGS: [],
-              // ALLOWED_ATTR: [],
-            }),
+            __html: DOMPurify.sanitize(content, {}),
           }}
         />
       </div>
