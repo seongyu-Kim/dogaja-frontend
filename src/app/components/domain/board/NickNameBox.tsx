@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import NicknameClickToggleWindow from "@/app/components/domain/board/NicknameClickToggleWindow";
+import { useUserStore } from "@/app/store/userStore";
 
 interface Props {
   name: string;
@@ -11,6 +12,7 @@ export default function NickNameBox({ name }: Props) {
   const [toggleWindow, setToggleWindow] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const toggleWindowRef = useRef<HTMLDivElement>(null);
+  const { user } = useUserStore();
 
   useEffect(() => {
     const handelOutsidClick = (e: MouseEvent) => {
@@ -30,6 +32,10 @@ export default function NickNameBox({ name }: Props) {
     setPosition({ x: clientX, y: clientY });
     setToggleWindow((prev) => !prev);
   };
+
+  if (!user) {
+    return <p>{name}</p>;
+  }
 
   return (
     <>
