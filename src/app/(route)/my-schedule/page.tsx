@@ -4,12 +4,13 @@ import Link from "next/link";
 import { IoDocumentText } from "react-icons/io5";
 import Button from "@/app/components/common/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Pagination from "@/app/components/common/Pagination";
 import { scheduleGet } from "@/app/utils/boardApi";
 import { ScheduleType } from "@/app/type/scheduleListType";
 import { useUserStore } from "@/app/store/userStore";
 import days from "@/app/utils/days";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 
 const itemsPerPage = 5;
 
@@ -62,6 +63,18 @@ export default function MySchedulePage() {
     }
   };
 
+  const handleDeleteClick = async (id: number) => {
+    const deleteConfirm = confirm("일정을 삭제 하시겠습니까?");
+    if (deleteConfirm) {
+      const res = 200; // api 요청 부분
+      if (res === 200) {
+        SuccessAlert("일정이 삭제되었습니다");
+        return;
+      }
+      ErrorAlert("일정 삭제 오류");
+    }
+  };
+
   return (
     <div className="flex justify-center h-full">
       <div className="flex flex-col w-[80%] h-full gap-20 pt-10 px-3 border-x border-mainColor">
@@ -85,7 +98,7 @@ export default function MySchedulePage() {
             {currentItems.length === 0 && (
               <p className="text-center">일정이 없습니다</p>
             )}
-            <Description list={currentItems} />
+            <Description list={currentItems} onDelete={handleDeleteClick} />
           </div>
         </main>
         {currentItems.length !== 0 && (
@@ -100,7 +113,13 @@ export default function MySchedulePage() {
   );
 }
 //임시 추후 타입 지정
-function Description({ list }: { list: ScheduleType[] }) {
+function Description({
+  list,
+  onDelete,
+}: {
+  list: ScheduleType[];
+  onDelete: (id: number) => void;
+}) {
   const { user: loginUser } = useUserStore();
   return (
     <ul className="flex flex-col items-center justify-center w-full gap-4">
@@ -110,52 +129,57 @@ function Description({ list }: { list: ScheduleType[] }) {
           const [start, end, day] = days(period);
           return (
             //   임시 추후 일정 상세 보기 페이지로 이동
-            <Link
-              href={`${route}/${id}`}
+            <div
               key={id}
               className="w-full h-[150px] border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
             >
               <div className="w-full flex item-center h-full px-2 gap-1">
-                <div className="w-[10%] h-full hidden md:flex items-center justify-center">
-                  {image ? (
-                    <p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기
-                  ) : (
-                    <IoDocumentText className="w-[55px] h-[55px] text-gray-400" />
-                  )}
-                </div>
-                <div className="flex w-[59%]">
-                  <div>
-                    <p>작성자 : {user.name}</p>
-                    <p>{title}</p>
-                    <p>장소 : {location}</p>
-                    <div className="flex gap-5">
-                      <p className="break-all">
-                        기간 : {start} ~ {end}
-                      </p>
-                      <p className="text-gray-500">{day}일</p>
-                    </div>
-                    {friendList && friendList.length > 0 ? (
-                      friendList.map(
-                        ({
-                          userId,
-                          name,
-                        }: {
-                          userId: string;
-                          name: string;
-                        }) => {
-                          return <p key={userId}>동행자 : {name}</p>;
-                        },
-                      )
+                <Link
+                  href={`${route}/${id}`}
+                  className="w-full flex item-center h-full px-2 gap-1"
+                >
+                  <div className="w-[10%] h-full hidden md:flex items-center justify-center">
+                    {image ? (
+                      <p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기
                     ) : (
-                      <p>동행자가 없습니다.</p>
+                      <IoDocumentText className="w-[55px] h-[55px] text-gray-400" />
                     )}
-                    <p>{review ? `${review}` : "후기가 없습니다"}</p>
                   </div>
-                </div>
+                  <div className="flex w-[59%]">
+                    <div>
+                      <p>작성자 : {user.name}</p>
+                      <p>{title}</p>
+                      <p>장소 : {location}</p>
+                      <div className="flex gap-5">
+                        <p className="break-all">
+                          기간 : {start} ~ {end}
+                        </p>
+                        <p className="text-gray-500">{day}일</p>
+                      </div>
+                      {friendList && friendList.length > 0 ? (
+                        friendList.map(
+                          ({
+                            userId,
+                            name,
+                          }: {
+                            userId: string;
+                            name: string;
+                          }) => {
+                            return <p key={userId}>동행자 : {name}</p>;
+                          },
+                        )
+                      ) : (
+                        <p>동행자가 없습니다.</p>
+                      )}
+                      <p>{review ? `${review}` : "후기가 없습니다"}</p>
+                    </div>
+                  </div>
+                </Link>
                 {loginUser && loginUser.name === user.name && (
                   <div className="flex gap-2 ml-auto">
                     {/*임시 추후 일정 관리 수정 페이지로 이동 id 값 가지고*/}
                     <Button
+                      onClick={() => onDelete(id)}
                       style={{
                         backgroundColor: "bg-mainRed",
                         hoverColor: "hover:bg-mainRedHover",
@@ -179,7 +203,7 @@ function Description({ list }: { list: ScheduleType[] }) {
                   </div>
                 )}
               </div>
-            </Link>
+            </div>
           );
         },
       )}
