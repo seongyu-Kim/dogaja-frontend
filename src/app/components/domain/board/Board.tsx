@@ -56,7 +56,7 @@ export default function Board({
   };
 
   return (
-    <div className="flex flex-col w-[50%] h-full items-center gap-20 pt-10 px-3 bg-gray-100">
+    <div className="flex flex-col w-[50%] h-full items-center gap-20 pt-10 px-3 border-x border-mainColor">
       <p className="text-3xl">{name} 게시판</p>
       <main className="w-full">
         {currentItems.length > 0 ? (
