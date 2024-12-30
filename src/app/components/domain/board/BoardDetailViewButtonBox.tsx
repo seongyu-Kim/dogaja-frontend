@@ -54,7 +54,7 @@ export default function BoardDetailViewButtonBox({
             </Button>
           </Link>
         )}
-        {user && (user.name === name || user.admin) && (
+        {user && (user.admin || user.name === name) && (
           <>
             <Link href={`./${postId}/update`}>
               <Button
