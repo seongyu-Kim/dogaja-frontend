@@ -24,6 +24,11 @@ export default function NicknameClickToggleWindow({
         onClose(false);
         return;
       }
+      if (res === 400) {
+        ErrorAlert(`${name}님에게 이미 친구 요청을 보냈습니다`);
+        onClose(false);
+        return;
+      }
       onClose(false);
       ErrorAlert("친구 요청 실패");
     }

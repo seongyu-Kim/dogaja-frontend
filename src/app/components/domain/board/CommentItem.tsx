@@ -71,39 +71,34 @@ export default function CommentItem({
       onCancelEdit();
     }
   };
-
-  const isOwnComment = true; // 임시 - 본인 댓글만 수정 삭제 가능하게
-
   return (
     <li className="w-full p-2 mb-5">
       <div className="flex items-center justify-between bg-gray-200 p-1 rounded-[4px] break-all w-full">
         <NickNameBox name={user.name} />
-        {isOwnComment && (
-          <div>
-            {loginUser &&
-              (loginUser.admin || loginUser.name === user.name) &&
-              (!editing ? (
-                <div className="flex items-center gap-2 mr-2">
-                  <button className="text-sm" onClick={() => onEditClick(id)}>
-                    수정
-                  </button>
-                  <button className="text-sm" onClick={handleDeleteClick}>
-                    삭제
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 mr-2">
-                  <button
-                    className="text-sm"
-                    type="button"
-                    onClick={onCancelEdit}
-                  >
-                    취소
-                  </button>
-                </div>
-              ))}
-          </div>
-        )}
+        <div>
+          {loginUser &&
+            (loginUser.admin || loginUser.name === user.name) &&
+            (!editing ? (
+              <div className="flex items-center gap-2 mr-2">
+                <button className="text-sm" onClick={() => onEditClick(id)}>
+                  수정
+                </button>
+                <button className="text-sm" onClick={handleDeleteClick}>
+                  삭제
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 mr-2">
+                <button
+                  className="text-sm"
+                  type="button"
+                  onClick={onCancelEdit}
+                >
+                  취소
+                </button>
+              </div>
+            ))}
+        </div>
       </div>
       <div className="py-1 break-all">
         {editing ? (

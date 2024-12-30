@@ -26,6 +26,13 @@ export default function Board({
   const totalPages = list ? Math.ceil(list.length / itemsPerPage) : 0;
 
   useEffect(() => {
+    if (!searchParams.has("page")) {
+      // 페이지 쿼리 파라미터가 없으면 page=1을 추가
+      router.push(`${boardPath}?page=1`);
+    }
+  }, [searchParams, router, boardPath]);
+
+  useEffect(() => {
     // 쿼리 파라미터에서 'page' 값을 가져와서 currentPage를 설정
     const page = parseInt(searchParams.get("page") || "1");
     if (page !== currentPage) {
