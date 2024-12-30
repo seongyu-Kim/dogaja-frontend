@@ -6,76 +6,33 @@ import Button from "@/app/components/common/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/common/Pagination";
+import { scheduleGet } from "@/app/utils/boardApi";
+import { ScheduleType } from "@/app/type/scheduleListType";
 
-const testList = [
-  // 임시 테스트 리스트
-  {
-    id: 1,
-    location: "경복궁",
-    startDate: "2024-12-23T09:00:00.000Z",
-    endDate: "2024-12-23T10:00:00.000Z",
-    members: ["여기저기", "닉네임", "이름 생각하기 싫다", "여기에요"],
-    comment: "좋아요",
-    image_id: null,
-  },
-  {
-    id: 2,
-    location: "잠실",
-    startDate: "2024-12-23T09:00:00.000Z",
-    endDate: "2024-12-23T10:00:00.000Z",
-    members: ["여기저기", "닉네임", "이름 생각하기 싫다", "여기에요"],
-    comment: "좋아요~",
-    image_id: "aa",
-  },
-  {
-    id: 3,
-    location: "강남",
-    startDate: "2024-12-23T09:00:00.000Z",
-    endDate: "2024-12-23T10:00:00.000Z",
-    members: ["여기저기", "닉네임", "이름 생각하기 싫다", "여기에요"],
-    comment: "좋아요~~",
-    image_id: null,
-  },
-  {
-    id: 4,
-    location: "나주곰탕",
-    startDate: "2024-12-23T09:00:00.000Z",
-    endDate: "2024-12-23T10:00:00.000Z",
-    members: ["여기저기", "닉네임", "이름 생각하기 싫다", "여기에요"],
-    comment: "좋아요~~~",
-    image_id: "aa",
-  },
-  {
-    id: 5,
-    location: "킹데리아",
-    startDate: "2024-12-23T09:00:00.000Z",
-    endDate: "2024-12-23T10:00:00.000Z",
-    members: ["스폰지밥", "뚱이", "집게사장", "다람이"],
-    comment: "좋아요~~~~",
-    image_id: null,
-  },
-  {
-    id: 6,
-    location: "의정부",
-    startDate: "2024-12-23T09:00:00.000Z",
-    endDate: "2024-12-23T10:00:00.000Z",
-    members: ["여기저기", "닉네임", "이름 생각하기 싫다", "여기에요"],
-    comment: "좋아요~~~~~",
-    image_id: "aa",
-  },
-];
+const itemsPerPage = 5;
 
 export default function MySchedulePage() {
+  const [list, setList] = useState<ScheduleType[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentItems, setCurrentItems] = useState<any[]>([]);
   const searchParams = useSearchParams();
   const boardPath = usePathname();
   const router = useRouter();
-  const itemsPerPage = 5;
+  const totalPages = Math.ceil(list!.length / itemsPerPage);
 
-  const totalPages = Math.ceil(testList!.length / itemsPerPage);
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  //임시 타입 추후 배열에 맞게 변경
-  const [currentItems, setCurrentItems] = useState<any[]>([]);
+  useEffect(() => {
+    const getList = async () => {
+      const scheduleList = await scheduleGet();
+      if (!scheduleList) {
+        setList([]);
+        return;
+      }
+      setList(scheduleList);
+    };
+    getList();
+  }, []);
+  //임시 콘솔
+  console.log(list);
 
   useEffect(() => {
     // 쿼리 파라미터에서 'page' 값을 가져와서 currentPage를 설정
@@ -88,9 +45,9 @@ export default function MySchedulePage() {
   useEffect(() => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const newCurrentItems = testList!.slice(indexOfFirstItem, indexOfLastItem);
+    const newCurrentItems = list!.slice(indexOfFirstItem, indexOfLastItem);
     setCurrentItems(newCurrentItems);
-  }, [currentPage, testList]);
+  }, [currentPage, list]);
 
   // 페이지 변경 시 URL 업데이트
   const handlePageChange = (page: number) => {
@@ -125,14 +82,19 @@ export default function MySchedulePage() {
         </div>
         <main className="w-full">
           <div className="w-[300px] md:w-auto">
+            {currentItems.length === 0 && (
+              <p className="text-center">일정이 없습니다</p>
+            )}
             <Description list={currentItems} />
           </div>
         </main>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          handlePageChange={handlePageChange}
-        />
+        {currentItems.length !== 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+          />
+        )}
       </div>
     </div>
   );
