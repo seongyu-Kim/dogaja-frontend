@@ -161,17 +161,6 @@ function Description({ list }: { list: ScheduleType[] }) {
                 {loginUser && loginUser.name === user.name && (
                   <div className="flex gap-2 ml-auto">
                     {/*임시 추후 일정 관리 수정 페이지로 이동 id 값 가지고*/}
-                    <Link href={`${route}/${id}/update`}>
-                      <Button
-                        style={{
-                          backgroundColor: "bg-mainBlue",
-                          hoverColor: "hover:bg-mainBlueHover",
-                          width: "w-[100px]",
-                        }}
-                      >
-                        수정
-                      </Button>
-                    </Link>
                     <Button
                       style={{
                         backgroundColor: "bg-mainRed",
@@ -181,6 +170,17 @@ function Description({ list }: { list: ScheduleType[] }) {
                     >
                       삭제
                     </Button>
+                    <Link href={`${route}/${id}/update`}>
+                      <Button
+                        style={{
+                          backgroundColor: "bg-mainColor",
+                          hoverColor: "hover:bg-mainHover",
+                          width: "w-[100px]",
+                        }}
+                      >
+                        수정
+                      </Button>
+                    </Link>
                   </div>
                 )}
               </div>
