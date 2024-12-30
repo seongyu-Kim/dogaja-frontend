@@ -53,14 +53,20 @@ export default function List({
                   {postId == id && (
                     <p className="font-semibold text-xl">{">"}</p>
                   )}
-                  <p>{title}</p>
+                  <p>
+                    {title.length > 35
+                      ? `${title.slice(0, 34)}...`
+                      : `${title}`}
+                  </p>
                   {commentsCount > 0 && (
                     <p className="text-[10px] text-blue-700">{commentsCount}</p>
                   )}
                 </div>
                 {preview && (
-                  <div className="flex items-end justify-end w-[100px]">
-                    <p>{name}</p>
+                  <div className="hidden md:flex items-end justify-end w-[100px]">
+                    <p className="overflow-hidden whitespace-nowrap text-ellipsis">
+                      {name}
+                    </p>
                   </div>
                 )}
               </div>

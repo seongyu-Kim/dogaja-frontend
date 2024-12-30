@@ -4,6 +4,7 @@ import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import { deleteComment, updateComment } from "@/app/utils/boardApi";
 import NickNameBox from "@/app/components/domain/board/NickNameBox";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/app/store/userStore";
 
 interface CommentItemProps {
   id: number;
@@ -28,6 +29,7 @@ export default function CommentItem({
   onCancelEdit,
 }: CommentItemProps) {
   const [updateContent, setUpdateContent] = useState<string>(content);
+  const { user: loginUser } = useUserStore();
   const router = useRouter();
   const commentId = String(id);
 
@@ -78,26 +80,28 @@ export default function CommentItem({
         <NickNameBox name={user.name} />
         {isOwnComment && (
           <div>
-            {!editing ? (
-              <div className="flex items-center gap-2 mr-2">
-                <button className="text-sm" onClick={() => onEditClick(id)}>
-                  수정
-                </button>
-                <button className="text-sm" onClick={handleDeleteClick}>
-                  삭제
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 mr-2">
-                <button
-                  className="text-sm"
-                  type="button"
-                  onClick={onCancelEdit}
-                >
-                  취소
-                </button>
-              </div>
-            )}
+            {loginUser &&
+              (loginUser.admin || loginUser.name === user.name) &&
+              (!editing ? (
+                <div className="flex items-center gap-2 mr-2">
+                  <button className="text-sm" onClick={() => onEditClick(id)}>
+                    수정
+                  </button>
+                  <button className="text-sm" onClick={handleDeleteClick}>
+                    삭제
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 mr-2">
+                  <button
+                    className="text-sm"
+                    type="button"
+                    onClick={onCancelEdit}
+                  >
+                    취소
+                  </button>
+                </div>
+              ))}
           </div>
         )}
       </div>
