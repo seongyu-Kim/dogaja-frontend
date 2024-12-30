@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import Pagination from "@/app/components/common/Pagination";
 import { scheduleGet } from "@/app/utils/boardApi";
 import { ScheduleType } from "@/app/type/scheduleListType";
+import { useUserStore } from "@/app/store/userStore";
 
 const itemsPerPage = 5;
 
@@ -63,8 +64,8 @@ export default function MySchedulePage() {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col w-[80%] h-full gap-20 pt-10 px-3 bg-gray-100">
+    <div className="flex justify-center h-full">
+      <div className="flex flex-col w-[80%] h-full gap-20 pt-10 px-3 border-x border-mainColor">
         <div className="flex items-center justify-between">
           <p className="text-3xl">일정 관리</p>
           {/*임시 추후 일정 생성 create 페이지로 이동*/}
@@ -101,10 +102,11 @@ export default function MySchedulePage() {
 }
 //임시 추후 타입 지정
 function Description({ list }: { list: ScheduleType[] }) {
+  const { user: loginUser } = useUserStore();
   return (
-    <ul className="flex flex-col items-center justify-center w-full">
+    <ul className="flex flex-col items-center justify-center w-full gap-4">
       {list!.map(
-        ({ id, title, location, period, review, image, user, friendList }) => {
+        ({ id, title, user, location, period, review, image, friendList }) => {
           const route = usePathname();
           const date = period.split("~");
           const start = new Date(date[0]);
@@ -117,10 +119,10 @@ function Description({ list }: { list: ScheduleType[] }) {
             <Link
               href={`${route}/${id}`}
               key={id}
-              className="w-full h-[150px] py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
+              className="w-full h-[150px] border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
             >
-              <div className="w-full flex item-center h-full px-1 gap-1">
-                <div className="w-[10%] h-full hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
+              <div className="w-full flex item-center h-full px-2 gap-1">
+                <div className="w-[10%] h-full hidden md:flex items-center justify-center">
                   {image ? (
                     <p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기
                   ) : (
@@ -129,6 +131,7 @@ function Description({ list }: { list: ScheduleType[] }) {
                 </div>
                 <div className="flex w-[59%]">
                   <div>
+                    <p>작성자 : {user.name}</p>
                     <p>{title}</p>
                     <p>장소 : {location}</p>
                     <div className="flex gap-5">
@@ -155,29 +158,31 @@ function Description({ list }: { list: ScheduleType[] }) {
                     <p>{review ? `${review}` : "후기가 없습니다"}</p>
                   </div>
                 </div>
-                <div className="flex gap-2 ml-auto">
-                  {/*임시 추후 일정 관리 수정 페이지로 이동 id 값 가지고*/}
-                  <Link href={"./"}>
+                {loginUser && loginUser.name === user.name && (
+                  <div className="flex gap-2 ml-auto">
+                    {/*임시 추후 일정 관리 수정 페이지로 이동 id 값 가지고*/}
+                    <Link href={`${route}/${id}/update`}>
+                      <Button
+                        style={{
+                          backgroundColor: "bg-mainBlue",
+                          hoverColor: "hover:bg-mainBlueHover",
+                          width: "w-[100px]",
+                        }}
+                      >
+                        수정
+                      </Button>
+                    </Link>
                     <Button
                       style={{
-                        backgroundColor: "bg-mainBlue",
-                        hoverColor: "hover:bg-mainBlueHover",
+                        backgroundColor: "bg-mainRed",
+                        hoverColor: "hover:bg-mainRedHover",
                         width: "w-[100px]",
                       }}
                     >
-                      수정
+                      삭제
                     </Button>
-                  </Link>
-                  <Button
-                    style={{
-                      backgroundColor: "bg-mainRed",
-                      hoverColor: "hover:bg-mainRedHover",
-                      width: "w-[100px]",
-                    }}
-                  >
-                    삭제
-                  </Button>
-                </div>
+                  </div>
+                )}
               </div>
             </Link>
           );
