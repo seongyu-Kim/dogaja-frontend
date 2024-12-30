@@ -17,7 +17,7 @@ export default async function BoardListDetail({ params }: Props) {
   const list = await boardTypeRequest(boardType as BoardType);
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center h-full">
       <Board name={`${boardTitle}`} list={list} />
     </div>
   );
