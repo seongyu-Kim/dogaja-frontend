@@ -32,12 +32,12 @@ export default function Navbar() {
 
 
   useEffect(() => {
-    // getUserName();
-    // getFriendRequests();
+    getUserName();
+    getFriendRequests();
 
     // 임시 로그인 상태 설정
-    setIsLoggedIn(true);
-    setName("elice");
+    // setIsLoggedIn(true);
+    // setName("elice");
   }, []);
   
   const getUserName = async () => {

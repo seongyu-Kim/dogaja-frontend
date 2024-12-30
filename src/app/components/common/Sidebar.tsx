@@ -17,7 +17,7 @@ export default function Sidebar() {
 
   return (
     <aside className="w-20 border-r-4 border-mainColor text-mainColor h-auto">
-      <ul className="flex flex-col text-center text-xs">
+      <ul className="flex flex-col text-center text-xs min-w-20">
         {pathname !== "/dashboard" && (
           <li className="mt-4 p-2 pb-2 hover:underline hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out">
             <Link href="/dashboard" className="flex flex-col items-center">
