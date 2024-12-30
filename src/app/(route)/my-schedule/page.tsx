@@ -33,8 +33,6 @@ export default function MySchedulePage() {
     };
     getList();
   }, []);
-  //임시 콘솔
-  console.log(list);
 
   useEffect(() => {
     // 쿼리 파라미터에서 'page' 값을 가져와서 currentPage를 설정
