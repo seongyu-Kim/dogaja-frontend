@@ -33,6 +33,7 @@ export default function NickNameBox({ name }: Props) {
     setToggleWindow((prev) => !prev);
   };
 
+  //유저 정보 없을 시 이름만 표기
   if (!user) {
     return <p>{name}</p>;
   }
