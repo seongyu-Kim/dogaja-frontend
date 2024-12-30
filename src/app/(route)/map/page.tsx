@@ -1,75 +1,113 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
+import React, { useEffect, useState } from "react";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
 
-const KakaoMap = () => {
+interface Place {
+  place_name: string;
+  address_name: string;
+  road_address_name?: string;
+  phone?: string;
+  x: string;
+  y: string;
+}
+
+interface KakaoMapProps {
+  keyword: string;
+  onPlacesFetched: (places: Place[]) => void;
+}
+
+const KakaoMap: React.FC<KakaoMapProps> = ({ keyword, onPlacesFetched }) => {
   const [currentPosition, setCurrentPosition] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [selectedLocationPosition, setSelectedLocationPosition] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          const myPosition = { lat, lng };
-          setCurrentPosition(myPosition);
-          console.log(`내 위치: ${JSON.stringify(myPosition)}`);
-        },
-        (error) => {
-          console.error("위치 가져오기 실패", error);
-          const fallbackPosition = { lat: 33.5563, lng: 126.79581 };
-          setCurrentPosition(fallbackPosition);
-          console.log(`기본 위치: ${JSON.stringify(fallbackPosition)}`);
-        }
-      );
+      navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setCurrentPosition({ lat, lng });
+      });
     }
   }, []);
 
+  useEffect(() => {
+    if (!keyword) return;
+
+    const ps = new kakao.maps.services.Places();
+
+    // 검색된 위치에 마커(맛집X)
+    ps.keywordSearch(`${keyword}`, (data, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const firstPlace = data[0];
+        if (firstPlace?.y && firstPlace?.x) {
+          const newPosition = {
+            lat: parseFloat(firstPlace.y),
+            lng: parseFloat(firstPlace.x),
+          };
+          setSelectedLocationPosition(newPosition);
+
+          // 지도 위치
+          if (window.kakao && window.kakao.maps) {
+            const map = new window.kakao.maps.Map(
+              document.getElementById("map") as HTMLElement,
+              {
+                center: new kakao.maps.LatLng(newPosition.lat, newPosition.lng),
+                level: 5,
+              }
+            );
+
+            // 마커
+            const marker = new kakao.maps.Marker({
+              position: new kakao.maps.LatLng(newPosition.lat, newPosition.lng),
+              map: map,
+              title: `${keyword} 위치`,
+            });
+
+            // 인포윈도우
+            const infowindow = new kakao.maps.InfoWindow({
+              content: `
+                      <div style="text-align: center; font-size: 14px;">
+                        <div>선택된 위치: ${keyword}</div>
+                        <div>인구 밀도: 많음</div>
+                        <div>가까운 주차장: XX주차장</div>
+                      </div>
+              `,
+            });
+            infowindow.open(map, marker);
+          }
+        }
+      }
+    });
+
+    // 추천 맛집 검색
+    ps.keywordSearch(`${keyword} 맛집`, (data, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        onPlacesFetched(data as Place[]);
+      }
+    });
+  }, [keyword, onPlacesFetched]);
+
   return (
     <Map
-      center={currentPosition || { lat: 33.5563, lng: 126.79581 }}
+      id="map"
+      center={currentPosition || { lat: 37.566826, lng: 126.9786567 }}
       style={{ width: "100%", height: "100%" }}
     >
-      {currentPosition && (
-        <>
-          <MapMarker
-            position={currentPosition}
-            clickable={true}
-            onClick={() => setIsOpen(true)}
-          />
+      {selectedLocationPosition && (
+        <MapMarker position={selectedLocationPosition} />
+      )}
 
-          {isOpen && (
-            <CustomOverlayMap position={currentPosition}>
-              <div
-                className="rounded-lg bg-white p-2 shadow-md"
-                style={{
-                  position: "relative",
-                  bottom: "170px",
-                  width: "210px",
-                  borderRadius: "8px",
-                }}
-              >
-                <div className="font-bold mb-2">내 위치</div>
-                <div>지역명: 서울</div>
-                <div>인구밀도: 많음</div>
-                <div>날씨: 좋음</div>
-                <div>미세먼지 농도: 나쁨</div>
-                <div>가까운 주차장: XX공영주차장</div>
-                <button
-                  className="mt-2 px-4 py-1 bg-blue-500 text-white rounded"
-                  onClick={() => setIsOpen(false)}
-                >
-                  닫기
-                </button>
-              </div>
-            </CustomOverlayMap>
-          )}
-        </>
+      {currentPosition && !selectedLocationPosition && (
+        <MapMarker position={currentPosition}>
+          <div>현재 위치</div>
+        </MapMarker>
       )}
     </Map>
   );
