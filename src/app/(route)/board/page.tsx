@@ -208,15 +208,17 @@ export default function BoardListPage() {
         {Object.keys(BOARD_TYPES).map((boardType) => {
           const title = BOARD_TYPES[boardType as BOARD_TYPES_KEY].title;
           const boardList = boardData[boardType] || [];
-          //여기서 호출?
           return (
-            <div key={boardType} className="p-4 border rounded-md">
+            <div
+              key={boardType}
+              className="p-4 border border-mainColor rounded-md h-full"
+            >
               <Link href={`/board/${boardType}`}>
                 <p className="border-b border-gray-400 text-3xl">
                   {title} 게시판
                 </p>
               </Link>
-              <div>
+              <div className="h-[450px]">
                 <List
                   list={boardList.sort((a, b) => b.id - a.id).slice(0, 10)}
                   preview={false}
