@@ -35,10 +35,10 @@ export default function List({
             <Link
               href={path}
               key={id}
-              className={`w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200 ${postId == id ? "bg-gray-300" : ""}`}
+              className={`w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200 ${postId == id ? "bg-gray-200" : ""}`}
             >
               <div
-                className={`w-full flex item-center justify-between ${preview ? "h-[50px]" : "h-auto"} px-1 gap-1`}
+                className={`w-full flex items-center justify-between ${preview ? "h-[50px]" : "h-auto"} px-1 gap-1`}
               >
                 {preview && (
                   <div className="w-[50px] h-[50px] hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
@@ -51,7 +51,7 @@ export default function List({
                 )}
                 <div className="flex w-[85%] items-center gap-3">
                   {postId == id && (
-                    <p className="font-semibold text-xl">{">"}</p>
+                    <p className="font-semibold text-xl">{"→"}</p>
                   )}
                   <p>
                     {title.length > 35
