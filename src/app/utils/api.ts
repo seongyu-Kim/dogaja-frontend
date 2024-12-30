@@ -52,4 +52,9 @@ export const API = {
     REPORT_DELETE: (id: string) => `${BASE_URL}/report/${id}`,
     REPORT_CREATE: (id: string) => `${BASE_URL}/report/${id}`,
   },
+  SCHEDULE: {
+    SCHEDULE_CREATE: `${BASE_URL}/schedule/create`,
+    SCHEDULE_LIST_GET: `${BASE_URL}/schedule`,
+    SCHEDULE_GET: (id:string) => `${BASE_URL}/schedule/${id}`,
+  }
 };

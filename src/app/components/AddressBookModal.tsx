@@ -130,9 +130,10 @@ const AddressBookModal: React.FC<{
           userId={selectedFriendId}
         />
       )}
-      <FriendAddModal 
-        isOpen={isFriendAddModalOpen} 
-        onClose={() => setFriendAddModalOpen(false)} 
+      <FriendAddModal
+        isOpen={isFriendAddModalOpen}
+        onClose={() => setFriendAddModalOpen(false)}
+        mode="friendRequest"
       />
     </>
   );
