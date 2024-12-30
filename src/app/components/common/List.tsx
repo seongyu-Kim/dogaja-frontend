@@ -1,6 +1,6 @@
 import { IoDocumentText } from "react-icons/io5";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 interface ListProps {
   // 임시 타입
   list: any[];
@@ -22,23 +22,24 @@ export default function List({
   if (!list) {
     return null;
   }
+  const searchParams = useSearchParams().get("page");
+  const route = usePathname();
 
   return (
     <main className="w-[300px] md:w-auto">
       <ul className="flex flex-col items-center justify-center w-full">
         {/*image_id는 임시 값 추후 수정*/}
         {list.map(({ id, image_id, title, commentsCount, name }) => {
-          const route = usePathname();
-          const path = `${boardType ? `board/${boardType}/${id}` : detailList ? `./${id}` : `${route}/${id}`}`;
+          const path = `${boardType ? `board/${boardType}/${id}?page=${searchParams}` : detailList ? `./${id}?page=${searchParams}` : `${route}/${id}?page=${searchParams}`}`;
 
           return (
             <Link
               href={path}
               key={id}
-              className={`w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200 ${postId == id ? "bg-gray-300" : ""}`}
+              className={`w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200 ${postId == id ? "bg-gray-200" : ""}`}
             >
               <div
-                className={`w-full flex item-center justify-between ${preview ? "h-[50px]" : "h-auto"} px-1 gap-1`}
+                className={`w-full flex items-center justify-between ${preview ? "h-[50px]" : "h-auto"} px-1 gap-1`}
               >
                 {preview && (
                   <div className="w-[50px] h-[50px] hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
@@ -51,7 +52,7 @@ export default function List({
                 )}
                 <div className="flex w-[85%] items-center gap-3">
                   {postId == id && (
-                    <p className="font-semibold text-xl">{">"}</p>
+                    <p className="font-semibold text-xl">{"→"}</p>
                   )}
                   <p>
                     {title.length > 35

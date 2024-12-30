@@ -76,7 +76,7 @@ export default function CommentItem({
 
   return (
     <li className="w-full p-2 mb-5">
-      <div className="flex items-center justify-between bg-gray-300 p-1 rounded-[4px] break-all w-full">
+      <div className="flex items-center justify-between bg-gray-200 p-1 rounded-[4px] break-all w-full">
         <NickNameBox name={user.name} />
         {isOwnComment && (
           <div>
