@@ -110,7 +110,6 @@ function Description({ list }: { list: ScheduleType[] }) {
         ({ id, title, user, location, period, review, image, friendList }) => {
           const route = usePathname();
           const [start, end, day] = days(period);
-          //링크 주소 추후 조회 수정 페이지 경로로 던져주기
           return (
             //   임시 추후 일정 상세 보기 페이지로 이동
             <Link
