@@ -65,7 +65,7 @@ export default function List({
                 </div>
                 {preview && (
                   <div className="hidden md:flex items-end justify-end w-[100px]">
-                    <p className="overflow-hidden whitespace-nowrap text-ellipsis">
+                    <p className="overflow-hidden whitespace-nowrap text-ellipsis text-sm">
                       {name}
                     </p>
                   </div>
