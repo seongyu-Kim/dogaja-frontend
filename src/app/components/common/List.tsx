@@ -39,14 +39,14 @@ export default function List({
               className={`w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200 ${postId == id ? "bg-gray-200" : ""}`}
             >
               <div
-                className={`w-full flex items-center justify-between ${preview ? "h-[50px]" : "h-auto"} px-1 gap-1`}
+                className={`w-full flex items-center justify-between ${preview ? "h-[50px]" : "h-auto"} px-1`}
               >
                 {preview && (
-                  <div className="w-[50px] h-[50px] hidden md:flex items-center justify-center bg-gray-200 rounded-lg">
+                  <div className="w-[50px] h-[50px] hidden md:flex items-center justify-center">
                     {image_id ? (
                       <p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기
                     ) : (
-                      <IoDocumentText className="w-[55px] h-[55px] text-gray-400" />
+                      <IoDocumentText className="w-[25px] h-[25px] text-gray-400" />
                     )}
                   </div>
                 )}
