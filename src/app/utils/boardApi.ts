@@ -2,7 +2,7 @@
 
 import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 export const createPost = async (
   formData: FormData,
@@ -154,6 +154,8 @@ export const requestFriend = async (friendName: string) => {
       return res.status;
     }
   } catch (e) {
-    console.log(e);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return e.status;
   }
 };
