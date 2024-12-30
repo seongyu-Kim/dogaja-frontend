@@ -9,6 +9,7 @@ import Pagination from "@/app/components/common/Pagination";
 import { scheduleGet } from "@/app/utils/boardApi";
 import { ScheduleType } from "@/app/type/scheduleListType";
 import { useUserStore } from "@/app/store/userStore";
+import days from "@/app/utils/days";
 
 const itemsPerPage = 5;
 
@@ -108,11 +109,7 @@ function Description({ list }: { list: ScheduleType[] }) {
       {list!.map(
         ({ id, title, user, location, period, review, image, friendList }) => {
           const route = usePathname();
-          const date = period.split("~");
-          const start = new Date(date[0]);
-          const end = new Date(date[1]);
-          const days =
-            (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
+          const [start, end, day] = days(period);
           //링크 주소 추후 조회 수정 페이지 경로로 던져주기
           return (
             //   임시 추후 일정 상세 보기 페이지로 이동
@@ -136,9 +133,9 @@ function Description({ list }: { list: ScheduleType[] }) {
                     <p>장소 : {location}</p>
                     <div className="flex gap-5">
                       <p className="break-all">
-                        기간 : {date[0]} ~ {date[1]}
+                        기간 : {start} ~ {end}
                       </p>
-                      <p className="text-gray-500">{days}일</p>
+                      <p className="text-gray-500">{day}일</p>
                     </div>
                     {friendList && friendList.length > 0 ? (
                       friendList.map(
@@ -170,6 +167,7 @@ function Description({ list }: { list: ScheduleType[] }) {
                     >
                       삭제
                     </Button>
+                    {/*임시 - 추후 아래 주소 수정*/}
                     <Link href={`${route}/${id}/update`}>
                       <Button
                         style={{
