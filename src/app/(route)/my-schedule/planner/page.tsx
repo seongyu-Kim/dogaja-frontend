@@ -7,67 +7,39 @@ import Input from "@/app/components/common/Input";
 import FriendAddModal from "@/app/components/FriendAddModal";
 import SelectImage from "@/app/components/common/SelectImage";
 
-import { DateRange } from "react-date-range";
-import "react-date-range/dist/styles.css"; // 기본 스타일
-import "react-date-range/dist/theme/default.css"; // 테마 스타일
-import "@/app/style/custom-date-range.css";
-import { differenceInDays } from "date-fns";
+import { FriendDto, ScheduleDto, StartDto, ArriveDto, BucketItem, CheckItem } from "@/app/utils/scheduleDto";
+import { API } from "@/app/utils/api";
+import { mainApi } from "@/app/utils/mainApi";
+import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 
-import { FaRegCalendarCheck  } from "react-icons/fa";
 import { IoPersonAddOutline } from "react-icons/io5";
-
-interface DateRangeType {
-  startDate: Date | null;
-  endDate: Date | null;
-  key: string;
-}
 
 function TravelPlannerPage() {
   const [title, setTitle] = useState("");
   const [companions, setCompanions] = useState<string[]>([]);
-  const [newCompanion, setNewCompanion] = useState("");
   const [friendsModalOpen, setFriendsModalOpen] = useState(false);
-
+  
+  const [departureDate, setDepartureDate] = useState<Date | null>(null);
+  const [arrivalDate, setArrivalDate] = useState<Date | null>(null);
+  const [startDepartureLocation, setStartDepartureLocation] = useState("");
+  const [endDepartureLocation, setEndDepartureLocation] = useState("");
+  const [startArrivalLocation, setStartArrivalLocation] = useState("");
+  const [endArrivalLocation, setEndArrivalLocation] = useState("");
+  const [departureTransportation, setDepartureTransportation] = useState("");
+  const [arrivalTransportation, setArrivalTransportation] = useState("");
+  const [departureInfo, setDepartureInfo] = useState("");
+  const [arrivalInfo, setArrivalInfo] = useState("");
+  
   const [checklist, setChecklist] = useState<{ text: string; checked: boolean }[]>([]);
   const [newChecklistItem, setNewChecklistItem] = useState("");
   const [bucketList, setBucketList] = useState<{ text: string; checked: boolean }[]>([]);
   const [newBucketItem, setNewBucketItem] = useState("");
-
-  const [departureDate, setDepartureDate] = useState("");
-  const [departureLocation, setDepartureLocation] = useState("");
-  const [arrivalLocation, setArrivalLocation] = useState("");
-  const [transportation, setTransportation] = useState("");
-  const [departureInfo, setDepartureInfo] = useState("");
-  const [arrivalInfo, setArrivalInfo] = useState("");
-
+  
   useEffect(() => {
     // 컴포넌트가 마운트될 때 더미 동행자 데이터를 추가합니다.
     const dummyCompanions = ["엘리스", "김토끼", "이토끼", "박토끼","홍길동", "홍길순"];
     setCompanions(dummyCompanions);
   }, []);
-
-  // 초기 날짜 범위 설정
-  const [dateRange, setDateRange] = useState<DateRangeType[]>([
-    {
-      startDate: null,
-      endDate: null,
-      key: "selection",
-    },
-  ]);
-
-  // 달력 관련 상태
-  const [showCalendar, setShowCalendar] = useState(false);
-  const nights =
-    dateRange[0].startDate && dateRange[0].endDate
-      ? differenceInDays(dateRange[0].endDate, dateRange[0].startDate)
-      : 0;
-  const days = nights + 1;
-
-  const toggleCalendar = () => setShowCalendar(!showCalendar);
-
-  const addCompanion = () => {
-    setNewCompanion("");
-  };
 
   const toggleFriendAddModal = () => {
     setFriendsModalOpen(!friendsModalOpen); // 모달 상태 토글
@@ -75,6 +47,12 @@ function TravelPlannerPage() {
 
   const removeCompanion = (index: number) => {
     setCompanions(companions.filter((_, i) => i !== index));
+  };
+
+  const addCompanion = (nickname: string) => {
+    if (!companions.includes(nickname)) {
+      setCompanions([...companions, nickname]);
+    }
   };
 
   const addChecklistItem = () => {
@@ -114,53 +92,102 @@ function TravelPlannerPage() {
     );
   };
 
+  const saveSchedule = async () => {
+
+    if (!title || !departureDate || !arrivalDate) {
+      ErrorAlert("필수 항목을 입력하세요.");
+      return;
+    }
+
+    const { SCHEDULE_CREATE } = API.SCHEDULE;
+
+    // DTO 데이터 생성
+    const scheduleDto: ScheduleDto = {
+      title,
+    };
+
+    const startDto: StartDto = {
+      date: departureDate.toISOString() || "",
+      start: startDepartureLocation,
+      arrive: endDepartureLocation,
+      vehicle: departureTransportation,
+      etc: departureInfo,
+      type: "start",
+    };
+
+    const arriveDto: ArriveDto = {
+      date: arrivalDate.toISOString() || "",
+      start: startArrivalLocation,
+      arrive: endArrivalLocation,
+      vehicle: arrivalTransportation,
+      etc: arrivalInfo,
+      type: "arrive",
+    };
+
+    const bucketItems: BucketItem[] = bucketList.map((item) => ({
+      content: item.text,
+      type: "bucket",
+    }));
+
+    const checkItems: CheckItem[] = checklist.map((item) => ({
+      content: item.text,
+      type: "check",
+    }));
+
+    const companionsDto: FriendDto[] = companions.map((name) => ({ name }));
+
+    const data = {
+      schedule: scheduleDto,
+      start: startDto,
+      arrive: arriveDto,
+      bucketList: bucketItems,
+      checklist: checkItems,
+      companions: companionsDto,
+    };
+
+    try {
+      const response = await mainApi({
+        url: SCHEDULE_CREATE,
+        method: "POST",
+        data,
+      });
+
+      if (response.status === 200) {
+        SuccessAlert("일정이 성공적으로 저장되었습니다!");
+      } else {
+        ErrorAlert("일정 저장 중 문제가 발생했습니다.");
+      }
+    } catch (error) {
+      console.error("Error saving schedule:", error);
+      ErrorAlert("일정 저장 중 문제가 발생했습니다.");
+    }
+  };
+
   return (
     <div className="p-6 space-y-2 flex flex-col justify-center items-center mx-auto w-full max-w-[1100px]">
       <div className="flex flex-col justify-between items-start w-full gap-2">
-        <div className="flex w-full justify-between items-center pt-2 mt-2">
-          <div className="mr-2 w-full lg:w-1/3">
-            여행 제목
+        <p className="text-gray-400 text-xs">* 는 필수항목입니다.</p>
+        <div className="flex w-full justify-between pt-2 mt-2">
+          <div className="mx-2 w-full lg:w-1/3">
+            여행 제목<span className="text-red-500 ml-1">*</span>
             <Input
               type="text"
               name="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="여행 제목을 입력하세요"
-              className="w-full border rounded px-3 py-2 text-sm min-w-32"
+              className="w-full border rounded px-3 py-1.5 my-3 text-sm min-w-32"
             />
           </div>
           <div className="relative mx-2 w-full lg:w-1/3">
-            여행 기간
-            <div className="flex items-center gap-2 min-w-[300px] text-sm my-3">
-              {/* 달력 아이콘 */}
-              <p>
-                {dateRange[0].startDate
-                  ? dateRange[0].startDate.toLocaleDateString()
-                  : "시작일 미정"}{" "}
-                ~{" "}
-                {dateRange[0].endDate
-                  ? dateRange[0].endDate.toLocaleDateString()
-                  : "종료일 미정"}{" "}
-                ({nights}박 {days}일)
-              </p>
-              <button onClick={toggleCalendar} className="text-mainColor">
-                <FaRegCalendarCheck className="text-xl hover:scale-110" />
-              </button>
+            여행 기간<span className="text-red-500 ml-1">*</span>
+            <div className="flex items-center gap-2 min-w-[300px] text-sm my-3 border border-gray-300 rounded-lg py-1.5 px-3">
+              <span className="text-gray-400">아래에서 출발/도착 기간을 선택해주세요</span>
             </div>
-            {showCalendar && (
-              <div className="absolute z-10 mt-2">
-                <DateRange
-                  editableDateInputs={true}
-                  onChange={(ranges) => setDateRange([ranges.selection])}
-                  moveRangeOnFirstSelection={false}
-                  ranges={dateRange}
-                />
-              </div>
-            )}
           </div>
           <div className="ml-2 w-full lg:w-1/3">
             동행자
-            <div className="flex items-center gap-2 text-sm border rounded-lg px-3 py-1 w-full">
+            <div className="flex items-center gap-2 text-sm my-3 border rounded-lg px-3 py-1 w-full">
               <span className="flex flex-wrap gap-1 items-center justify-start w-full min-w-48 overflow-x-auto">
                 {companions.map((companion, index) => (
                   <span
@@ -191,24 +218,32 @@ function TravelPlannerPage() {
             <div className="flex justify-center mt-2 gap-2 w-full">
               <TravelSegment
                 title="출발"
-                departure={departureDate}
-                arrival={departureLocation}
-                transportation={transportation}
+                departureTime={departureDate}
+                arrivalTime={arrivalDate}
+                departure={startDepartureLocation}
+                arrival={endDepartureLocation}
+                transportation={departureTransportation}
                 additionalInfo={departureInfo}
-                setDeparture={setDepartureDate}
-                setArrival={setDepartureLocation}
-                setTransportation={setTransportation}
+                setDepartureTime={setDepartureDate}
+                setArrivalTime={setArrivalDate}
+                setDeparture={setStartDepartureLocation}
+                setArrival={setEndDepartureLocation}
+                setTransportation={setDepartureTransportation}
                 setAdditionalInfo={setDepartureInfo}
               />
               <TravelSegment
                 title="도착"
-                departure={arrivalLocation}
-                arrival={arrivalLocation}
-                transportation={transportation}
+                departureTime={departureDate}
+                arrivalTime={arrivalDate}
+                departure={startArrivalLocation}
+                arrival={endArrivalLocation}
+                transportation={arrivalTransportation}
                 additionalInfo={arrivalInfo}
-                setDeparture={setArrivalLocation}
-                setArrival={setArrivalLocation}
-                setTransportation={setTransportation}
+                setDepartureTime={setDepartureDate}
+                setArrivalTime={setArrivalDate}
+                setDeparture={setStartArrivalLocation}
+                setArrival={setEndArrivalLocation}
+                setTransportation={setArrivalTransportation}
                 setAdditionalInfo={setArrivalInfo}
               />
             </div>
@@ -265,10 +300,17 @@ function TravelPlannerPage() {
           </div>
         </div>
       </div>
-      <button className="flex items-center justify-center mt-4 bg-mainColor hover:bg-mainHover text-white rounded-lg px-3 py-2">
+      <button 
+        onClick={saveSchedule}
+        className="flex items-center justify-center mt-4 bg-mainColor hover:bg-mainHover text-white rounded-lg px-3 py-2">
         저장
       </button>
-      <FriendAddModal isOpen={friendsModalOpen} onClose={toggleFriendAddModal} />
+      <FriendAddModal
+        isOpen={friendsModalOpen}
+        onClose={toggleFriendAddModal}
+        mode="companionAdd"
+        onAddCompanion={(nickname) => addCompanion(nickname)}
+      />
     </div>
   );
 }

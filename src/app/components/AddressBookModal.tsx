@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
@@ -27,14 +27,13 @@ const AddressBookModal: React.FC<{
   useEffect(() => {
     getFriendList();
   }, []);
-
+  
   const getFriendList = async () => {
     const { FRIENDS_LIST_GET } = API.FRIENDS;
     try {
       const res = await mainApi({
         url: FRIENDS_LIST_GET,
         method: "GET",
-        withAuth: true,
       });
       if (res.status === 200) {
         setFriends(res.data.friends || []);
@@ -53,9 +52,7 @@ const AddressBookModal: React.FC<{
         method: "DELETE",
       });
       if (res.status === 200) {
-        setFriends((prevFriends) =>
-          prevFriends.filter((friend) => friend.id !== id),
-        );
+        setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== id));
         SuccessAlert("친구 목록에서 삭제되었습니다.");
       }
     } catch (e) {
@@ -84,9 +81,7 @@ const AddressBookModal: React.FC<{
                 className="flex justify-between items-center py-2 border-b border-gray-300"
               >
                 <span className="flex items-center">
-                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">
-                    이미지
-                  </div>
+                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">이미지</div>
                   {friend.name}
                 </span>
                 <Button
@@ -138,6 +133,7 @@ const AddressBookModal: React.FC<{
       <FriendAddModal
         isOpen={isFriendAddModalOpen}
         onClose={() => setFriendAddModalOpen(false)}
+        mode="friendRequest"
       />
     </>
   );

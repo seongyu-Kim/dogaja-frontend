@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse, Method } from "axios";
 interface AxiosProps {
   url: string;
   method: Method;
-  data?: Record<string, string>;
+  data?: Record<string, any>;
   headers?: Record<string, string>;
   tags?: string;
   withCredentials?: boolean;
