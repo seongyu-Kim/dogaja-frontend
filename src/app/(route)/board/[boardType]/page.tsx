@@ -29,7 +29,7 @@ export default async function BoardListDetail({ params }: Props) {
 
   return (
     <div className="flex justify-center h-full">
-      <Board name={`${boardTitle}`} list={list} />
+      <Board name={boardTitle} list={list} />
     </div>
   );
 }

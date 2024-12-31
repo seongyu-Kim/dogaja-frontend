@@ -2,7 +2,8 @@ export interface BoardListType {
   id: number;
   title: string;
   name: string;
-  commentsCount: string;
+  commentsCount: number;
+  img: number;
 }
 
 export interface ReadBoardType {
