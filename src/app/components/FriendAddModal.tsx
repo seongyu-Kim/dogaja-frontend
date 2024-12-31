@@ -16,11 +16,9 @@ interface Friend {
 interface FriendAddModalProps {
   isOpen: boolean;
   onClose: () => void;
-  mode: "friendRequest" | "companionAdd";
-  onAddCompanion?: (nickname: string) => void;
 }
 
-const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose, mode, onAddCompanion }) => {
+const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
   const [inputValue, setInputValue] = useState("");
   const [friends, setFriends] = useState<Friend[]>([]);
   const [loading, setLoading] = useState(false);
@@ -63,7 +61,6 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose, mode, 
   };
 
   const handleAdd = async (friend: Friend) => {
-    if (mode === "friendRequest") {
       // 친구 요청 전송
       const { FRIENDS_REQUEST_POST } = API.FRIENDS;
       try {
@@ -83,11 +80,6 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose, mode, 
         console.error(e);
         ErrorAlert("친구 요청 전송 중 오류가 발생했습니다.");
       }
-    } else if (mode === "companionAdd" && onAddCompanion) {
-      // 동행자 추가
-      onAddCompanion(friend.nickname);
-      closeModal();
-    }
   };
 
   const closeModal = () => {
@@ -102,7 +94,7 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose, mode, 
     <Modal 
       isOpen={isOpen} 
       onClose={closeModal} 
-      title={mode === "friendRequest" ? "친구 추가" : "동행자 추가"}
+      title="친구 추가"
       inputProps={{
         type: "text",
         name: "nickname",

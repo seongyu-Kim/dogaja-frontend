@@ -135,7 +135,7 @@ function Description({
             >
               <div className="w-full flex item-center h-full px-2 gap-1">
                 <Link
-                  href={`${route}/${id}`}
+                  href={`/my-schedule/planner/${id}`}
                   className="w-full flex item-center h-full px-2 gap-1"
                 >
                   <div className="w-[10%] h-full hidden md:flex items-center justify-center">
@@ -180,8 +180,7 @@ function Description({
                     >
                       삭제
                     </Button>
-                    {/*임시 - 추후 아래 주소 수정*/}
-                    <Link href={`${route}/${id}/update`}>
+                    <Link href={`/my-schedule/planner/${id}`}>
                       <Button
                         style={{
                           backgroundColor: "bg-mainColor",

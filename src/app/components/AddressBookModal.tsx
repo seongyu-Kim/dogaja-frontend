@@ -18,7 +18,9 @@ interface Friend {
 const AddressBookModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-}> = ({ isOpen, onClose }) => {
+  onAddFriend: (friendName: string) => void;
+  isSchedulePage?: boolean;
+}> = ({ isOpen, onClose, onAddFriend, isSchedulePage }) => {
   const [isRequestModalOpen, setRequestModalOpen] = useState(false);
   const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
   const [isFriendAddModalOpen, setFriendAddModalOpen] = useState(false);
@@ -48,7 +50,7 @@ const AddressBookModal: React.FC<{
     const { FRIENDS_DELETE } = API.FRIENDS;
     try {
       const res = await mainApi({
-        url: FRIENDS_DELETE,
+        url: FRIENDS_DELETE(id.toString()),
         method: "DELETE",
       });
       if (res.status === 200) {
@@ -70,6 +72,11 @@ const AddressBookModal: React.FC<{
     setFriendAddModalOpen(true);
   };
 
+  const handleAddSchedule = (friendName: string) => {
+    onAddFriend(friendName);
+    onClose();
+  };
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} title="주소록">
@@ -84,6 +91,18 @@ const AddressBookModal: React.FC<{
                   <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">이미지</div>
                   {friend.name}
                 </span>
+                {isSchedulePage && (
+                  <Button
+                    onClick={() => handleAddSchedule(friend.name)} // 친구 선택 시 처리
+                    style={{
+                      textColor: "text-mainColor",
+                      backgroundColor: "bg-transparent",
+                      hoverTextColor: "hover:text-mainColorHover",
+                    }}
+                  >
+                    추가
+                  </Button>
+                )}
                 <Button
                   onClick={() => handleDelete(friend.id)}
                   style={{
@@ -133,7 +152,6 @@ const AddressBookModal: React.FC<{
       <FriendAddModal
         isOpen={isFriendAddModalOpen}
         onClose={() => setFriendAddModalOpen(false)}
-        mode="friendRequest"
       />
     </>
   );

@@ -37,8 +37,8 @@ export const API = {
     FRIENDS_REQUEST_GET: `${BASE_URL}/friends/requests/received`,
     FRIENDS_LIST_GET: `${BASE_URL}/friends/list`,
     FRIENDS_REQUEST_POST: `${BASE_URL}/friends/request`,
-    FRIENDS_REQUEST_PATCH: `${BASE_URL}/friends/requests/{id}/respond`,
-    FRIENDS_DELETE: `${BASE_URL}/friends/{friendId}`,
+    FRIENDS_REQUEST_PATCH: (id:string) => `${BASE_URL}/friends/requests/${id}/respond`,
+    FRIENDS_DELETE: (friendId:string) => `${BASE_URL}/friends/${friendId}`,
   },
   COMMENT: {
     COMMENT_CREATE: (id: string) => `${BASE_URL}/comment/${id}`,
@@ -54,7 +54,16 @@ export const API = {
   },
   SCHEDULE: {
     SCHEDULE_CREATE: `${BASE_URL}/schedule/create`,
+    SCHEDULE_GET: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}`,
+    SCHEDULE_UPDATE: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}`,
+    SCHEDULE_DELETE: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}`,
     SCHEDULE_LIST_GET: `${BASE_URL}/schedule`,
-    SCHEDULE_GET: (id:string) => `${BASE_URL}/schedule/${id}`,
+    SCHEDULE_LIST_UPDATE: (scheduleId:string, listsId:string) => `${BASE_URL}/schedule/${scheduleId}/${listsId}`,
+    SCHEDULE_LIST_DELETE: (scheduleId:string, listsId:string) => `${BASE_URL}/schedule/${scheduleId}/${listsId}`,
+    SCHEDULE_LIST_CHECK: (scheduleId:string, listsId:string) => `${BASE_URL}/schedule/${scheduleId}/${listsId}/checked`,
+    SCHEDULE_ADD_BUCKET: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/bucket`,
+    SCHEDULE_ADD_CHECKLIST: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/check`,
+    SCHEDULE_ADD_FRIEND: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/friends`,
+    SCHEDULE_DELETE_FRIEND: (scheduleId:string, friendId:string) => `${BASE_URL}/schedule/${scheduleId}/${friendId}`,
   }
 };

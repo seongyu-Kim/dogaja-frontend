@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, useEffect  } from "react";
+import { useRouter, useParams } from "next/navigation";
 import TravelSegment from "@/app/components/common/TravelSegment";
 import Checklist from "@/app/components/common/Checklist";
 import Input from "@/app/components/common/Input";
-import FriendAddModal from "@/app/components/FriendAddModal";
 import SelectImage from "@/app/components/common/SelectImage";
+import AddressBookModal from "@/app/components/AddressBookModal";
 
 import { FriendDto, ScheduleDto, StartDto, ArriveDto, BucketItem, CheckItem } from "@/app/utils/scheduleDto";
 import { API } from "@/app/utils/api";
@@ -15,6 +16,8 @@ import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 import { IoPersonAddOutline } from "react-icons/io5";
 
 function TravelPlannerPage() {
+  const { scheduleId } = useParams();
+
   const [title, setTitle] = useState("");
   const [companions, setCompanions] = useState<string[]>([]);
   const [friendsModalOpen, setFriendsModalOpen] = useState(false);
@@ -99,7 +102,7 @@ function TravelPlannerPage() {
       return;
     }
 
-    const { SCHEDULE_CREATE } = API.SCHEDULE;
+    const { SCHEDULE_CREATE, SCHEDULE_ADD_BUCKET, SCHEDULE_ADD_CHECKLIST } = API.SCHEDULE;
 
     // DTO 데이터 생성
     const scheduleDto: ScheduleDto = {
@@ -154,12 +157,40 @@ function TravelPlannerPage() {
 
       if (response.status === 200) {
         SuccessAlert("일정이 성공적으로 저장되었습니다!");
+
+        const scheduleId = response.data.id;
+
+        const bucketPromises = bucketItems.map((item) =>
+          mainApi({
+            url: SCHEDULE_ADD_BUCKET(scheduleId),
+            method: "POST",
+            data: {
+              content: item.content,
+              type: item.type,
+            },
+          })
+        );
+
+        const checklistPromises = checkItems.map((item) =>
+          mainApi({
+            url: SCHEDULE_ADD_CHECKLIST(scheduleId),
+            method: "POST",
+            data: {
+              content: item.content,
+              type: item.type,
+            },
+          })
+        );
+  
+        // 모든 비동기 작업 병렬 실행
+        await Promise.all([...bucketPromises, ...checklistPromises]);
+
       } else {
-        ErrorAlert("일정 저장 중 문제가 발생했습니다.");
+        ErrorAlert("일정 저장 중 문제가 발생했습니다.d");
       }
     } catch (error) {
       console.error("Error saving schedule:", error);
-      ErrorAlert("일정 저장 중 문제가 발생했습니다.");
+      ErrorAlert("일정 저장 중 문제가 발생했습니다.s");
     }
   };
 
@@ -213,6 +244,12 @@ function TravelPlannerPage() {
             </div>
           </div>
         </div>
+        <AddressBookModal
+          isOpen={friendsModalOpen}
+          onClose={() => setFriendsModalOpen(false)}
+          onAddFriend={addCompanion}
+          isSchedulePage={true}
+        />
         <div className="flex justify-center w-full min-w-[950px] gap-2">
           <div className="w-[70%] min-w-[720px]">
             <div className="flex justify-center mt-2 gap-2 w-full">
@@ -305,12 +342,7 @@ function TravelPlannerPage() {
         className="flex items-center justify-center mt-4 bg-mainColor hover:bg-mainHover text-white rounded-lg px-3 py-2">
         저장
       </button>
-      <FriendAddModal
-        isOpen={friendsModalOpen}
-        onClose={toggleFriendAddModal}
-        mode="companionAdd"
-        onAddCompanion={(nickname) => addCompanion(nickname)}
-      />
+
     </div>
   );
 }
