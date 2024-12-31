@@ -1,6 +1,8 @@
 "use client";
 import { io, Socket } from "socket.io-client";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { useUserStore } from "@/app/store/userStore";
+import notFound from "@/app/not-found";
 
 interface MessageType {
   message: string;
@@ -15,7 +17,9 @@ interface ChatRoom {
   roomId: string; // 채팅방 식별자 추가
 }
 
-const chatSocket: Socket = io("ws://localhost:5000");
+const chatSocket: Socket = io(
+  "ws://kdt-react-node-1-team02.elicecoding.com:3003",
+);
 
 export default function ChatPage() {
   //임시 - 아래 타입들 API 나오기 전에 상상코딩된 부분이라 수정 예정
@@ -104,6 +108,7 @@ export default function ChatPage() {
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
   const messageRef = useRef<HTMLInputElement>(null);
+  const { user } = useUserStore();
 
   // 초기 채팅방 목록 가져오기
   useEffect(() => {
@@ -186,6 +191,10 @@ export default function ChatPage() {
   const getMessagesSocketHandler = (data: MessageType) => {
     setChatLog((prevChatLog) => [...prevChatLog, data]);
   };
+
+  if (!user || !user.admin) {
+    return notFound({});
+  }
 
   return (
     <div className="flex bg-white gap-2 px-10 pt-10 h-[800px]">

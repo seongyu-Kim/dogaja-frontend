@@ -10,12 +10,14 @@ type User = {
 
 type UserState = {
   user: User;
+  resetUser: () => void;
   fetchUser: () => Promise<void>;
 };
 
 export const useUserStore = create<UserState>((set) => ({
   user: null,
   error: null,
+  resetUser: () => set({ user: null }),
 
   fetchUser: async () => {
     try {

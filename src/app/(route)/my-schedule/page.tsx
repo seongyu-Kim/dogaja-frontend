@@ -6,11 +6,12 @@ import Button from "@/app/components/common/Button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Pagination from "@/app/components/common/Pagination";
-import { scheduleGet } from "@/app/utils/boardApi";
+import { scheduleDelete, scheduleGet } from "@/app/utils/boardApi";
 import { ScheduleType } from "@/app/type/scheduleListType";
 import { useUserStore } from "@/app/store/userStore";
 import days from "@/app/utils/days";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { string } from "postcss-selector-parser";
 
 const itemsPerPage = 5;
 
@@ -66,7 +67,7 @@ export default function MySchedulePage() {
   const handleDeleteClick = async (id: number) => {
     const deleteConfirm = confirm("일정을 삭제 하시겠습니까?");
     if (deleteConfirm) {
-      const res = 200; // api 요청 부분
+      const res = await scheduleDelete(String(id)); // api 요청 부분
       if (res === 200) {
         SuccessAlert("일정이 삭제되었습니다");
         return;
