@@ -6,7 +6,7 @@ export interface ScheduleType {
   review: string | null; //임시 타입 null로 작성되어 있어서 임시
   image: string | null; //임시 타입 null로 작성되어 있어서 임시
   user: User;
-  friendList: FriendList[];
+  friends: FriendList[];
 }
 
 interface User {
