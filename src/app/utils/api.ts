@@ -55,6 +55,7 @@ export const API = {
   SCHEDULE: {
     SCHEDULE_CREATE: `${BASE_URL}/schedule/create`,
     SCHEDULE_LIST_GET: `${BASE_URL}/schedule`,
-    SCHEDULE_GET: (id:string) => `${BASE_URL}/schedule/${id}`,
-  }
+    SCHEDULE_GET: (id: string) => `${BASE_URL}/schedule/${id}`,
+    SCHEDULE_DELETE: (id: string) => `${BASE_URL}/schedule/${id}`,
+  },
 };
