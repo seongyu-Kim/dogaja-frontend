@@ -36,9 +36,14 @@ export default function ChatPage() {
       user: "other",
     },
     {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
+      message: "더미데이터~",
+      timestamp: "오후 2:30",
+      user: "me",
+    },
+    {
+      message: "더미데이터~",
+      timestamp: "오후 2:30",
+      user: "me",
     },
     {
       message: "더미데이터2",
@@ -79,6 +84,16 @@ export default function ChatPage() {
       message: "더미데이터2",
       timestamp: "오후 2:31",
       user: "other",
+    },
+    {
+      message: "더미데이터2",
+      timestamp: "오후 2:31",
+      user: "other",
+    },
+    {
+      message: "더미데이터~",
+      timestamp: "오후 2:30",
+      user: "me",
     },
     {
       message: "더미데이터2",
@@ -95,11 +110,21 @@ export default function ChatPage() {
     //대충 axios로 채팅방 목록 가져오고 setChatRooms에 데이터 넣어주고 아래에 함수 실행~
     console.log("채팅방 목록 불러옴~~");
     setChatRooms([
-      { name: "A", messages: 13, roomId: "1" },
+      { name: "r", messages: 13, roomId: "1" },
       { name: "B", messages: 13, roomId: "2" },
       { name: "C", messages: 8, roomId: "3" },
       { name: "D", messages: 0, roomId: "4" },
       { name: "E", messages: 7, roomId: "5" },
+      { name: "D", messages: 0, roomId: "6" },
+      { name: "E", messages: 7, roomId: "7" },
+      { name: "D", messages: 0, roomId: "8" },
+      { name: "E", messages: 7, roomId: "9" },
+      { name: "D", messages: 0, roomId: "10" },
+      { name: "E", messages: 7, roomId: "11" },
+      { name: "D", messages: 0, roomId: "12" },
+      { name: "E", messages: 7, roomId: "13" },
+      { name: "D", messages: 0, roomId: "14" },
+      { name: "E", messages: 7, roomId: "15" },
     ]);
   }, []);
 
@@ -163,12 +188,12 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex bg-white gap-2 pb-24 px-10 pt-5 h-3/4">
-      <div className="w-64 border border-mainColor rounded">
-        <div className="p-4 border-b border-gray-200">
+    <div className="flex bg-white gap-2 px-10 pt-10 h-[800px]">
+      <div className="w-64 border border-mainColor rounded overflow-y-auto">
+        <div className="p-4 bg-white border-b border-gray-300 sticky top-0">
           <h2 className="text-lg font-semibold text-gray-700">채팅</h2>
         </div>
-        <div className="overflow-y-auto">
+        <div>
           {chatRooms.map((room) => (
             <div
               key={room.roomId}
@@ -196,78 +221,80 @@ export default function ChatPage() {
           ))}
         </div>
       </div>
-      <div className="flex-1 flex flex-col rounded border border-mainColor">
-        <div className="flex-1 overflow-y-auto p-4">
-          <p className="text-center border-b border-gray-300 pb-2 mb-4">
-            {selectedRoom &&
-              chatRooms.find((room) => room.roomId === selectedRoom)?.name}
-          </p>
-          <div className="space-y-4 overflow-y-auto">
-            {chatLog.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message.user === "me" ? "justify-end" : "justify-start"}`}
-              >
+      {selectedRoom && (
+        <div className="flex-1 flex flex-col rounded border border-mainColor">
+          <div className="flex-1 overflow-y-auto">
+            <p className="text-center bg-white border-b border-gray-300 py-2 mb-4 sticky top-0 rounded">
+              {selectedRoom &&
+                chatRooms.find((room) => room.roomId === selectedRoom)?.name}
+            </p>
+            <div className="space-y-4 overflow-y-auto p-4">
+              {chatLog.map((message, index) => (
                 <div
-                  className={`flex items-end gap-2 ${message.user === "me" ? "flex-row-reverse" : "flex-row"}`}
+                  key={index}
+                  className={`flex ${message.user === "me" ? "justify-end" : "justify-start"}`}
                 >
-                  {message.user !== "me" && (
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex-shrink-0" />
-                  )}
-                  <div className="flex flex-col gap-1">
-                    <div
-                      className={`max-w-md px-4 py-2 rounded-2xl 
+                  <div
+                    className={`flex items-end gap-2 ${message.user === "me" ? "flex-row-reverse" : "flex-row"}`}
+                  >
+                    {message.user !== "me" && (
+                      <div className="w-8 h-8 bg-gray-200 rounded-full flex-shrink-0" />
+                    )}
+                    <div className="flex flex-col gap-1">
+                      <div
+                        className={`max-w-md px-4 py-2 rounded-2xl 
                       ${
                         message.user === "me"
-                          ? "bg-rose-100 text-gray-800"
-                          : "bg-gray-100 text-gray-800"
+                          ? "bg-rose-200 text-gray-800"
+                          : "bg-gray-200 text-gray-800"
                       }`}
-                    >
-                      {message.message}
-                    </div>
-                    {message.timestamp && (
-                      <span
-                        className={`text-xs text-gray-500 ${message.user === "me" ? "text-right" : "text-left"}`}
                       >
-                        {message.timestamp}
-                      </span>
-                    )}
+                        {message.message}
+                      </div>
+                      {message.timestamp && (
+                        <span
+                          className={`text-xs text-gray-500 ${message.user === "me" ? "text-right" : "text-left"}`}
+                        >
+                          {message.timestamp}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+          <div className="border-t border-gray-300 p-4">
+            <form onSubmit={submitMessageApiHandler} className="flex gap-2">
+              <input
+                ref={messageRef}
+                type="text"
+                placeholder="메시지를 입력하세요."
+                className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-gray-400"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 text-gray-500 hover:text-gray-600"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                  />
+                </svg>
+              </button>
+            </form>
           </div>
         </div>
-        <div className="border-t border-gray-300 p-4">
-          <form onSubmit={submitMessageApiHandler} className="flex gap-2">
-            <input
-              ref={messageRef}
-              type="text"
-              placeholder="메시지를 입력하세요."
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:border-gray-400"
-            />
-            <button
-              type="submit"
-              className="px-4 py-2 text-gray-500 hover:text-gray-600"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                />
-              </svg>
-            </button>
-          </form>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
