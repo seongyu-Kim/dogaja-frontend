@@ -1,7 +1,7 @@
 "use client";
 
 import { CommentType } from "@/app/type/boardListType";
-import { FaComments } from "react-icons/fa";
+import { FaComment } from "react-icons/fa";
 import CommentList from "@/app/components/domain/board/CommentList";
 import CommentCreate from "@/app/components/domain/board/CommentCreate";
 import { useUserStore } from "@/app/store/userStore";
@@ -21,7 +21,7 @@ export default function CommentArea({
     <>
       <div className="flex flex-col gap-3 border-b border-gray-400 pb-6">
         <div className="flex gap-3 items-center">
-          <FaComments className="w-[35px] h-[35px] text-gray-400" />
+          <FaComment className="w-[25px] h-[25px] text-gray-400" />
           <p>{defaultCommentList.length} 댓글</p>
         </div>
         <div>

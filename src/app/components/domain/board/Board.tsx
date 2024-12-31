@@ -26,6 +26,13 @@ export default function Board({
   const totalPages = list ? Math.ceil(list.length / itemsPerPage) : 0;
 
   useEffect(() => {
+    if (!searchParams.has("page")) {
+      // 페이지 쿼리 파라미터가 없으면 page=1을 추가
+      router.push(`${boardPath}?page=1`);
+    }
+  }, [searchParams, router, boardPath]);
+
+  useEffect(() => {
     // 쿼리 파라미터에서 'page' 값을 가져와서 currentPage를 설정
     const page = parseInt(searchParams.get("page") || "1");
     if (page !== currentPage) {
@@ -56,7 +63,7 @@ export default function Board({
   };
 
   return (
-    <div className="flex flex-col w-[50%] h-full items-center gap-20 pt-10 px-3 bg-gray-100">
+    <div className="flex flex-col min-w-[400px] w-[50%] h-full items-center gap-20 pt-10 px-3 border-x border-mainColor">
       <p className="text-3xl">{name} 게시판</p>
       <main className="w-full">
         {currentItems.length > 0 ? (

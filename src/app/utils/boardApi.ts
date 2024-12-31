@@ -2,7 +2,8 @@
 
 import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
+import { ScheduleType } from "@/app/type/scheduleListType";
 
 export const createPost = async (
   formData: FormData,
@@ -154,6 +155,25 @@ export const requestFriend = async (friendName: string) => {
       return res.status;
     }
   } catch (e) {
-    console.log(e);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    return e.status;
+  }
+};
+
+//일정 리스트 조회
+export const scheduleGet = async () => {
+  const { SCHEDULE_READ } = API.SCHEDULE;
+  try {
+    const res = await mainApi({
+      url: SCHEDULE_READ,
+      method: "GET",
+      withAuth: true,
+    });
+    if (res.status === 200) {
+      return res.data as ScheduleType[];
+    }
+  } catch (e) {
+    console.error(e);
   }
 };

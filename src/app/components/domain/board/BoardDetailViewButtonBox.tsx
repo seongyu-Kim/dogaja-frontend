@@ -54,13 +54,14 @@ export default function BoardDetailViewButtonBox({
             </Button>
           </Link>
         )}
-        {user && (user.name === name || user.admin) && (
+        {user && (user.admin || user.name === name) && (
           <>
             <Link href={`./${postId}/update`}>
               <Button
                 style={{
-                  backgroundColor: "bg-mainColor",
-                  hoverColor: "hover:bg-mainHover",
+                  // backgroundColor: "bg-mainColor",
+                  backgroundColor: "bg-gray-400",
+                  hoverColor: "hover:bg-gray-500",
                   width: "w-[90px]",
                 }}
               >
@@ -70,8 +71,8 @@ export default function BoardDetailViewButtonBox({
             <Button
               onClick={handleDeleteClick}
               style={{
-                backgroundColor: "bg-mainColor",
-                hoverColor: "hover:bg-mainHover",
+                backgroundColor: "bg-mainRed",
+                hoverColor: "hover:bg-mainRedHover",
                 width: "w-[90px]",
               }}
             >
