@@ -14,6 +14,7 @@ import SlideMenu from "./Slidemenu";
 import AddressBookModal from "../AddressBookModal";
 import RequestModal from "../RequestModal";
 import NotificationList, { Notification } from "../NotificationList";
+import { useUserStore } from "@/app/store/userStore";
 
 interface UserInfoResponse {
   name: string;
@@ -30,6 +31,7 @@ export default function Navbar() {
     useState<Notification | null>(null);
   const [name, setName] = useState<string>("");
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const { resetUser, user } = useUserStore();
 
   useEffect(() => {
     getUserName();
@@ -86,8 +88,9 @@ export default function Navbar() {
         method: "POST",
         withAuth: true,
       });
-      if (res.status === 200) {
+      if (res.status === 201) {
         localStorage.removeItem("token");
+        resetUser();
         setIsLoggedIn(false);
         router.replace("/");
         SuccessAlert("로그아웃 되었습니다.");

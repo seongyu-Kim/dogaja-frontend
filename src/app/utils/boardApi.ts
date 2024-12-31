@@ -177,3 +177,19 @@ export const scheduleGet = async () => {
     console.error(e);
   }
 };
+
+export const scheduleDelete = async (id: string) => {
+  const { SCHEDULE_DELETE } = API.SCHEDULE;
+  try {
+    const res = await mainApi({
+      url: SCHEDULE_DELETE(id),
+      method: "DELETE",
+      withAuth: true,
+    });
+    if (res.status === 200) {
+      return res.status;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
