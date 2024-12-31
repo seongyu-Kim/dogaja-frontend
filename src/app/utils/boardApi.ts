@@ -163,10 +163,10 @@ export const requestFriend = async (friendName: string) => {
 
 //일정 리스트 조회
 export const scheduleGet = async () => {
-  const { SCHEDULE_READ } = API.SCHEDULE;
+  const { SCHEDULE_LIST_GET } = API.SCHEDULE;
   try {
     const res = await mainApi({
-      url: SCHEDULE_READ,
+      url: SCHEDULE_LIST_GET,
       method: "GET",
       withAuth: true,
     });
