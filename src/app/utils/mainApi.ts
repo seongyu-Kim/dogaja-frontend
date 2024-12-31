@@ -1,4 +1,10 @@
-import axios, { AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import axios, {
+  AxiosRequestConfig,
+  AxiosResponse,
+  isAxiosError,
+  Method,
+} from "axios";
+import { toast } from "react-toastify";
 
 interface AxiosProps {
   url: string;
@@ -9,6 +15,20 @@ interface AxiosProps {
   withCredentials?: boolean;
   withAuth?: boolean;
 }
+
+interface ErrorMeta {
+  response: {
+    data: {
+      error: string;
+      message: string;
+      statusCode: number;
+    };
+  };
+}
+
+export const isServerApiError = (error: unknown): error is ErrorMeta => {
+  return isAxiosError(error) && !!error.response;
+};
 
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   next?: Record<string, string>;
@@ -47,6 +67,28 @@ export const mainApi = async <T>({
     return res;
   } catch (e: any) {
     console.error(e);
-    throw e.response || e.message;
+    throw e;
   }
 };
+
+createAxios.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (isServerApiError(error)) {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        return Promise.reject(error);
+      }
+
+      toast.error("세션이 만료되었습니다. 로그인을 해야합니다.", {
+        position: "top-right",
+        autoClose: 2500,
+        closeOnClick: true,
+        toastId: "session-expired",
+      });
+
+      return Promise.reject(error);
+    }
+  },
+);

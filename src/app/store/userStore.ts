@@ -28,7 +28,12 @@ export const useUserStore = create<UserState>((set) => ({
       });
 
       const userData = response.data as User;
-      set({ user: userData });
+      const statusCode = response.status;
+      if (statusCode === 200) {
+        set({ user: userData });
+        return;
+      }
+      set({ user: null });
       //
     } catch (e) {
       console.error("fetchUser", e);
