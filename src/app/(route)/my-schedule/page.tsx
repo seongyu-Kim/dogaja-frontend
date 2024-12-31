@@ -70,6 +70,7 @@ export default function MySchedulePage() {
       const res = await scheduleDelete(String(id)); // api 요청 부분
       if (res === 200) {
         SuccessAlert("일정이 삭제되었습니다");
+        setList((prevList) => prevList.filter((item) => item.id !== id));
         return;
       }
       ErrorAlert("일정 삭제 오류");
