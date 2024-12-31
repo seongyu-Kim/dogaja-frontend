@@ -13,7 +13,14 @@ interface Friend {
   nickname: string;
 }
 
-const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ isOpen, onClose }) => {
+interface FriendAddModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  mode: "friendRequest" | "companionAdd";
+  onAddCompanion?: (nickname: string) => void;
+}
+
+const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose, mode, onAddCompanion }) => {
   const [inputValue, setInputValue] = useState("");
   const [friends, setFriends] = useState<Friend[]>([]);
   const [loading, setLoading] = useState(false);
@@ -39,7 +46,6 @@ const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ i
     setLoading(true);
     setHasSearched(true);
     
-    // 친구 검색 로직 (더미 데이터 사용)
     const dummyFriends = [
       { id: 1, nickname: "엘리스" },
       { id: 2, nickname: "김토끼" },
@@ -56,24 +62,31 @@ const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ i
     setLoading(false);
   };
 
-  const handleAddFriend = async (friend: Friend) => {
-    const { FRIENDS_REQUEST_POST } = API.FRIENDS;
-    try {
-      const res = await mainApi({
-        url: FRIENDS_REQUEST_POST,
-        method: "POST",
-        data: { friendName: friend.nickname },
-      });
+  const handleAdd = async (friend: Friend) => {
+    if (mode === "friendRequest") {
+      // 친구 요청 전송
+      const { FRIENDS_REQUEST_POST } = API.FRIENDS;
+      try {
+        const res = await mainApi({
+          url: FRIENDS_REQUEST_POST,
+          method: "POST",
+          data: { friendName: friend.nickname },
+        });
 
-      if (res.status === 200) {
-        SuccessAlert("친구 요청이 전송되었습니다.");
-        closeModal();
-      } else {
-        ErrorAlert("친구 요청 전송에 실패했습니다.");
+        if (res.status === 200) {
+          SuccessAlert("친구 요청이 전송되었습니다.");
+          closeModal();
+        } else {
+          ErrorAlert("친구 요청 전송에 실패했습니다.");
+        }
+      } catch (e) {
+        console.error(e);
+        ErrorAlert("친구 요청 전송 중 오류가 발생했습니다.");
       }
-    } catch (e) {
-      console.error(e);
-      ErrorAlert("친구 요청 전송 중 오류가 발생했습니다.");
+    } else if (mode === "companionAdd" && onAddCompanion) {
+      // 동행자 추가
+      onAddCompanion(friend.nickname);
+      closeModal();
     }
   };
 
@@ -89,7 +102,7 @@ const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ i
     <Modal 
       isOpen={isOpen} 
       onClose={closeModal} 
-      title="친구 추가" 
+      title={mode === "friendRequest" ? "친구 추가" : "동행자 추가"}
       inputProps={{
         type: "text",
         name: "nickname",
@@ -129,7 +142,7 @@ const FriendAddModal: React.FC<{ isOpen: boolean; onClose: () => void; }> = ({ i
                 </span>
                 <button
                   className="bg-mainColor text-sm hover:bg-mainHover text-white px-1.5 py-1.5 rounded"
-                  onClick={() => handleAddFriend(friend)}
+                  onClick={() => handleAdd(friend)}
                 >
                   <FaPlus />
                 </button>

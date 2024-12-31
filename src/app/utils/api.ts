@@ -54,7 +54,7 @@ export const API = {
   },
   SCHEDULE: {
     SCHEDULE_CREATE: `${BASE_URL}/schedule/create`,
-    SCHEDULE_READ: `${BASE_URL}/schedule`,
-    SCHEDULE_DETAIL_READ: (id: string) => `${BASE_URL}/schedule/${id}`,
-  },
+    SCHEDULE_LIST_GET: `${BASE_URL}/schedule`,
+    SCHEDULE_GET: (id:string) => `${BASE_URL}/schedule/${id}`,
+  }
 };
