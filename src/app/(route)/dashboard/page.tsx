@@ -1,26 +1,39 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import KakaoMap from "../map/page";
 import { TbMapSearch } from "react-icons/tb";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 import { LiaThumbtackSolid } from "react-icons/lia";
-import { FaMapMarkerAlt } from "react-icons/fa";
-import { FaSearch } from "react-icons/fa";
+import { FaMapMarkerAlt, FaSearch } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
 import Input from "@/app/components/common/Input";
+import { mainApi } from "@/app/utils/mainApi";
+import { API } from "@/app/utils/api";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { FaStar } from "react-icons/fa";
 
 interface Place {
+  id?: string;
   place_name: string;
   address_name: string;
   road_address_name?: string;
   phone?: string;
+  x: string;
+  y: string;
+  isFavorite?: boolean;
+  favoriteId?: string;
 }
+
+interface Fav {
+  id?: string;
+  location: string;
+  address?: string;
+}
+
 const Dashboard: React.FC = () => {
-  //검색값
   const [searchValue, setSearchValue] = useState<string>("");
   const [locationsList] = useState<string[]>([
-    "우리집",
     "서울역",
     "동대문",
     "광화문",
@@ -28,27 +41,28 @@ const Dashboard: React.FC = () => {
     "홍대",
     "이태원",
   ]);
-  //선택 장소
   const [selectedLocation, setSelectedLocation] = useState<string>("");
-  //추천 장소
   const [places, setPlaces] = useState<Place[]>([]);
-  //
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
+  const [favorites, setFavorites] = useState<Fav[]>([]);
 
+  // 검색창 클릭
   const handleSearchClick = () => {
     setSearchValue(selectedLocation);
     setShowDropdown(true);
   };
 
+  // 위치 선택
   const handleLocationSelect = (location: string) => {
     setSearchValue(location);
     setSelectedLocation(location);
     setShowDropdown(false);
   };
 
-  const filteredLocations = locationsList.filter((location) =>
-    location.includes(searchValue)
-  );
+  const filteredLocations = showDropdown
+    ? locationsList.filter((location) => location.includes(searchValue))
+    : [];
+
   const highlightMatch = (text: string, search: string) => {
     if (!search) return text;
 
@@ -64,6 +78,114 @@ const Dashboard: React.FC = () => {
         part
       )
     );
+  };
+
+  useEffect(() => {
+    const initializeData = async () => {
+      await fetchFavoritePlaces();
+    };
+    initializeData();
+  }, []);
+
+  useEffect(() => {
+    if (places.length && favorites.length) {
+      mergePlacesWithFavorites();
+      return;
+    }
+  }, [favorites, places]);
+
+  //즐찾 목록
+  const fetchFavoritePlaces = async () => {
+    try {
+      const res = await mainApi({
+        url: API.BOOKMARK.BOOKMARK_ALL_GET,
+        method: "GET",
+        withAuth: true,
+      });
+
+      if (res.status === 200) {
+        setFavorites(res.data as Fav[]);
+      }
+    } catch (e) {
+      console.error("즐찾 불러오기 실패", e);
+      ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
+    }
+  };
+
+  //장소, 즐찾 병합
+  const mergePlacesWithFavorites = () => {
+    const updatedPlaces = places.map((place) => {
+      const favorite = favorites.find(
+        (fav) => fav.location === place.place_name
+      );
+      return {
+        ...place,
+        isFavorite: !!favorite,
+        favoriteId: favorite?.id,
+      };
+    });
+
+    //데이터가 같으면 중단
+    if (JSON.stringify(places) === JSON.stringify(updatedPlaces)) {
+      return;
+    }
+    setPlaces(updatedPlaces);
+  };
+
+  //즐찾추가
+  const addFavoritePlace = async (place: Place) => {
+    try {
+      const res = await mainApi({
+        url: API.BOOKMARK.BOOKMARK_CREATE,
+        method: "POST",
+        data: {
+          location: place.place_name,
+          address: place.address_name,
+          latitude: place.x,
+          longitude: place.y,
+        },
+        withAuth: true,
+      });
+
+      if (res.status === 201) {
+        SuccessAlert("즐겨찾기가 추가되었습니다.");
+        await fetchFavoritePlaces();
+
+        setPlaces((prevPlaces) =>
+          prevPlaces.map((p) =>
+            p.place_name === place.place_name ? { ...p, isFavorite: true } : p
+          )
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  //즐찾해제
+  const removeFavoritePlace = async (place: Place) => {
+    if (!place.favoriteId) return;
+
+    try {
+      const res = await mainApi({
+        url: API.BOOKMARK.BOOKMARK_DELETE(place.favoriteId),
+        method: "DELETE",
+        withAuth: true,
+      });
+
+      if (res.status === 200) {
+        SuccessAlert("즐겨찾기가 삭제되었습니다.");
+        await fetchFavoritePlaces();
+
+        setPlaces((prevPlaces) =>
+          prevPlaces.map((p) =>
+            p.place_name === place.place_name ? { ...p, isFavorite: false } : p
+          )
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -119,12 +241,11 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="flex justify-center min-h-[calc(92vh)]">
-        {/* 레이아웃 */}
         <div className="flex w-full max-w-7xl">
-          {/* 왼쪽*/}
+          {/* 왼쪽 */}
           <div className="flex flex-col flex-grow basis-2/3 p-4 space-y-4">
             {/* 지도 */}
-            <div className="flex-grow bg-gray-200 rounded-lg shadow-md ">
+            <div className="flex-grow bg-gray-200 rounded-lg shadow-md">
               <h2 className="flex text-lg p-3">
                 <TbMapSearch className="w-6 h-auto mr-2" />
                 지도
@@ -137,7 +258,7 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
             {/* 추천 장소 */}
-            <div className="bg-gray-200 rounded-lg shadow-md h-[30vh] overflow-hidden">
+            <div className="bg-gray-200 rounded-lg shadow-md h-[35vh] overflow-hidden">
               <h2 className="flex text-lg p-3">
                 <LiaThumbtackSolid className="w-6 h-auto mr-2" />
                 추천 맛집
@@ -147,13 +268,26 @@ const Dashboard: React.FC = () => {
                   places.map((place, index) => (
                     <div
                       key={index}
-                      className="mb-4 border-b-[1px] border-black pb-4"
+                      className="mb-4 border-b-[1px] border-gray-400 pb-4 flex justify-between items-center"
                     >
-                      <p className="text-lg">{place.place_name}</p>
-                      <p>{place.road_address_name || place.address_name}</p>
-                      <p className="text-sm">
-                        {place.phone || "번호를 제공하지 않습니다."}
-                      </p>
+                      <div>
+                        <p className="text-lg">{place.place_name}</p>
+                        <p>{place.road_address_name || place.address_name}</p>
+                        <p className="text-sm">
+                          {place.phone || "번호를 제공하지 않습니다."}
+                        </p>
+                      </div>
+
+                      <div className="mr-3">
+                        <FaStar
+                          className={`cursor-pointer w-6 h-auto  ${place.isFavorite ? "text-yellow-500" : "text-gray-400"}`}
+                          onClick={() =>
+                            place.isFavorite
+                              ? removeFavoritePlace(place)
+                              : addFavoritePlace(place)
+                          }
+                        />
+                      </div>
                     </div>
                   ))
                 ) : (
