@@ -1,6 +1,6 @@
 "use client";
 
-import List from "@/app/components/common/List";
+import List from "@/app/components/domain/board/List";
 import PathToCreate from "@/app/components/domain/board/PathToCreate";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/common/Pagination";

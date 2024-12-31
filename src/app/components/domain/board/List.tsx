@@ -44,9 +44,9 @@ export default function List({
                 className={`w-full flex items-center justify-between ${preview ? "h-[50px]" : "h-auto"} px-1`}
               >
                 {preview && (
-                  <div className="w-[50px] h-[50px] hidden md:flex items-center justify-center">
+                  <div className="w-[25px] h-[25px] hidden md:flex items-center justify-center">
                     {img ? (
-                      <MdOutlinePhoto className="w-[25px] h-[25px] text-gray-400" /> //임시 - 추후 이미지 가공해서 보여주기
+                      <MdOutlinePhoto className="w-[25px] h-[25px] text-gray-400" />
                     ) : (
                       <IoDocumentText className="w-[25px] h-[25px] text-gray-400" />
                     )}
@@ -56,11 +56,11 @@ export default function List({
                   {parseInt(postId!) == id && (
                     <p className="font-semibold text-xl">{"→"}</p>
                   )}
-                  <p>
-                    {title.length > 35
-                      ? `${title.slice(0, 34)}...`
-                      : `${title}`}
-                  </p>
+                  <div className="w-4/5">
+                    <p className="overflow-hidden whitespace-nowrap text-ellipsis">
+                      {title}
+                    </p>
+                  </div>
                   {commentsCount > 0 && (
                     <p className="text-[10px] text-blue-700">{commentsCount}</p>
                   )}
