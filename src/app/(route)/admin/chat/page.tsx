@@ -188,7 +188,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex bg-white gap-2 px-10 pt-5 h-[800px]">
+    <div className="flex bg-white gap-2 px-10 pt-10 h-[800px]">
       <div className="w-64 border border-mainColor rounded overflow-y-auto">
         <div className="p-4 bg-white border-b border-gray-300 sticky top-0">
           <h2 className="text-lg font-semibold text-gray-700">채팅</h2>
