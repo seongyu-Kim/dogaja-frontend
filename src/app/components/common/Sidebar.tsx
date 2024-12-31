@@ -5,9 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaRegListAlt, FaRegUser, FaRegCalendarAlt } from "react-icons/fa";
 import { FaCompass } from "react-icons/fa6";
+import { useUserStore } from "@/app/store/userStore";
+import { AiFillAlert } from "react-icons/ai";
+import { IoChatboxEllipsesOutline } from "react-icons/io5";
 
 export default function Sidebar() {
   const [isBoardOpen, setIsBoardOpen] = useState(false);
+  const { user } = useUserStore();
+
   const pathname = usePathname();
 
   const toggleBoardMenu = (event: React.MouseEvent) => {
@@ -79,6 +84,27 @@ export default function Sidebar() {
           </Link>
           일정관리
         </li>
+        {user?.admin && (
+          <>
+            <li className="p-2 mt-4 hover:underline hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out">
+              <Link href="/admin/report" className="flex flex-col items-center">
+                <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
+                  <AiFillAlert className="text-xl" />
+                </div>
+              </Link>
+              신고 확인
+            </li>
+
+            <li className="p-2 mt-4 hover:underline hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out">
+              <Link href="/admin/chat" className="flex flex-col items-center">
+                <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
+                  <IoChatboxEllipsesOutline className="text-xl" />
+                </div>
+              </Link>
+              채팅 확인
+            </li>
+          </>
+        )}
       </ul>
     </aside>
   );

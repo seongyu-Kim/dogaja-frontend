@@ -133,7 +133,7 @@ function Description({
               key={id}
               className="w-full h-[150px] border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
             >
-              <div className="w-full flex item-center h-full px-2 gap-1">
+              <div className="w-full flex item-center h-full px-2 gap-1 relative">
                 <Link
                   href={`${route}/${id}`}
                   className="w-full flex item-center h-full px-2 gap-1"
@@ -168,7 +168,7 @@ function Description({
                   </div>
                 </Link>
                 {loginUser && loginUser.name === user.name && (
-                  <div className="flex gap-2 ml-auto">
+                  <div className="flex gap-2 ml-auto absolute right-0">
                     {/*임시 추후 일정 관리 수정 페이지로 이동 id 값 가지고*/}
                     <Button
                       onClick={() => onDelete(id)}
