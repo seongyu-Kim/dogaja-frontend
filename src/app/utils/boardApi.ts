@@ -178,6 +178,7 @@ export const scheduleGet = async () => {
   }
 };
 
+//일정 리스트 삭제 요청
 export const scheduleDelete = async (id: string) => {
   const { SCHEDULE_DELETE } = API.SCHEDULE;
   try {

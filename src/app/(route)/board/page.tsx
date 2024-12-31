@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { BOARD_TYPES } from "@/app/utils/board-config";
-import List from "@/app/components/common/List";
+import List from "@/app/components/domain/board/List";
 import { useEffect, useState } from "react";
 import { BoardListType } from "@/app/type/boardListType";
 import boardTypeRequest from "@/app/utils/boardTypeRequest";
@@ -12,20 +12,19 @@ type BOARD_TYPES_KEY = keyof typeof BOARD_TYPES;
 
 export default function BoardListPage() {
   // 카테고리가 몇개가 생길지 모르니 List 컴포넌트를 BOARD_TYPES key 값 개수 만큼 추가 할 수 있게
-
   const [boardData, setBoardData] = useState<Record<string, BoardListType[]>>(
     {},
   );
   const [loading, setloading] = useState(true);
+  const boardTypeKeys = Object.keys(BOARD_TYPES);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const result: Record<string, BoardListType[]> = {};
-        const boardType = Object.keys(BOARD_TYPES);
 
         await Promise.all(
-          boardType.map(async (boardType) => {
+          boardTypeKeys.map(async (boardType) => {
             const data = await boardTypeRequest(boardType as BOARD_TYPES_KEY);
             if (data) {
               result[boardType] = data;
@@ -55,7 +54,7 @@ export default function BoardListPage() {
     <div className="flex flex-col items-center my-20">
       <p className="text-3xl mb-10">게시판 둘러보기</p>
       <div className="grid grid-cols-2 gap-4 w-1/2">
-        {Object.keys(BOARD_TYPES).map((boardType) => {
+        {boardTypeKeys.map((boardType) => {
           const title = BOARD_TYPES[boardType as BOARD_TYPES_KEY].title;
           const boardList = boardData[boardType] || [];
           return (

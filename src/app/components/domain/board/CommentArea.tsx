@@ -14,9 +14,7 @@ export default function CommentArea({
   postId: string;
 }) {
   const { user } = useUserStore();
-  const defaultCommentList = list.filter(
-    (item) => item.id !== null && item.id !== undefined && item.user.name,
-  );
+  const defaultCommentList = list.filter((item) => !!item.id && item.user.name);
   return (
     <>
       <div className="flex flex-col gap-3 border-b border-gray-400 pb-6">
