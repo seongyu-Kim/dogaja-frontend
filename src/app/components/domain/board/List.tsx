@@ -56,7 +56,7 @@ export default function List({
                   {parseInt(postId!) == id && (
                     <p className="font-semibold text-xl">{"→"}</p>
                   )}
-                  <div className="w-4/5">
+                  <div className="w-auto max-w-md">
                     <p className="overflow-hidden whitespace-nowrap text-ellipsis">
                       {title}
                     </p>
