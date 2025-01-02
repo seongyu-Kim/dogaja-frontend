@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
@@ -11,7 +11,7 @@ import { mainApi } from "@/app/utils/mainApi";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 
 interface Friend {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -27,16 +27,18 @@ const AddressBookModal: React.FC<{
   useEffect(() => {
     getFriendList();
   }, []);
-  
+
   const getFriendList = async () => {
     const { FRIENDS_LIST_GET } = API.FRIENDS;
     try {
       const res = await mainApi({
         url: FRIENDS_LIST_GET,
         method: "GET",
+        withAuth: true,
       });
       if (res.status === 200) {
-        setFriends(res.data.friends || []);
+        const data = (res.data as Friend[]) || [];
+        setFriends(data);
       }
     } catch (e) {
       console.error(e);
@@ -44,15 +46,22 @@ const AddressBookModal: React.FC<{
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
+    const deleteConfirm = confirm("정말 친구 목록에서 삭제하시겠습니까?");
+    if (!deleteConfirm) {
+      return;
+    }
     const { FRIENDS_DELETE } = API.FRIENDS;
     try {
       const res = await mainApi({
-        url: FRIENDS_DELETE,
+        url: FRIENDS_DELETE(id),
         method: "DELETE",
+        withAuth: true,
       });
       if (res.status === 200) {
-        setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== id));
+        setFriends((prevFriends) =>
+          prevFriends.filter((friend) => friend.id !== id),
+        );
         SuccessAlert("친구 목록에서 삭제되었습니다.");
       }
     } catch (e) {
@@ -81,7 +90,9 @@ const AddressBookModal: React.FC<{
                 className="flex justify-between items-center py-2 border-b border-gray-300"
               >
                 <span className="flex items-center">
-                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">이미지</div>
+                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">
+                    이미지
+                  </div>
                   {friend.name}
                 </span>
                 <Button
@@ -127,7 +138,6 @@ const AddressBookModal: React.FC<{
           onClose={() => setRequestModalOpen(false)}
           title="친구 요청"
           explanation="친구 요청에 수락하시겠습니까?"
-          userId={selectedFriendId}
         />
       )}
       <FriendAddModal

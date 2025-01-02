@@ -38,8 +38,9 @@ export const API = {
     FRIENDS_REQUEST_GET: `${BASE_URL}/friends/requests/received`,
     FRIENDS_LIST_GET: `${BASE_URL}/friends/list`,
     FRIENDS_REQUEST_POST: `${BASE_URL}/friends/request`,
-    FRIENDS_REQUEST_PATCH: `${BASE_URL}/friends/requests/{id}/respond`,
-    FRIENDS_DELETE: `${BASE_URL}/friends/{friendId}`,
+    FRIENDS_REQUEST_PATCH: (id: number) =>
+      `${BASE_URL}/friends/requests/${id}/respond`,
+    FRIENDS_DELETE: (friendId: string) => `${BASE_URL}/friends/${friendId}`,
   },
   COMMENT: {
     COMMENT_CREATE: (id: string) => `${BASE_URL}/comment/${id}`,
