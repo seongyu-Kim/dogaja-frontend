@@ -11,30 +11,20 @@ import { useUserStore } from "@/app/store/userStore";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import { useRouter } from "next/navigation";
 
-const myPosts = [
-  { id: 1, title: "대방어 먹고싶다", content: "서울 대방어 맛집 소개" },
-  {
-    id: 2,
-    title: "식사 후기",
-    content: "이번 주에 맛있게 먹은 회사 근처 식당들",
-  },
-  { id: 3, title: "겨울 여행", content: "가을에 떠나는 바다 추천" },
-];
+interface Fav {
+  id?: string;
+  location: string;
+  address?: string;
+  phone?: string;
+  isFav?: boolean;
+}
 
-const initialFavoritePosts = [
-  {
-    id: 1,
-    title: "망원한강공원",
-    content: "추가적으로 들어갈 내용........",
-    isChecked: false,
-  },
-  {
-    id: 2,
-    title: "연남동",
-    content: "메모메모.....",
-    isChecked: false,
-  },
-];
+interface myPost {
+  id?: string;
+  title: string;
+  content: string;
+  type: string;
+}
 
 const MyPage = () => {
   const [name, setName] = useState<string>("");
@@ -44,13 +34,16 @@ const MyPage = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [isChangingPassword, setIsChangingPassword] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<string>("");
-  const [favoritePosts, setFavoritePosts] = useState(initialFavoritePosts);
+  const [favorites, setFavorites] = useState<Fav[]>([]);
+  const [myPosts, setMyPosts] = useState<myPost[]>([]);
 
   const router = useRouter();
   const { user, fetchUser } = useUserStore();
 
   useEffect(() => {
     fetchUser();
+    fetchFavoritePlaces();
+    fetchMyPost();
   }, [fetchUser]);
 
   useEffect(() => {
@@ -176,19 +169,67 @@ const MyPage = () => {
     }
   };
 
-  const toggleFavoriteChecked = (id: number) => {
-    setFavoritePosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === id ? { ...post, isChecked: !post.isChecked } : post
-      )
-    );
+  //내가 쓴 글
+  const fetchMyPost = async () => {
+    try {
+      const res = await mainApi({
+        url: API.BOARD.BOARD_MY_POST,
+        method: "GET",
+        withAuth: true,
+      });
+
+      setMyPosts(res.data.posts as myPost[]);
+    } catch (e) {
+      console.error(e);
+      ErrorAlert("나의 게시글을 불러오는데 실패하였습니다.");
+    }
+  };
+
+  //즐찾 리스트
+  const fetchFavoritePlaces = async () => {
+    try {
+      const res = await mainApi({
+        url: API.BOOKMARK.BOOKMARK_ALL_GET,
+        method: "GET",
+        withAuth: true,
+      });
+
+      if (res.status === 200) {
+        setFavorites(
+          (res.data as Fav[]).map((fav) => ({ ...fav, isFav: true }))
+        );
+      }
+    } catch (e) {
+      console.error("즐찾 불러오기 실패", e);
+      ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
+    }
+  };
+  //즐찾 해제
+  const removeFavoritePlace = async (favId: string) => {
+    if (!favId) return;
+
+    try {
+      const res = await mainApi({
+        url: API.BOOKMARK.BOOKMARK_DELETE(favId),
+        method: "DELETE",
+        withAuth: true,
+      });
+
+      if (res.status === 200) {
+        SuccessAlert("즐겨찾기가 삭제되었습니다.");
+        await fetchFavoritePlaces();
+      }
+    } catch (e) {
+      console.error(e);
+      ErrorAlert("즐겨찾기 삭제하는데 실패하였습니다.");
+    }
   };
 
   return (
-    <div className="flex justify-center min-h-[calc(92vh)]">
+    <div className="flex justify-center mt-2">
       <div className="flex w-full max-w-7xl p-4">
         {/* 내 정보 */}
-        <div className="flex flex-col flex-grow basis-1/3 p-4 space-y-4 bg-gray-200 rounded-lg shadow-md mr-4 relative">
+        <div className="flex flex-col basis-1/3 p-4 space-y-4 bg-gray-200 rounded-lg shadow-md mr-4 relative">
           <h2 className="flex text-lg p-3 items-center">
             <FaUserEdit className="w-6 h-auto mr-2" /> 내 정보
           </h2>
@@ -337,17 +378,20 @@ const MyPage = () => {
         </div>
 
         {/* 오른쪽 */}
-        <div className="flex flex-col flex-grow basis-2/3 space-y-4">
-          {/* 내가 쓴 글 */}
-          <div className="bg-gray-200 rounded-lg shadow-md flex-grow">
+        <div className="flex flex-col basis-2/3 space-y-4">
+          {/* 내가 작성한 글 */}
+          <div className="bg-gray-200 rounded-lg shadow-md h-[45vh] overflow-hidden">
             <h2 className="flex text-lg p-3 items-center">
               <FaListAlt className="w-5 h-auto mr-2" /> 내가 작성한 글
             </h2>
-            <div className="p-3">
+            <div className="p-3 h-[calc(100%-3rem)] overflow-y-auto">
               {myPosts.length > 0 ? (
                 <ul>
                   {myPosts.map((post) => (
-                    <li key={post.id} className="mb-4 border-b border-black">
+                    <li
+                      key={post.id}
+                      className="mb-4 border-b border-black pb-4"
+                    >
                       <h3 className="text-lg">{post.title}</h3>
                       <p>{post.content}</p>
                     </li>
@@ -360,26 +404,29 @@ const MyPage = () => {
           </div>
 
           {/* 즐찾 */}
-          <div className="bg-gray-200 rounded-lg shadow-md flex-grow">
+          <div className="bg-gray-200 rounded-lg shadow-md h-[45vh] overflow-hidden">
             <h2 className="flex text-lg p-3 items-center">
               <FaBookmark className="w-5 h-auto mr-2" /> 즐겨찾기
             </h2>
-            <div className="p-3">
-              {favoritePosts.length > 0 ? (
+            <div className="p-3 h-[calc(100%-3rem)] overflow-y-auto">
+              {favorites.length > 0 ? (
                 <ul>
-                  {favoritePosts.map((post) => (
+                  {favorites.map((fav) => (
                     <li
-                      key={post.id}
-                      className="mb-4 border-b border-black flex justify-between items-center"
+                      key={fav.id}
+                      className="mb-4 border-b border-black flex justify-between items-center pb-4"
                     >
                       <div>
-                        <h3 className="text-lg">{post.title}</h3>
-                        <p>{post.content}</p>
+                        <h3 className="text-lg">{fav.location}</h3>
+                        <p>{fav.address}</p>
+                        <p className="text-sm">
+                          {fav.phone || "번호를 제공하지 않는 장소입니다."}
+                        </p>
                       </div>
                       <div className="mr-2">
                         <FaStar
-                          className={`cursor-pointer w-6 h-auto ${post.isChecked ? "text-yellow-500" : ""}`}
-                          onClick={() => toggleFavoriteChecked(post.id)}
+                          className={`cursor-pointer w-6 h-auto ${fav.isFav ? "text-yellow-500" : ""}`}
+                          onClick={() => removeFavoritePlace(fav.id!)}
                         />
                       </div>
                     </li>
