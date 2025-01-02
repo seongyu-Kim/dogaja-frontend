@@ -28,7 +28,7 @@ export default function UserChatArea({
               className="w-[35px] h-[35px] text-gray-500 cursor-pointer"
             />
           </div>
-          <div className="flex items-center w-full h-full overflow-y-auto">
+          <div className="flex items-center w-full h-full overflow-y-auto border-t border-gray-300">
             <ChatInput />
           </div>
         </div>
