@@ -5,9 +5,7 @@ import { useUserStore } from "@/app/store/userStore";
 import notFound from "@/app/not-found";
 import { ChatRoom, MessageType } from "@/app/type/ChatType";
 
-const chatSocket: Socket = io(
-  "ws://kdt-react-node-1-team02.elicecoding.com:3003",
-);
+const chatSocket: Socket = io(`${process.env.NEXT_PUBLIC_SOKET_URL}`);
 
 export default function ChatPage() {
   //임시 - 아래 타입들 API 나오기 전에 상상코딩된 부분이라 수정 예정
