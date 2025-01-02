@@ -9,6 +9,7 @@ import FriendAddModal from "./FriendAddModal";
 import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
+import { IoPersonCircleOutline } from "react-icons/io5";
 
 interface Friend {
   id: string;
@@ -89,10 +90,8 @@ const AddressBookModal: React.FC<{
                 key={friend.id}
                 className="flex justify-between items-center py-2 border-b border-gray-300"
               >
-                <span className="flex items-center">
-                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">
-                    이미지
-                  </div>
+                <span className="flex items-center gap-2">
+                  <IoPersonCircleOutline className="text-gray-300 w-[50px] h-[50px]" />
                   {friend.name}
                 </span>
                 <Button
