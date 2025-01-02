@@ -19,27 +19,12 @@ interface Fav {
   isFav?: boolean;
 }
 
-// interface myPost {
-//   id?: string;
-//   title: string;
-//   content: string;
-//   type: string;
-// }
-
-const myPosts = [
-  { id: 1, title: "대방어 먹고싶다", content: "서울 대방어 맛집 소개" },
-  {
-    id: 2,
-    title: "식사 후기",
-    content: "이번 주에 맛있게 먹은 회사 근처 식당들",
-  },
-  { id: 3, title: "겨울 여행", content: "가을에 떠나는 바다 추천" },
-  { id: 3, title: "겨울 여행", content: "가을에 떠나는 바다 추천" },
-  { id: 3, title: "겨울 여행", content: "가을에 떠나는 바다 추천" },
-  { id: 3, title: "겨울 여행", content: "가을에 떠나는 바다 추천" },
-  { id: 3, title: "겨울 여행", content: "가을에 떠나는 바다 추천" },
-  { id: 3, title: "겨울 여행", content: "가을에 떠나는 바다 추천" },
-];
+interface myPost {
+  id?: string;
+  title: string;
+  content: string;
+  type: string;
+}
 
 const MyPage = () => {
   const [name, setName] = useState<string>("");
@@ -51,7 +36,7 @@ const MyPage = () => {
   const [passwordError, setPasswordError] = useState<string>("");
   const [favorites, setFavorites] = useState<Fav[]>([]);
   //내가 쓴 글
-  // const [myPost, setMyPost] = useState<myPost[]>([]);
+  const [myPost, setMyPost] = useState<myPost[]>([]);
 
   const router = useRouter();
   const { user, fetchUser } = useUserStore();
@@ -59,6 +44,7 @@ const MyPage = () => {
   useEffect(() => {
     fetchUser();
     fetchFavoritePlaces();
+    fetchMyPost();
   }, [fetchUser]);
 
   useEffect(() => {
@@ -185,20 +171,20 @@ const MyPage = () => {
   };
 
   //내가 쓴 글
-  // const fetchMyPost = async () => {
-  //   try {
-  //     const res = await mainApi({
-  //       url: API.BOARD.MY_POST,
-  //       method: "GET",
-  //       withAuth: true,
-  //     });
+  const fetchMyPost = async () => {
+    try {
+      const res = await mainApi({
+        url: API.BOARD.BOARD_MY_POST,
+        method: "GET",
+        withAuth: true,
+      });
 
-  //     setMyPost(res.data as myPost[]);
-  //   } catch (e) {
-  //     console.error(e);
-  //     ErrorAlert("나의 게시글을 불러오는데 실패하였습니다.");
-  //   }
-  // };
+      setMyPost(res.data as myPost[]);
+    } catch (e) {
+      console.error(e);
+      ErrorAlert("나의 게시글을 불러오는데 실패하였습니다.");
+    }
+  };
 
   //즐찾 리스트
   const fetchFavoritePlaces = async () => {
@@ -400,9 +386,9 @@ const MyPage = () => {
               <FaListAlt className="w-5 h-auto mr-2" /> 내가 작성한 글
             </h2>
             <div className="p-3 h-[calc(100%-3rem)] overflow-y-auto">
-              {myPosts.length > 0 ? (
+              {myPost.length > 0 ? (
                 <ul>
-                  {myPosts.map((post) => (
+                  {myPost.map((post) => (
                     <li
                       key={post.id}
                       className="mb-4 border-b border-black pb-4"
