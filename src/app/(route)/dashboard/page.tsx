@@ -12,6 +12,7 @@ import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import { FaStar } from "react-icons/fa";
+import AddPlaceModal from "@/app/components/AddPlaceModal";
 
 interface Place {
   id?: string;
@@ -45,6 +46,11 @@ const Dashboard: React.FC = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [favorites, setFavorites] = useState<Fav[]>([]);
+  //장소추가모달
+  const [isAddPlaceModal, setIsAddPlaceModal] = useState(false);
+
+  //모달
+  const handleAddPlaceModal = () => setIsAddPlaceModal((prev) => !prev);
 
   // 검색창 클릭
   const handleSearchClick = () => {
@@ -143,6 +149,7 @@ const Dashboard: React.FC = () => {
           address: place.address_name,
           latitude: place.x,
           longitude: place.y,
+          phone: place.phone,
         },
         withAuth: true,
       });
@@ -274,11 +281,18 @@ const Dashboard: React.FC = () => {
                         <p className="text-lg">{place.place_name}</p>
                         <p>{place.road_address_name || place.address_name}</p>
                         <p className="text-sm">
-                          {place.phone || "번호를 제공하지 않습니다."}
+                          {place.phone || "번호를 제공하지 않는 장소입니다."}
                         </p>
                       </div>
 
-                      <div className="mr-3">
+                      <div className="flex mr-3 space-x-4">
+                        <div
+                          onClick={handleAddPlaceModal}
+                          className="cursor-pointer hover:text-green-500"
+                        >
+                          + 일정에 추가하기
+                        </div>
+
                         <FaStar
                           className={`cursor-pointer w-6 h-auto  ${place.isFavorite ? "text-yellow-500" : "text-gray-400"}`}
                           onClick={() =>
@@ -325,6 +339,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+      <AddPlaceModal isOpen={isAddPlaceModal} onClose={handleAddPlaceModal} />
     </div>
   );
 };
