@@ -107,7 +107,6 @@ export default function ChatPage() {
   // 초기 채팅방 목록 가져오기
   useEffect(() => {
     //대충 axios로 채팅방 목록 가져오고 setChatRooms에 데이터 넣어주고 아래에 함수 실행~
-    console.log("채팅방 목록 불러옴~~");
     setChatRooms([
       { name: "r", messages: 13, roomId: "1" },
       { name: "B", messages: 13, roomId: "2" },
