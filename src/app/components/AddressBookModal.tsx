@@ -88,7 +88,7 @@ const AddressBookModal: React.FC<{
             {friends.map((friend) => (
               <li
                 key={friend.id}
-                className="flex justify-between items-center py-2 border-b border-gray-300"
+                className="flex justify-between items-center py-2 px-2 border-b border-gray-300"
               >
                 <span className="flex items-center gap-2">
                   <IoPersonCircleOutline className="text-gray-300 w-[50px] h-[50px]" />
