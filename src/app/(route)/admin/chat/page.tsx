@@ -3,19 +3,7 @@ import { io, Socket } from "socket.io-client";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/app/store/userStore";
 import notFound from "@/app/not-found";
-
-interface MessageType {
-  message: string;
-  timestamp?: string;
-  user?: string;
-}
-
-interface ChatRoom {
-  name: string;
-  messages: number;
-  lastMessage?: string;
-  roomId: string; // 채팅방 식별자 추가
-}
+import { ChatRoom, MessageType } from "@/app/type/ChatType";
 
 const chatSocket: Socket = io(
   "ws://kdt-react-node-1-team02.elicecoding.com:3003",
