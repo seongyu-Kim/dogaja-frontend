@@ -43,6 +43,8 @@ export default function Navbar() {
   }, []);
 
   const getUserName = async () => {
+    //임시 - 유저 정보 없으면 API 호출 불가
+    if (!user) return;
     const { MY_INFO_GET } = API.USER;
     try {
       const res = await mainApi<UserInfoResponse>({
@@ -64,6 +66,8 @@ export default function Navbar() {
   };
 
   const getFriendRequests = async () => {
+    //임시 - 유저 정보 없으면 API 호출 불가
+    if (!user) return;
     const { FRIENDS_REQUEST_GET } = API.FRIENDS;
     try {
       const res = await mainApi({
