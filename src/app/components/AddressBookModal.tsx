@@ -10,6 +10,7 @@ import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 import { IoPersonCircleOutline } from "react-icons/io5";
+import { useUserStore } from "@/app/store/userStore";
 
 interface Friend {
   id: string;
@@ -24,12 +25,15 @@ const AddressBookModal: React.FC<{
   const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
   const [isFriendAddModalOpen, setFriendAddModalOpen] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
+  const { user } = useUserStore();
 
   useEffect(() => {
     getFriendList();
   }, []);
 
   const getFriendList = async () => {
+    //임시 - 유저 정보 없으면 API 호출 불가
+    if (!user) return;
     const { FRIENDS_LIST_GET } = API.FRIENDS;
     try {
       const res = await mainApi({
