@@ -67,7 +67,7 @@ export default function ReportPage() {
     }
   };
 
-  // 페이지 변경 시 URL 업데이트
+  // 페이지 변경 시 URL 업데이트 임시 - 추후 관리자 페이지는 3제거
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       if (boardPath.split("/").length === 3) {
