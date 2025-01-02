@@ -18,7 +18,7 @@ export default function UserChatArea({
   return (
     <>
       {adminChatClick && (
-        <div className="flex gap-3 flex-col items-center group bg-white border border-gray-300 shadow-2xl fixed bottom-5 right-5 py-1 px-1 rounded-md w-[400px] h-[700px]">
+        <div className="overflow-y-hidden flex gap-3 flex-col items-center group bg-white border border-gray-300 shadow-2xl fixed bottom-5 right-5 py-1 px-1 rounded-md w-[400px] h-[700px]">
           <div className="flex justify-end w-full">
             <IoIosClose
               onClick={() => {
@@ -28,7 +28,7 @@ export default function UserChatArea({
               className="w-[35px] h-[35px] text-gray-500 cursor-pointer"
             />
           </div>
-          <div className="flex items-center w-full h-full overflow-y-auto">
+          <div className="flex items-center w-full h-full border-t border-gray-300">
             <ChatInput />
           </div>
         </div>
@@ -121,6 +121,7 @@ function ChatInput() {
     },
   ]);
   const messageRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     chatSocket.on("message", getMessagesSocketHandler);
@@ -134,6 +135,10 @@ function ChatInput() {
       chatSocket.off("message", getMessagesSocketHandler);
       chatSocket.off("previousMessages");
     };
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
   }, []);
 
   const submitMessageApiHandler = async (
@@ -159,9 +164,18 @@ function ChatInput() {
     setChatLog((prevChatLog) => [...prevChatLog, data]);
   };
 
+  const scrollToBottom = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  };
+
   return (
     <div className="flex flex-col w-full h-full">
-      <div className="space-y-4 px-2 py-2">
+      <div
+        ref={containerRef}
+        className="space-y-4 px-2 py-2 overflow-y-auto pb-16"
+      >
         {chatLog.map((message, index) => (
           <div
             key={index}
@@ -196,8 +210,8 @@ function ChatInput() {
           </div>
         ))}
       </div>
-      <div className="border-t border-gray-300 p-4 w-full sticky left-0 bottom-0 bg-white">
-        <form onSubmit={submitMessageApiHandler} className="flex gap-2">
+      <div className="border-t border-gray-300 p-2 sticky bottom-0 left-0 w-full bg-white">
+        <form onSubmit={submitMessageApiHandler} className="flex gap-2 w-full">
           <input
             ref={messageRef}
             type="text"
@@ -206,7 +220,7 @@ function ChatInput() {
           />
           <button
             type="submit"
-            className="px-4 py-2 text-gray-500 hover:text-gray-600"
+            className="py-2 text-gray-500 hover:text-gray-600"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
