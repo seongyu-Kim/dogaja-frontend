@@ -77,18 +77,18 @@ createAxios.interceptors.response.use(
     if (isServerApiError(error)) {
       const token = localStorage.getItem("token");
 
-      if (!token) {
+      if (error.response.data.statusCode === 401) {
+        if (!token) {
+          toast.error("세션이 만료되었습니다. 로그인을 해야합니다.", {
+            position: "top-right",
+            autoClose: 2500,
+            closeOnClick: true,
+            toastId: "session-expired",
+          });
+        }
         return Promise.reject(error);
       }
-
-      toast.error("세션이 만료되었습니다. 로그인을 해야합니다.", {
-        position: "top-right",
-        autoClose: 2500,
-        closeOnClick: true,
-        toastId: "session-expired",
-      });
-
-      return Promise.reject(error);
     }
-  },
+    return Promise.reject(error);
+  }
 );
