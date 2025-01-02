@@ -35,7 +35,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       {(!isHidden || isMainPage) && <Navbar />}
       <div className="flex min-h-screen mt-14">
         {!isHidden && !isMainPage && <Sidebar />}
-        {user && <UserChatBox />}
+        {user && !user.admin && <UserChatBox />}
         <main className="w-full">
           <ToastProvider />
           {children}
