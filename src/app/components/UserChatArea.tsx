@@ -8,9 +8,7 @@ interface Props {
   setAdminChatClick: (value: boolean) => void;
 }
 
-const chatSocket: Socket = io(
-  "ws://kdt-react-node-1-team02.elicecoding.com:3003",
-);
+const chatSocket: Socket = io(`${process.env.NEXT_PUBLIC_SOKET_URL}`);
 
 export default function UserChatArea({
   adminChatClick,
