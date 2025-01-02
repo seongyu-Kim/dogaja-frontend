@@ -34,7 +34,7 @@ export default function NickNameBox({ name }: Props) {
   };
 
   //유저 정보 없을 시 이름만 표기
-  if (!user) {
+  if (!user || user.name === name) {
     return <p>{name}</p>;
   }
 

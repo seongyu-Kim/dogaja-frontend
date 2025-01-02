@@ -82,7 +82,7 @@ const AddressBookModal: React.FC<{
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} title="주소록">
-        <div className="max-h-60 overflow-y-auto mb-4">
+        <div className="min-h-60 max-h-60 overflow-y-auto mb-4">
           <ul className="mb-4">
             {friends.map((friend) => (
               <li
