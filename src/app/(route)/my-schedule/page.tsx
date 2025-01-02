@@ -11,7 +11,6 @@ import { ScheduleType } from "@/app/type/scheduleListType";
 import { useUserStore } from "@/app/store/userStore";
 import days from "@/app/utils/days";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
-import { string } from "postcss-selector-parser";
 
 const itemsPerPage = 5;
 
