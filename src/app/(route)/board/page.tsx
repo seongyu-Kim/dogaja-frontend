@@ -15,7 +15,6 @@ export default function BoardListPage() {
   const [boardData, setBoardData] = useState<Record<string, BoardListType[]>>(
     {},
   );
-  const [loading, setloading] = useState(true);
   const boardTypeKeys = Object.keys(BOARD_TYPES);
 
   useEffect(() => {
@@ -38,17 +37,11 @@ export default function BoardListPage() {
       } catch (e) {
         console.error(e);
         ErrorAlert("데이터 조회에 실패했습니다");
-      } finally {
-        setloading(false);
       }
     };
 
     getData();
   }, []);
-
-  if (loading) {
-    return <p className="text-center">게시글 불러오는 중</p>;
-  }
 
   return (
     <div className="flex flex-col items-center my-20">
