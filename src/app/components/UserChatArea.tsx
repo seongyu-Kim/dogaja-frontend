@@ -206,7 +206,7 @@ function ChatInput() {
           />
           <button
             type="submit"
-            className="px-4 py-2 text-gray-500 hover:text-gray-600"
+            className="py-2 text-gray-500 hover:text-gray-600"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
