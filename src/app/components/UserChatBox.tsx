@@ -6,7 +6,6 @@ import UserChatArea from "@/app/components/UserChatArea";
 
 export default function UserChatBox() {
   const [adminChatClick, setAdminChatClick] = useState<boolean>(false);
-  console.log(adminChatClick);
   return (
     <div className="hidden md:block">
       {!adminChatClick ? (
