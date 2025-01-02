@@ -28,7 +28,7 @@ export default function UserChatArea({
               className="w-[35px] h-[35px] text-gray-500 cursor-pointer"
             />
           </div>
-          <div className="flex items-center w-full h-full overflow-y-auto border-t border-gray-300">
+          <div className="flex items-center w-full h-full border-t border-gray-300">
             <ChatInput />
           </div>
         </div>
@@ -161,7 +161,7 @@ function ChatInput() {
 
   return (
     <div className="flex flex-col w-full h-full">
-      <div className="space-y-4 px-2 py-2">
+      <div className="space-y-4 px-2 py-2 overflow-y-auto pb-10">
         {chatLog.map((message, index) => (
           <div
             key={index}
