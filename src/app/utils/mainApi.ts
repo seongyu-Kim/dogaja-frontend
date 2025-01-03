@@ -77,16 +77,18 @@ createAxios.interceptors.response.use(
   (error) => {
     if (isServerApiError(error)) {
       const token = localStorage.getItem("token");
-      const { user } = useUserStore();
+      const { user, resetUser } = useUserStore();
 
       if (error.response.data.statusCode === 401) {
-        if (!token && !user) {
+        if (token && user) {
           toast.error("세션이 만료되었습니다. 로그인을 해야합니다.", {
             position: "top-right",
             autoClose: 2500,
             closeOnClick: true,
             toastId: "session-expired",
           });
+          resetUser();
+          localStorage.removeItem("token");
         }
         return Promise.reject(error);
       }
