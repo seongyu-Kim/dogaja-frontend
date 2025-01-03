@@ -6,6 +6,7 @@ import Sidebar from "./components/common/Sidebar";
 import ToastProvider from "@/app/ToastProvider";
 import { useUserStore } from "@/app/store/userStore";
 import UserChatBox from "@/app/components/UserChatBox";
+import { useEffect } from "react";
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -13,7 +14,16 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const pathname = usePathname();
-  const { user } = useUserStore();
+  const { user, fetchUser } = useUserStore();
+  useEffect(() => {
+    const authValidate = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        await fetchUser();
+      }
+    };
+    authValidate();
+  }, [pathname]);
 
   // Nav, Sidebar 보여줄 경로
   const registeredRoutes = ["/", "/dashboard", "/board", "/map"];
