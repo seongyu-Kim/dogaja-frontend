@@ -81,7 +81,6 @@ createAxios.interceptors.response.use(
 
       if (error.response.data.statusCode === 401) {
         if (!token && !user) {
-          console.log("에러러", error.response.data);
           toast.error("세션이 만료되었습니다. 로그인을 해야합니다.", {
             position: "top-right",
             autoClose: 2500,
