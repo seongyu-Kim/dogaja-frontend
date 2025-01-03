@@ -37,6 +37,10 @@ export const useUserStore = create<UserState>((set) => ({
       //
     } catch (e) {
       console.error("fetchUser", e);
+      if (e.status === 401) {
+        set({ user: null });
+        localStorage.removeItem("token");
+      }
     }
   },
 }));

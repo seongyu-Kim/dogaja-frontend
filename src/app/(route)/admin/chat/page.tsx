@@ -1,11 +1,10 @@
 "use client";
-import { io, Socket } from "socket.io-client";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/app/store/userStore";
 import notFound from "@/app/not-found";
 import { ChatRoom, MessageType } from "@/app/type/ChatType";
-
-const chatSocket: Socket = io(`${process.env.NEXT_PUBLIC_SOKET_URL}`);
+import { disconnectSocket, getSocket } from "@/app/utils/websocket";
+import { Socket } from "socket.io-client";
 
 export default function ChatPage() {
   //임시 - 아래 타입들 API 나오기 전에 상상코딩된 부분이라 수정 예정
@@ -95,7 +94,30 @@ export default function ChatPage() {
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
   const messageRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const socketRef = useRef<Socket | null>(null);
   const { user } = useUserStore();
+
+  useEffect(() => {
+    if (!user?.admin) {
+      disconnectSocket();
+      return;
+    }
+    socketRef.current = getSocket();
+    const chatSocket = socketRef.current;
+
+    chatSocket.on("message", getMessagesSocketHandler);
+
+    // 이전 메시지 수신
+    chatSocket.on("previousMessages", (messages: MessageType[]) => {
+      setChatLog(messages);
+    });
+
+    return () => {
+      chatSocket.off("message", getMessagesSocketHandler);
+      chatSocket.off("previousMessages");
+      disconnectSocket();
+    };
+  }, []);
 
   // 변경될 때마다 스크롤을 하단으로 이동
   useEffect(() => {
@@ -126,23 +148,10 @@ export default function ChatPage() {
     ]);
   }, []);
 
-  // 실시간 메시지
-  useEffect(() => {
-    chatSocket.on("message", getMessagesSocketHandler);
-
-    // 이전 메시지 수신
-    chatSocket.on("previousMessages", (messages: MessageType[]) => {
-      setChatLog(messages);
-    });
-
-    return () => {
-      chatSocket.off("message", getMessagesSocketHandler);
-      chatSocket.off("previousMessages");
-    };
-  }, []);
-
   // 채팅방 선택 핸들러
   const handleRoomSelect = async (roomId: string) => {
+    if (!socketRef.current) return;
+    const chatSocket = socketRef.current;
     setSelectedRoom(roomId);
 
     try {
@@ -166,7 +175,8 @@ export default function ChatPage() {
   // 메시지 전송 핸들러
   const submitMessageApiHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (messageRef.current?.value && selectedRoom) {
+    const chatSocket = socketRef.current;
+    if (messageRef.current?.value && selectedRoom && chatSocket) {
       const newMessage = {
         message: messageRef.current.value,
         timestamp: new Date().toLocaleTimeString("ko-KR", {
@@ -190,10 +200,6 @@ export default function ChatPage() {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   };
-
-  if (!user || !user.admin) {
-    return notFound({});
-  }
 
   return (
     <div className="flex bg-white gap-2 px-10 pt-10 h-[800px]">
