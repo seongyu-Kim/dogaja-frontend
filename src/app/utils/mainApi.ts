@@ -5,6 +5,7 @@ import axios, {
   Method,
 } from "axios";
 import { toast } from "react-toastify";
+import { useUserStore } from "@/app/store/userStore";
 
 interface AxiosProps {
   url: string;
@@ -76,9 +77,11 @@ createAxios.interceptors.response.use(
   (error) => {
     if (isServerApiError(error)) {
       const token = localStorage.getItem("token");
+      const { user } = useUserStore();
 
       if (error.response.data.statusCode === 401) {
-        if (!token) {
+        if (!token && !user) {
+          console.log("에러러", error.response.data);
           toast.error("세션이 만료되었습니다. 로그인을 해야합니다.", {
             position: "top-right",
             autoClose: 2500,
