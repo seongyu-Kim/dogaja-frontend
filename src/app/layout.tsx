@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import ClientLayout from "./ClientLayout";
-import UserDataFetch from "@/app/components/UserDataFetch";
 
 export const metadata: Metadata = {
   title: "Do가자",
@@ -25,7 +24,6 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${font.className} antialiased flex flex-col flex-1`}>
-        <UserDataFetch />
         <ClientLayout>{children}</ClientLayout>
         <script
           type="text/javascript"
