@@ -2,15 +2,22 @@
 
 import Button from "@/app/components/common/Button";
 import { useState } from "react";
-import { createComment } from "@/app/actions";
+import { createComment } from "@/app/utils/boardApi";
+import { useRouter } from "next/navigation";
+
 //id값 넘겨 받아서 api 연동 준비??
 export default function CommentCreate({ id }: { id: string }) {
   const [content, setcontent] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    await createComment(formData, id);
+    const res = await createComment(formData, id);
+    if (res === 201) {
+      router.refresh();
+      setcontent("");
+    }
   };
   //임시 - 로그인(유저정보)정보 없으면 null 반환하게
   return (
@@ -18,6 +25,7 @@ export default function CommentCreate({ id }: { id: string }) {
       <div className="h-[100px] mb-[100px] flex gap-2">
         <textarea
           name="content"
+          value={content}
           onChange={(e) => setcontent(e.target.value)}
           className="w-full h-full resize-none p-2 rounded-md border border-gray-400 focus:outline-none"
           placeholder="댓글을 입력해주세요"
@@ -26,8 +34,8 @@ export default function CommentCreate({ id }: { id: string }) {
           disabled={!content}
           type="submit"
           style={{
-            backgroundColor: "bg-mainColor",
-            hoverColor: "hover:bg-mainHover",
+            backgroundColor: `${content ? "bg-mainColor" : "bg-gray-400"}`,
+            hoverColor: `${content ? "hover:bg-mainHover" : ""}`,
             height: "h-full",
             width: "w-20",
             padding: "py-2",

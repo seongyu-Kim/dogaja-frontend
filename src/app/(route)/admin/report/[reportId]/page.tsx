@@ -9,7 +9,7 @@ export default async function ReportId({ params }: PostIdProps) {
   const { ReportId } = params;
   return (
     <>
-      <BoardDetailView id={ReportId} />
+      <BoardDetailView postId={ReportId} />
     </>
   );
 }
