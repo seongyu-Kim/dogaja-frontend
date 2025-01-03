@@ -1,20 +1,19 @@
 import { IoIosClose } from "react-icons/io";
-import { io, Socket } from "socket.io-client";
 import React, { useEffect, useRef, useState } from "react";
 import { MessageType } from "@/app/type/ChatType";
+import { useUserStore } from "@/app/store/userStore";
+import { disconnectSocket, getSocket } from "@/app/utils/websocket";
+import { Socket } from "socket.io-client";
 
 interface Props {
   adminChatClick: boolean;
   setAdminChatClick: (value: boolean) => void;
 }
 
-const chatSocket: Socket = io(`${process.env.NEXT_PUBLIC_SOKET_URL}`);
-
 export default function UserChatArea({
   adminChatClick,
   setAdminChatClick,
 }: Props) {
-  chatSocket.connect();
   return (
     <>
       {adminChatClick && (
@@ -23,7 +22,7 @@ export default function UserChatArea({
             <IoIosClose
               onClick={() => {
                 setAdminChatClick(!adminChatClick);
-                chatSocket.disconnect();
+                disconnectSocket();
               }}
               className="w-[35px] h-[35px] text-gray-500 cursor-pointer"
             />
@@ -122,8 +121,17 @@ function ChatInput() {
   ]);
   const messageRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const socketRef = useRef<Socket | null>(null);
+  const { user } = useUserStore();
 
   useEffect(() => {
+    if (!user) {
+      disconnectSocket();
+      return;
+    }
+    socketRef.current = getSocket();
+    const chatSocket = socketRef.current;
+
     chatSocket.on("message", getMessagesSocketHandler);
 
     // 이전 메시지 수신
@@ -134,6 +142,7 @@ function ChatInput() {
     return () => {
       chatSocket.off("message", getMessagesSocketHandler);
       chatSocket.off("previousMessages");
+      disconnectSocket();
     };
   }, []);
 
@@ -145,7 +154,8 @@ function ChatInput() {
     e: React.FormEvent<HTMLFormElement>,
   ) => {
     e.preventDefault();
-    if (messageRef.current?.value) {
+    const chatSocket = socketRef.current;
+    if (messageRef.current?.value && chatSocket) {
       const newMessage = {
         message: messageRef.current.value,
         timestamp: new Date().toLocaleTimeString("ko-KR", {
@@ -189,7 +199,7 @@ function ChatInput() {
               )}
               <div className="flex flex-col gap-1">
                 <div
-                  className={`max-w-md px-4 py-2 rounded-2xl 
+                  className={`max-w-md px-4 py-2 rounded-2xl
                       ${
                         message.user === "me"
                           ? "bg-rose-200 text-gray-800"
