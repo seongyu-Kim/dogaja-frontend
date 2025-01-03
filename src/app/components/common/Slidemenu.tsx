@@ -1,13 +1,17 @@
 import React from 'react';
 
-interface SlideMenuProps {
-  show: boolean;
-  items: string[];
-  className?: string;
-  onClickItem?: (index: number) => void;
+interface SlideMenuItem {
+  label: React.ReactNode;
+  onClick?: () => void;
 }
 
-const SlideMenu: React.FC<SlideMenuProps> = ({ show, items, className, onClickItem }) => {
+interface SlideMenuProps {
+  show: boolean;
+  items: SlideMenuItem[];
+  className?: string;
+}
+
+const SlideMenu: React.FC<SlideMenuProps> = ({ show, items, className }) => {  
   return (
     <>
       {show && (
@@ -24,9 +28,13 @@ const SlideMenu: React.FC<SlideMenuProps> = ({ show, items, className, onClickIt
                   className={`hover:underline cursor-pointer text-sm py-px ${
                     index !== items.length - 1 ? 'border-b border-mainColor' : ''
                   }`}
-                  onClick={() => onClickItem?.(index)}
+                  onClick={() => {
+                    if (item.onClick) {
+                      item.onClick();
+                    }
+                  }}
                 >
-                  {item}
+                  {item.label}
                 </li>
               ))
             ) : (

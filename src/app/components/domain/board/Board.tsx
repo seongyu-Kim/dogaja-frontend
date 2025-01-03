@@ -1,12 +1,15 @@
 "use client";
 
-import List from "@/app/components/common/List";
+import List from "@/app/components/domain/board/List";
 import PathToCreate from "@/app/components/domain/board/PathToCreate";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/common/Pagination";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { BoardPropTypes } from "@/app/type/commonBoardPropType";
 import { BoardListType } from "@/app/type/boardListType";
+import { useUserStore } from "@/app/store/userStore";
+
+const itemsPerPage = 10;
 
 export default function Board({
   name,
@@ -14,16 +17,20 @@ export default function Board({
   detailList,
   postId,
 }: BoardPropTypes) {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentItems, setCurrentItems] = useState<BoardListType[]>([]);
+  const { user } = useUserStore();
   const searchParams = useSearchParams();
   const boardPath = usePathname();
   const router = useRouter();
-  const itemsPerPage = 10;
-
   const totalPages = list ? Math.ceil(list.length / itemsPerPage) : 0;
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  //임시 타입 추후 배열에 맞게 변경
-  const [currentItems, setCurrentItems] = useState<BoardListType[]>([]);
+  useEffect(() => {
+    if (!searchParams.has("page")) {
+      // 페이지 쿼리 파라미터가 없으면 page=1을 추가
+      router.push(`${boardPath}?page=1`);
+    }
+  }, [searchParams, router, boardPath]);
 
   useEffect(() => {
     // 쿼리 파라미터에서 'page' 값을 가져와서 currentPage를 설정
@@ -56,7 +63,7 @@ export default function Board({
   };
 
   return (
-    <div className="flex flex-col w-[50%] h-full items-center gap-20 pt-10 px-3 bg-gray-100">
+    <div className="flex flex-col min-w-[400px] w-[50%] h-full items-center gap-20 pt-10 px-3 border-x border-mainColor">
       <p className="text-3xl">{name} 게시판</p>
       <main className="w-full">
         {currentItems.length > 0 ? (
@@ -64,9 +71,11 @@ export default function Board({
         ) : (
           <p className="text-center">게시글이 없습니다</p>
         )}
-        <div className="mt-2 flex justify-end">
-          <PathToCreate />
-        </div>
+        {user && (
+          <div className="mt-2 flex justify-end">
+            <PathToCreate />
+          </div>
+        )}
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

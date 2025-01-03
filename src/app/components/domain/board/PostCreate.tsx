@@ -1,42 +1,50 @@
 "use client";
 
 import Input from "@/app/components/common/Input";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { modules } from "@/app/utils/reactQuillOptions";
 import Button from "@/app/components/common/Button";
 import Link from "next/link";
-import { createPost } from "@/app/actions";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { createPost } from "@/app/utils/boardApi";
 
 export default function PostCreate() {
   //임시 라우터 추후 API 연동 할 때 게시판명 받아서 POST 요청
-  const router = useParams().boardType;
-  const [post, setPost] = useState({
-    title: "",
-    content: "",
-  });
-  const isDisabled = !post.title || !post.content;
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setPost({
-      ...post,
-      [name]: value,
-    });
-  };
+  const boardType = useParams().boardType;
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [disabled, setDisabled] = useState(true);
+  const router = useRouter();
 
-  const handleDescriptionChange = (value: string) => {
-    setPost({
-      ...post,
-      content: value,
-    });
+  useEffect(() => {
+    setDisabled(!title.trim() || !content.trim());
+  }, [title, content]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (disabled) {
+      ErrorAlert("모든 필드를 다 채워주세요");
+      return;
+    }
     const formData = new FormData(e.target as HTMLFormElement);
-    await createPost(formData, router as string);
+    formData.append("content", content);
+    const res = await createPost(formData, boardType as string);
+    if (!res) return;
+    if (res.status === 201) {
+      SuccessAlert("게시글 생성 성공");
+      router.push(`${res.data.postId}`);
+      return;
+    }
+    if (res.status !== 200) {
+      ErrorAlert("게시글 생성 실패");
+    }
   };
 
   return (
@@ -62,7 +70,7 @@ export default function PostCreate() {
           </div>
           <div className="h-[500px]">
             <ReactQuill
-              onChange={handleDescriptionChange}
+              onChange={setContent}
               modules={modules}
               className="h-full"
             />
@@ -83,12 +91,11 @@ export default function PostCreate() {
           <Button
             type="submit"
             style={{
-              backgroundColor: "bg-mainColor",
-              hoverColor: "hover:bg-mainHover",
+              backgroundColor: `${disabled ? "bg-gray-400" : "bg-mainColor"}`,
+              hoverColor: `${disabled ? "" : "hover:bg-mainHover"}`,
               width: "w-[100px]",
             }}
-            disabled={isDisabled}
-            className={`${isDisabled && "bg-gray-400 hover:bg-gray-400"}`}
+            disabled={disabled}
           >
             작성
           </Button>

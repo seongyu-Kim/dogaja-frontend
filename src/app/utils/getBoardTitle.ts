@@ -4,6 +4,9 @@ export default function getBoardTitle(routerPath: string): string {
   const boardTypeKeys = Object.keys(BOARD_TYPES) as Array<
     keyof typeof BOARD_TYPES
   >;
+  if (!routerPath) {
+    return "알 수 없음";
+  }
   const matchedBoardType = boardTypeKeys.find((key) =>
     routerPath.includes(key),
   );
