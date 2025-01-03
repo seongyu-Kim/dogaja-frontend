@@ -88,7 +88,6 @@ createAxios.interceptors.response.use(
             toastId: "session-expired",
           });
           resetUser();
-          localStorage.removeItem("token");
         }
         return Promise.reject(error);
       }
