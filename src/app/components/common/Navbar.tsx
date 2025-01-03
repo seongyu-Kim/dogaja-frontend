@@ -34,7 +34,7 @@ export default function Navbar() {
   const { resetUser, user } = useUserStore();
 
   useEffect(() => {
-    getUserName();
+    // getUserName();
     getFriendRequests();
 
     // 임시 로그인 상태 설정
@@ -42,28 +42,39 @@ export default function Navbar() {
     // setName("elice");
   }, []);
 
-  const getUserName = async () => {
-    //임시 - 유저 정보 없으면 API 호출 불가
-    if (!user) return;
-    const { MY_INFO_GET } = API.USER;
-    try {
-      const res = await mainApi<UserInfoResponse>({
-        url: MY_INFO_GET,
-        method: "GET",
-        withAuth: true,
-      });
-      if (res.status === 200) {
-        const userName = res.data.name;
-        setName(userName);
-        setIsLoggedIn(true);
-        SuccessAlert(`${userName}님 반갑습니다!`);
-      }
-    } catch (e) {
-      console.error(e);
+  useEffect(() => {
+    if (!user) {
       setIsLoggedIn(false);
-      ErrorAlert("이름 가져오기에 실패했습니다.");
+      setName("");
+      return;
     }
-  };
+    setName(user.name);
+    setIsLoggedIn(true);
+    // SuccessAlert(`${user.name}님 반갑습니다!`); // 계속 뜨는 문제가 있음 나중에 처리
+  }, [user]);
+
+  // const getUserName = async () => {
+  //   //임시 - 유저 정보 없으면 API 호출 불가
+  //   if (!user) return;
+  //   const { MY_INFO_GET } = API.USER;
+  //   try {
+  //     const res = await mainApi<UserInfoResponse>({
+  //       url: MY_INFO_GET,
+  //       method: "GET",
+  //       withAuth: true,
+  //     });
+  //     if (res.status === 200) {
+  //       const userName = res.data.name;
+  //       setName(userName);
+  //       setIsLoggedIn(true);
+  //       SuccessAlert(`${userName}님 반갑습니다!`);
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //     setIsLoggedIn(false);
+  //     ErrorAlert("이름 가져오기에 실패했습니다.");
+  //   }
+  // };
 
   const getFriendRequests = async () => {
     //임시 - 유저 정보 없으면 API 호출 불가
@@ -122,7 +133,7 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {isLoggedIn ? (
+      {user ? (
         <ul className="flex gap-3">
           <li className="cursor-pointer" onClick={openAddressBookModal}>
             <FaRegAddressBook className="text-mainColor text-2xl hover:scale-105 transition-all duration-300 ease-in-out" />
@@ -147,7 +158,7 @@ export default function Navbar() {
             className="mr-2 hover:underline cursor-pointer text-mainColor font-bold hover:scale-105 transition-all duration-300 ease-in-out"
             onClick={toggleLogoutMenu}
           >
-            {name}님
+            {user.name}님
           </li>
           <SlideMenu
             show={showLogoutMenu}
