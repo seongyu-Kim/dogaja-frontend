@@ -36,7 +36,6 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 }
 
 const createAxios = axios.create({
-  baseURL: "http://localhost:3000",
   headers: {
     "Content-Type": "application/json",
   },

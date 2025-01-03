@@ -14,10 +14,14 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const pathname = usePathname();
-  const { user, fetchUser } = useUserStore();
+  const { user, fetchUser, resetUser } = useUserStore();
   useEffect(() => {
     const authValidate = async () => {
       const token = localStorage.getItem("token");
+      if (!token && user) {
+        resetUser();
+        return;
+      }
       if (token) {
         await fetchUser();
       }
