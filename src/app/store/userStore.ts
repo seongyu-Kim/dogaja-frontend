@@ -17,7 +17,10 @@ type UserState = {
 export const useUserStore = create<UserState>((set) => ({
   user: null,
   error: null,
-  resetUser: () => set({ user: null }),
+  resetUser: () => {
+    set({ user: null });
+    localStorage.removeItem("token");
+  },
 
   fetchUser: async () => {
     try {
