@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
+import { isAxiosError } from "axios";
 
 type User = {
   name: string;
@@ -40,9 +41,11 @@ export const useUserStore = create<UserState>((set) => ({
       //
     } catch (e) {
       console.error("fetchUser", e);
-      if (e.status === 401) {
-        set({ user: null });
-        localStorage.removeItem("token");
+      if (isAxiosError(e)) {
+        if (e.status === 401) {
+          set({ user: null });
+          localStorage.removeItem("token");
+        }
       }
     }
   },

@@ -1,7 +1,6 @@
 "use client";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/app/store/userStore";
-import notFound from "@/app/not-found";
 import { ChatRoom, MessageType } from "@/app/type/ChatType";
 import { disconnectSocket, getSocket } from "@/app/utils/websocket";
 import { Socket } from "socket.io-client";

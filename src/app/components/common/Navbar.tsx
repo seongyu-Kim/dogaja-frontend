@@ -12,82 +12,38 @@ import { FaRegAddressBook } from "react-icons/fa6";
 import { PiBellBold } from "react-icons/pi";
 import SlideMenu from "./Slidemenu";
 import AddressBookModal from "../AddressBookModal";
-import RequestModal from "../RequestModal";
 import NotificationList, { Notification } from "../NotificationList";
 import { useUserStore } from "@/app/store/userStore";
 
-interface UserInfoResponse {
-  name: string;
-}
-
 export default function Navbar() {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutMenu, setShowLogoutMenu] = useState(false);
   const [showAddressBookModal, setShowAddressBookModal] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedNotification, setSelectedNotification] =
     useState<Notification | null>(null);
-  const [name, setName] = useState<string>("");
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const { resetUser, user } = useUserStore();
 
   useEffect(() => {
-    // getUserName();
     getFriendRequests();
-
-    // 임시 로그인 상태 설정
-    // setIsLoggedIn(true);
-    // setName("elice");
-  }, []);
-
-  useEffect(() => {
-    if (!user) {
-      setIsLoggedIn(false);
-      setName("");
-      return;
-    }
-    setName(user.name);
-    setIsLoggedIn(true);
-    // SuccessAlert(`${user.name}님 반갑습니다!`); // 계속 뜨는 문제가 있음 나중에 처리
   }, [user]);
 
-  // const getUserName = async () => {
-  //   //임시 - 유저 정보 없으면 API 호출 불가
-  //   if (!user) return;
-  //   const { MY_INFO_GET } = API.USER;
-  //   try {
-  //     const res = await mainApi<UserInfoResponse>({
-  //       url: MY_INFO_GET,
-  //       method: "GET",
-  //       withAuth: true,
-  //     });
-  //     if (res.status === 200) {
-  //       const userName = res.data.name;
-  //       setName(userName);
-  //       setIsLoggedIn(true);
-  //       SuccessAlert(`${userName}님 반갑습니다!`);
-  //     }
-  //   } catch (e) {
-  //     console.error(e);
-  //     setIsLoggedIn(false);
-  //     ErrorAlert("이름 가져오기에 실패했습니다.");
-  //   }
-  // };
-
   const getFriendRequests = async () => {
-    //임시 - 유저 정보 없으면 API 호출 불가
     if (!user) return;
+
     const { FRIENDS_REQUEST_GET } = API.FRIENDS;
+
     try {
       const res = await mainApi({
         url: FRIENDS_REQUEST_GET,
         method: "GET",
         withAuth: true,
       });
+
       if (res.status === 200) {
-        setNotifications(res.data.requests);
+        setNotifications(res.data.requests); // 임시 - 타입 추가 지정 확실하게 해줘야함
       }
     } catch (e) {
       console.error(e);
@@ -97,16 +53,17 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     const { LOGOUT } = API.AUTH;
+
     try {
       const res = await mainApi({
         url: LOGOUT,
         method: "POST",
         withAuth: true,
       });
+
       if (res.status === 201) {
         localStorage.removeItem("token");
         resetUser();
-        setIsLoggedIn(false);
         router.replace("/");
         SuccessAlert("로그아웃 되었습니다.");
       }
@@ -170,6 +127,10 @@ export default function Navbar() {
             ]}
             className="right-4 w-20 text-center"
           />
+          <AddressBookModal
+            isOpen={showAddressBookModal}
+            onClose={openAddressBookModal}
+          />
         </ul>
       ) : (
         <Link
@@ -179,11 +140,6 @@ export default function Navbar() {
           로그인
         </Link>
       )}
-
-      <AddressBookModal
-        isOpen={showAddressBookModal}
-        onClose={openAddressBookModal}
-      />
     </nav>
   );
 }
