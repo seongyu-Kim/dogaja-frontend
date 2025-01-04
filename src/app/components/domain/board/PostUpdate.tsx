@@ -23,7 +23,7 @@ export default function PostUpdate({ post }: PostType) {
   const [content, setContent] = useState(post.content);
   const [disabled, setDisabled] = useState(true);
 
-  const boardId = useParams().boardId;
+  const { boardType, boardId } = useParams();
   const router = useRouter();
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function PostUpdate({ post }: PostType) {
 
     if (res === 200) {
       SuccessAlert("게시글 수정 성공");
-      router.push("./");
+      router.push(`/board/${boardType}/${boardId}`);
       return;
     }
 
