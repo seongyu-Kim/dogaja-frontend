@@ -12,13 +12,8 @@ import { FaRegAddressBook } from "react-icons/fa6";
 import { PiBellBold } from "react-icons/pi";
 import SlideMenu from "./Slidemenu";
 import AddressBookModal from "../AddressBookModal";
-import RequestModal from "../RequestModal";
 import NotificationList, { Notification } from "../NotificationList";
 import { useUserStore } from "@/app/store/userStore";
-
-interface UserInfoResponse {
-  name: string;
-}
 
 export default function Navbar() {
   const router = useRouter();
