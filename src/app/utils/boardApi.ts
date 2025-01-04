@@ -151,7 +151,8 @@ export const requestFriend = async (friendName: string) => {
       data: { friendName: friendName },
       withAuth: true,
     });
-    if (res.status === 200) {
+    //임시 - 아래 상태 코드 논의 해야함
+    if (res.status === 200 || res.status === 201) {
       return res.status;
     }
   } catch (e) {
