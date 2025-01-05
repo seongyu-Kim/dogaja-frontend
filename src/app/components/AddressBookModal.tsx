@@ -22,7 +22,6 @@ const AddressBookModal: React.FC<{
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
   const [isRequestModalOpen, setRequestModalOpen] = useState(false);
-  const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
   const [isFriendAddModalOpen, setFriendAddModalOpen] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
   const { user } = useUserStore();
@@ -75,8 +74,7 @@ const AddressBookModal: React.FC<{
     }
   };
 
-  const handleConfirm = (id: number) => {
-    setSelectedFriendId(id);
+  const handleConfirm = () => {
     setRequestModalOpen(true);
   };
 
@@ -114,7 +112,7 @@ const AddressBookModal: React.FC<{
         </div>
         <div className="flex justify-center gap-2">
           <Button
-            onClick={() => handleConfirm(1)}
+            onClick={() => handleConfirm()}
             className="text-sm w-full"
             style={{
               backgroundColor: "bg-mainColor",

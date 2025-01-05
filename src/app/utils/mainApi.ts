@@ -51,7 +51,6 @@ export const mainApi = async <T>({
   withAuth = false,
 }: AxiosProps): Promise<AxiosResponse<T>> => {
   try {
-    //토큰은 어디에 저장할지 모르니 임시로 로컬스토리지
     const token = withAuth ? localStorage.getItem("token") : null;
     const config: CustomAxiosRequestConfig = {
       url,
