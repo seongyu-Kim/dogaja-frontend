@@ -81,7 +81,7 @@ export default function MySchedulePage() {
         <div className="flex items-center justify-between">
           <p className="text-3xl">일정 관리</p>
           {/*임시 추후 일정 생성 create 페이지로 이동*/}
-          <Link href="/my-schedule/planner">
+          <Link href="/my-schedule/create">
             <Button
               style={{
                 backgroundColor: "bg-mainColor",
@@ -135,7 +135,7 @@ function Description({
             >
               <div className="w-full flex item-center h-full px-2 gap-1 relative">
                 <Link
-                  href={`/my-schedule/planner/${id}`}
+                  href={`/my-schedule/${id}`}
                   className="w-full flex item-center h-full px-2 gap-1"
                 >
                   <div className="w-[10%] h-full hidden md:flex items-center justify-center">
@@ -180,7 +180,7 @@ function Description({
                     >
                       삭제
                     </Button>
-                    <Link href={`/my-schedule/planner/${id}`}>
+                    <Link href={`/my-schedule/${id}/update`}>
                       <Button
                         style={{
                           backgroundColor: "bg-mainColor",

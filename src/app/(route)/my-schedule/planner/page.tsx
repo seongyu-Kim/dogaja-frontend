@@ -19,6 +19,7 @@ function TravelPlannerPage() {
   const { scheduleId } = useParams();
 
   const [title, setTitle] = useState("");
+  const [travelDuration, setTravelDuration] = useState("");
   const [companions, setCompanions] = useState<string[]>([]);
   const [friendsModalOpen, setFriendsModalOpen] = useState(false);
   
@@ -45,7 +46,7 @@ function TravelPlannerPage() {
   }, []);
 
   const toggleFriendAddModal = () => {
-    setFriendsModalOpen(!friendsModalOpen); // 모달 상태 토글
+    setFriendsModalOpen(!friendsModalOpen);
   };
 
   const removeCompanion = (index: number) => {
@@ -94,6 +95,17 @@ function TravelPlannerPage() {
       )
     );
   };
+
+  useEffect(() => {
+    if (departureDate && arrivalDate) {
+      const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "2-digit", day: "2-digit" };
+      const start = departureDate.toLocaleDateString("ko-KR", options);
+      const end = arrivalDate.toLocaleDateString("ko-KR", options);
+      setTravelDuration(`${start} ~ ${end}`);
+    } else {
+      setTravelDuration("");
+    }
+  }, [departureDate, arrivalDate]);
 
   const saveSchedule = async () => {
 
