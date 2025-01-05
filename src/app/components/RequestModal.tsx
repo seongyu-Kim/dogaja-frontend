@@ -5,6 +5,7 @@ import Button from "./common/Button";
 import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
+import { IoPersonAddSharp } from "react-icons/io5";
 
 interface Friend {
   id: number;
@@ -16,7 +17,6 @@ interface RequestModalProps {
   onClose: () => void;
   title: string;
   explanation: string;
-  userId: number | null;
 }
 
 const RequestModal: React.FC<RequestModalProps> = ({
@@ -24,11 +24,9 @@ const RequestModal: React.FC<RequestModalProps> = ({
   onClose,
   title,
   explanation,
-  userId,
 }) => {
-
   const [friends, setFriends] = useState<Friend[]>([]);
-    
+
   useEffect(() => {
     if (isOpen) {
       getFriendRequests();
@@ -41,9 +39,10 @@ const RequestModal: React.FC<RequestModalProps> = ({
       const res = await mainApi({
         url: FRIENDS_REQUEST_GET,
         method: "GET",
+        withAuth: true,
       });
       if (res.status === 200) {
-        setFriends(res.data.requests);
+        setFriends(res.data as Friend[]);
       }
     } catch (e) {
       console.error(e);
@@ -55,12 +54,16 @@ const RequestModal: React.FC<RequestModalProps> = ({
     const { FRIENDS_REQUEST_PATCH } = API.FRIENDS;
     try {
       const res = await mainApi({
-        url: FRIENDS_REQUEST_PATCH,
+        url: FRIENDS_REQUEST_PATCH(id),
         method: "PATCH",
         data: { status: "accepted" },
+        withAuth: true,
       });
       if (res.status === 200) {
-        setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== id));
+        SuccessAlert("친구 요청을 수락했습니다.");
+        setFriends((prevFriends) =>
+          prevFriends.filter((friend) => friend.id !== id),
+        );
       }
     } catch (e) {
       console.error(e);
@@ -69,15 +72,22 @@ const RequestModal: React.FC<RequestModalProps> = ({
   };
 
   const handleRefusal = async (id: number) => {
+    const deleteConfirm = confirm("친구 요청을 거절 하시겠습니까?");
+    if (!deleteConfirm) {
+      return;
+    }
     const { FRIENDS_REQUEST_PATCH } = API.FRIENDS;
     try {
       const res = await mainApi({
-        url: FRIENDS_REQUEST_PATCH,
+        url: FRIENDS_REQUEST_PATCH(id),
         method: "PATCH",
         data: { status: "rejected" },
+        withAuth: true,
       });
       if (res.status === 200) {
-        setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== id));
+        setFriends((prevFriends) =>
+          prevFriends.filter((friend) => friend.id !== id),
+        );
       }
     } catch (e) {
       console.error(e);
@@ -85,22 +95,25 @@ const RequestModal: React.FC<RequestModalProps> = ({
     }
   };
 
-  const filteredFriends = friends.filter(friend => friend.id === userId);
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} explanation={explanation}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={title}
+      explanation={explanation}
+    >
       <div className="flex justify-center gap-2 mt-4 max-h-60 overflow-y-auto">
         <ul className="mb-4 w-full">
-          {filteredFriends.length === 0 ? (
+          {friends.length === 0 ? (
             <li className="text-center">요청이 없습니다.</li>
           ) : (
-            filteredFriends.map((friend) => (
+            friends.map((friend) => (
               <li
                 key={friend.id}
                 className="flex justify-between items-center py-2 border-b border-gray-300"
               >
-                <span className="flex items-center">
-                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">이미지</div>
+                <span className="flex items-center gpa-2">
+                  <IoPersonAddSharp className="text-gray-300 w-[40px] h-[40px] rounded-full" />
                   {friend.name}
                 </span>
                 <div className="flex justify-center gap-3">
@@ -128,7 +141,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
               </li>
             ))
           )}
-        </ul> 
+        </ul>
       </div>
     </Modal>
   );

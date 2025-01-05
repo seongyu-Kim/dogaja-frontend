@@ -151,7 +151,8 @@ export const requestFriend = async (friendName: string) => {
       data: { friendName: friendName },
       withAuth: true,
     });
-    if (res.status === 200) {
+    //임시 - 아래 상태 코드 논의 해야함
+    if (res.status === 200 || res.status === 201) {
       return res.status;
     }
   } catch (e) {
@@ -172,6 +173,23 @@ export const scheduleGet = async () => {
     });
     if (res.status === 200) {
       return res.data as ScheduleType[];
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+//일정 리스트 삭제 요청
+export const scheduleDelete = async (id: string) => {
+  const { SCHEDULE_DELETE } = API.SCHEDULE;
+  try {
+    const res = await mainApi({
+      url: SCHEDULE_DELETE(id),
+      method: "DELETE",
+      withAuth: true,
+    });
+    if (res.status === 200) {
+      return res.status;
     }
   } catch (e) {
     console.error(e);

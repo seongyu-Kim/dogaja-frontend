@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
@@ -9,9 +9,11 @@ import FriendAddModal from "./FriendAddModal";
 import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
+import { IoPersonCircleOutline } from "react-icons/io5";
+import { useUserStore } from "@/app/store/userStore";
 
 interface Friend {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -22,23 +24,27 @@ const AddressBookModal: React.FC<{
   isSchedulePage?: boolean;
 }> = ({ isOpen, onClose, onAddFriend, isSchedulePage }) => {
   const [isRequestModalOpen, setRequestModalOpen] = useState(false);
-  const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
   const [isFriendAddModalOpen, setFriendAddModalOpen] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
+  const { user } = useUserStore();
 
   useEffect(() => {
     getFriendList();
   }, []);
-  
+
   const getFriendList = async () => {
+    //임시 - 유저 정보 없으면 API 호출 불가
+    if (!user) return;
     const { FRIENDS_LIST_GET } = API.FRIENDS;
     try {
       const res = await mainApi({
         url: FRIENDS_LIST_GET,
         method: "GET",
+        withAuth: true,
       });
       if (res.status === 200) {
-        setFriends(res.data.friends || []);
+        const data = (res.data as Friend[]) || [];
+        setFriends(data);
       }
     } catch (e) {
       console.error(e);
@@ -46,15 +52,22 @@ const AddressBookModal: React.FC<{
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
+    const deleteConfirm = confirm("정말 친구 목록에서 삭제하시겠습니까?");
+    if (!deleteConfirm) {
+      return;
+    }
     const { FRIENDS_DELETE } = API.FRIENDS;
     try {
       const res = await mainApi({
-        url: FRIENDS_DELETE(id.toString()),
+        url: FRIENDS_DELETE(id),
         method: "DELETE",
+        withAuth: true,
       });
       if (res.status === 200) {
-        setFriends((prevFriends) => prevFriends.filter((friend) => friend.id !== id));
+        setFriends((prevFriends) =>
+          prevFriends.filter((friend) => friend.id !== id),
+        );
         SuccessAlert("친구 목록에서 삭제되었습니다.");
       }
     } catch (e) {
@@ -63,8 +76,7 @@ const AddressBookModal: React.FC<{
     }
   };
 
-  const handleConfirm = (id: number) => {
-    setSelectedFriendId(id);
+  const handleConfirm = () => {
     setRequestModalOpen(true);
   };
 
@@ -80,15 +92,15 @@ const AddressBookModal: React.FC<{
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} title="주소록">
-        <div className="max-h-60 overflow-y-auto mb-4">
+        <div className="min-h-60 max-h-60 overflow-y-auto mb-4">
           <ul className="mb-4">
             {friends.map((friend) => (
               <li
                 key={friend.id}
-                className="flex justify-between items-center py-2 border-b border-gray-300"
+                className="flex justify-between items-center py-2 px-2 border-b border-gray-300"
               >
-                <span className="flex items-center">
-                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">이미지</div>
+                <span className="flex items-center gap-2">
+                  <IoPersonCircleOutline className="text-gray-300 w-[50px] h-[50px]" />
                   {friend.name}
                 </span>
                 {isSchedulePage && (
@@ -119,7 +131,7 @@ const AddressBookModal: React.FC<{
         </div>
         <div className="flex justify-center gap-2">
           <Button
-            onClick={() => handleConfirm(1)}
+            onClick={() => handleConfirm()}
             className="text-sm w-full"
             style={{
               backgroundColor: "bg-mainColor",
@@ -146,7 +158,6 @@ const AddressBookModal: React.FC<{
           onClose={() => setRequestModalOpen(false)}
           title="친구 요청"
           explanation="친구 요청에 수락하시겠습니까?"
-          userId={selectedFriendId}
         />
       )}
       <FriendAddModal

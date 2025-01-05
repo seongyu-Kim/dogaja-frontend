@@ -12,8 +12,7 @@ import { deletePost, deleteReport } from "@/app/utils/boardApi";
 import getBoardTitle from "@/app/utils/getBoardTitle";
 import Pagination from "@/app/components/common/Pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useUserStore } from "@/app/store/userStore";
-import notFound from "@/app/not-found";
+import { isAxiosError } from "axios";
 
 const itemsPerPage = 10;
 
@@ -21,8 +20,6 @@ export default function ReportPage() {
   const [list, setList] = useState<ReportListType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentItems, setCurrentItems] = useState<ReportListType[]>([]);
-  const { user } = useUserStore();
-
   const searchParams = useSearchParams();
   const boardPath = usePathname();
   const router = useRouter();
@@ -63,12 +60,17 @@ export default function ReportPage() {
         return;
       }
     } catch (e) {
-      console.error(e);
-      ErrorAlert("리스트 조회 실패");
+      if (isAxiosError(e)) {
+        if (e.response && e.response.data.statusCode === 401) {
+          ErrorAlert("유효하지 않은 사용자");
+          router.replace("/");
+        }
+        ErrorAlert("오류가 발생했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
-  // 페이지 변경 시 URL 업데이트
+  // 페이지 변경 시 URL 업데이트 임시 - 추후 관리자 페이지는 3제거
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       if (boardPath.split("/").length === 3) {
@@ -111,10 +113,6 @@ export default function ReportPage() {
       ErrorAlert("신고 삭제 실패");
     }
   };
-
-  if (!user || !user.admin) {
-    return notFound({});
-  }
 
   return (
     <div className="flex justify-center h-full">

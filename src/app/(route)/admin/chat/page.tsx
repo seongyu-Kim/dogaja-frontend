@@ -1,21 +1,9 @@
 "use client";
-import { io, Socket } from "socket.io-client";
 import { FormEvent, useEffect, useRef, useState } from "react";
-
-interface MessageType {
-  message: string;
-  timestamp?: string;
-  user?: string;
-}
-
-interface ChatRoom {
-  name: string;
-  messages: number;
-  lastMessage?: string;
-  roomId: string; // 채팅방 식별자 추가
-}
-
-const chatSocket: Socket = io("ws://localhost:5000");
+import { useUserStore } from "@/app/store/userStore";
+import { ChatRoom, MessageType } from "@/app/type/ChatType";
+import { disconnectSocket, getSocket } from "@/app/utils/websocket";
+import { Socket } from "socket.io-client";
 
 export default function ChatPage() {
   //임시 - 아래 타입들 API 나오기 전에 상상코딩된 부분이라 수정 예정
@@ -104,11 +92,42 @@ export default function ChatPage() {
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
   const messageRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const socketRef = useRef<Socket | null>(null);
+  const { user } = useUserStore();
+
+  useEffect(() => {
+    if (!user?.admin) {
+      disconnectSocket();
+      return;
+    }
+    socketRef.current = getSocket();
+    const chatSocket = socketRef.current;
+
+    chatSocket.on("message", getMessagesSocketHandler);
+
+    // 이전 메시지 수신
+    chatSocket.on("previousMessages", (messages: MessageType[]) => {
+      setChatLog(messages);
+    });
+
+    return () => {
+      chatSocket.off("message", getMessagesSocketHandler);
+      chatSocket.off("previousMessages");
+      disconnectSocket();
+    };
+  }, []);
+
+  // 변경될 때마다 스크롤을 하단으로 이동
+  useEffect(() => {
+    if (selectedRoom) {
+      scrollToBottom();
+    }
+  }, [selectedRoom]);
 
   // 초기 채팅방 목록 가져오기
   useEffect(() => {
     //대충 axios로 채팅방 목록 가져오고 setChatRooms에 데이터 넣어주고 아래에 함수 실행~
-    console.log("채팅방 목록 불러옴~~");
     setChatRooms([
       { name: "r", messages: 13, roomId: "1" },
       { name: "B", messages: 13, roomId: "2" },
@@ -128,23 +147,10 @@ export default function ChatPage() {
     ]);
   }, []);
 
-  // 실시간 메시지
-  useEffect(() => {
-    chatSocket.on("message", getMessagesSocketHandler);
-
-    // 이전 메시지 수신
-    chatSocket.on("previousMessages", (messages: MessageType[]) => {
-      setChatLog(messages);
-    });
-
-    return () => {
-      chatSocket.off("message", getMessagesSocketHandler);
-      chatSocket.off("previousMessages");
-    };
-  }, []);
-
   // 채팅방 선택 핸들러
   const handleRoomSelect = async (roomId: string) => {
+    if (!socketRef.current) return;
+    const chatSocket = socketRef.current;
     setSelectedRoom(roomId);
 
     try {
@@ -168,7 +174,8 @@ export default function ChatPage() {
   // 메시지 전송 핸들러
   const submitMessageApiHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (messageRef.current?.value && selectedRoom) {
+    const chatSocket = socketRef.current;
+    if (messageRef.current?.value && selectedRoom && chatSocket) {
       const newMessage = {
         message: messageRef.current.value,
         timestamp: new Date().toLocaleTimeString("ko-KR", {
@@ -187,10 +194,16 @@ export default function ChatPage() {
     setChatLog((prevChatLog) => [...prevChatLog, data]);
   };
 
+  const scrollToBottom = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  };
+
   return (
     <div className="flex bg-white gap-2 px-10 pt-10 h-[800px]">
       <div className="w-64 border border-mainColor rounded overflow-y-auto">
-        <div className="p-4 bg-white border-b border-gray-300 sticky top-0">
+        <div className="p-4 bg-white rounded border-b border-gray-300 sticky top-0">
           <h2 className="text-lg font-semibold text-gray-700">채팅</h2>
         </div>
         <div>
@@ -223,7 +236,7 @@ export default function ChatPage() {
       </div>
       {selectedRoom && (
         <div className="flex-1 flex flex-col rounded border border-mainColor">
-          <div className="flex-1 overflow-y-auto">
+          <div ref={containerRef} className="flex-1 overflow-y-auto">
             <p className="text-center bg-white border-b border-gray-300 py-2 mb-4 sticky top-0 rounded">
               {selectedRoom &&
                 chatRooms.find((room) => room.roomId === selectedRoom)?.name}

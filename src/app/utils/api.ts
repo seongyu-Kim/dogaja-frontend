@@ -28,6 +28,7 @@ export const API = {
     BOARD_ASK_GET: `${BASE_URL}/post/ask`,
     BOARD_REVIEW_GET: `${BASE_URL}/post/review`,
     BOARD_WITH_GET: `${BASE_URL}/post/with`,
+    BOARD_MY_POST: `${BASE_URL}/post/my`,
     POST_CREATE: `${BASE_URL}/post/create`,
     POST_READ: (id: string) => `${BASE_URL}/post/${id}`,
     POST_UPDATE: (id: string) => `${BASE_URL}/post/${id}`,

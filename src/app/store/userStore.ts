@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
+import { isAxiosError } from "axios";
 
 type User = {
   name: string;
@@ -10,12 +11,17 @@ type User = {
 
 type UserState = {
   user: User;
+  resetUser: () => void;
   fetchUser: () => Promise<void>;
 };
 
 export const useUserStore = create<UserState>((set) => ({
   user: null,
   error: null,
+  resetUser: () => {
+    set({ user: null });
+    localStorage.removeItem("token");
+  },
 
   fetchUser: async () => {
     try {
@@ -26,10 +32,21 @@ export const useUserStore = create<UserState>((set) => ({
       });
 
       const userData = response.data as User;
-      set({ user: userData });
+      const statusCode = response.status;
+      if (statusCode === 200) {
+        set({ user: userData });
+        return;
+      }
+      set({ user: null });
       //
     } catch (e) {
       console.error("fetchUser", e);
+      if (isAxiosError(e)) {
+        if (e.status === 401) {
+          set({ user: null });
+          localStorage.removeItem("token");
+        }
+      }
     }
   },
 }));

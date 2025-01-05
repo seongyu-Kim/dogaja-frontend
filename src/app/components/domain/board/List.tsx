@@ -1,9 +1,11 @@
 import { IoDocumentText } from "react-icons/io5";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { MdOutlinePhoto } from "react-icons/md";
+import { BoardListType } from "@/app/type/boardListType";
 interface ListProps {
   // 임시 타입
-  list: any[];
+  list: BoardListType[];
   preview?: boolean;
   boardType?: string;
   detailList?: boolean;
@@ -29,36 +31,36 @@ export default function List({
     <main className="w-[300px] md:w-auto">
       <ul className="flex flex-col items-center justify-center w-full">
         {/*image_id는 임시 값 추후 수정*/}
-        {list.map(({ id, image_id, title, commentsCount, name }) => {
+        {list.map(({ id, img, title, commentsCount, name }) => {
           const path = `${boardType ? `board/${boardType}/${id}` : detailList ? `./${id}?page=${searchParams}` : `${route}/${id}?page=${searchParams}`}`;
 
           return (
             <Link
               href={path}
               key={id}
-              className={`w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200 ${postId == id ? "bg-gray-200" : ""}`}
+              className={`w-full py-2 border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200 ${parseInt(postId!) == id ? "bg-gray-200" : ""}`}
             >
               <div
                 className={`w-full flex items-center justify-between ${preview ? "h-[50px]" : "h-auto"} px-1`}
               >
                 {preview && (
-                  <div className="w-[50px] h-[50px] hidden md:flex items-center justify-center">
-                    {image_id ? (
-                      <p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기
+                  <div className="w-[25px] h-[25px] hidden md:flex items-center justify-center">
+                    {img ? (
+                      <MdOutlinePhoto className="w-[25px] h-[25px] text-gray-400" />
                     ) : (
                       <IoDocumentText className="w-[25px] h-[25px] text-gray-400" />
                     )}
                   </div>
                 )}
                 <div className="flex w-[85%] items-center gap-3">
-                  {postId == id && (
+                  {parseInt(postId!) == id && (
                     <p className="font-semibold text-xl">{"→"}</p>
                   )}
-                  <p>
-                    {title.length > 35
-                      ? `${title.slice(0, 34)}...`
-                      : `${title}`}
-                  </p>
+                  <div className="w-auto max-w-md">
+                    <p className="overflow-hidden whitespace-nowrap text-ellipsis">
+                      {title}
+                    </p>
+                  </div>
                   {commentsCount > 0 && (
                     <p className="text-[10px] text-blue-700">{commentsCount}</p>
                   )}

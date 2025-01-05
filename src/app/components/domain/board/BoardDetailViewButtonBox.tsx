@@ -20,6 +20,7 @@ export default function BoardDetailViewButtonBox({
   const [reportModal, setReportModal] = useState(false);
   const { user } = useUserStore();
   const router = useRouter();
+  const isEditable = user && (user.admin || user.name === name);
 
   const handleOpenModal = () => setReportModal((prev) => !prev);
   const handleCloseModal = () => setReportModal(false);
@@ -39,7 +40,7 @@ export default function BoardDetailViewButtonBox({
   };
   return (
     <div className="flex items-center justify-between">
-      <p onClick={handleOpenModal}>신고</p>
+      <button onClick={handleOpenModal}>신고</button>
       <div className="flex gap-2">
         {user && (
           <Link href="./create">
@@ -54,7 +55,7 @@ export default function BoardDetailViewButtonBox({
             </Button>
           </Link>
         )}
-        {user && (user.admin || user.name === name) && (
+        {isEditable && (
           <>
             <Link href={`./${postId}/update`}>
               <Button

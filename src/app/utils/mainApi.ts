@@ -1,4 +1,11 @@
-import axios, { AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import axios, {
+  AxiosRequestConfig,
+  AxiosResponse,
+  isAxiosError,
+  Method,
+} from "axios";
+import { toast } from "react-toastify";
+import { useUserStore } from "@/app/store/userStore";
 
 interface AxiosProps {
   url: string;
@@ -10,12 +17,25 @@ interface AxiosProps {
   withAuth?: boolean;
 }
 
+interface ErrorMeta {
+  response: {
+    data: {
+      error: string;
+      message: string;
+      statusCode: number;
+    };
+  };
+}
+
+export const isServerApiError = (error: unknown): error is ErrorMeta => {
+  return isAxiosError(error) && !!error.response;
+};
+
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   next?: Record<string, string>;
 }
 
 const createAxios = axios.create({
-  baseURL: "http://localhost:3000",
   headers: {
     "Content-Type": "application/json",
   },
@@ -31,7 +51,6 @@ export const mainApi = async <T>({
   withAuth = false,
 }: AxiosProps): Promise<AxiosResponse<T>> => {
   try {
-    //토큰은 어디에 저장할지 모르니 임시로 로컬스토리지
     const token = withAuth ? localStorage.getItem("token") : null;
     const config: CustomAxiosRequestConfig = {
       url,
@@ -47,6 +66,30 @@ export const mainApi = async <T>({
     return res;
   } catch (e: any) {
     console.error(e);
-    throw e.response || e.message;
+    throw e;
   }
 };
+
+createAxios.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (isServerApiError(error)) {
+      const token = localStorage.getItem("token");
+      const { user, resetUser } = useUserStore();
+
+      if (error.response.data.statusCode === 401) {
+        if (token && user) {
+          toast.error("세션이 만료되었습니다. 로그인을 해야합니다.", {
+            position: "top-right",
+            autoClose: 2500,
+            closeOnClick: true,
+            toastId: "session-expired",
+          });
+          resetUser();
+        }
+        return Promise.reject(error);
+      }
+    }
+    return Promise.reject(error);
+  },
+);
