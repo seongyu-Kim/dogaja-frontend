@@ -6,15 +6,14 @@ import Button from "./common/Button";
 import RequestModal from "./RequestModal";
 import FriendAddModal from "./FriendAddModal";
 
-import { API } from "@/app/utils/api";
-import { mainApi } from "@/app/utils/mainApi";
-import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
-import { IoPersonCircleOutline } from "react-icons/io5";
 import { useUserStore } from "@/app/store/userStore";
+import { deleteFriend, getFriendList } from "./common/api/friendApi";
+
+import { IoPersonCircleOutline } from "react-icons/io5";
 
 interface Friend {
   id: string;
-  name: string;
+  nickname: string;
 }
 
 const AddressBookModal: React.FC<{
@@ -29,50 +28,28 @@ const AddressBookModal: React.FC<{
   const { user } = useUserStore();
 
   useEffect(() => {
-    getFriendList();
+    getFriendListHandler();
   }, []);
 
-  const getFriendList = async () => {
+  const getFriendListHandler  = async () => {
     //임시 - 유저 정보 없으면 API 호출 불가
     if (!user) return;
-    const { FRIENDS_LIST_GET } = API.FRIENDS;
     try {
-      const res = await mainApi({
-        url: FRIENDS_LIST_GET,
-        method: "GET",
-        withAuth: true,
-      });
-      if (res.status === 200) {
-        const data = (res.data as Friend[]) || [];
-        setFriends(data);
-      }
-    } catch (e) {
-      console.error(e);
-      ErrorAlert("친구목록 가져오기에 실패했습니다.");
+      const friendsList = await getFriendList();
+      setFriends(friendsList);
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const handleDelete = async (id: string) => {
-    const deleteConfirm = confirm("정말 친구 목록에서 삭제하시겠습니까?");
-    if (!deleteConfirm) {
-      return;
-    }
-    const { FRIENDS_DELETE } = API.FRIENDS;
+  // 친구 삭제
+  const handleDelete = async (friendId: string) => {
+    
     try {
-      const res = await mainApi({
-        url: FRIENDS_DELETE(id),
-        method: "DELETE",
-        withAuth: true,
-      });
-      if (res.status === 200) {
-        setFriends((prevFriends) =>
-          prevFriends.filter((friend) => friend.id !== id),
-        );
-        SuccessAlert("친구 목록에서 삭제되었습니다.");
-      }
-    } catch (e) {
-      console.error(e);
-      ErrorAlert("친구 삭제에 실패했습니다.");
+      await deleteFriend(friendId.toString());
+      setFriends(friends.filter(friend => friend.id !== friendId)); // 삭제 후 친구 목록에서 제거
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -101,11 +78,11 @@ const AddressBookModal: React.FC<{
               >
                 <span className="flex items-center gap-2">
                   <IoPersonCircleOutline className="text-gray-300 w-[50px] h-[50px]" />
-                  {friend.name}
+                  {friend.nickname}
                 </span>
                 {isSchedulePage && (
                   <Button
-                    onClick={() => handleAddSchedule(friend.name)} // 친구 선택 시 처리
+                    onClick={() => handleAddSchedule(friend.nickname)} // 친구 선택 시 처리
                     style={{
                       textColor: "text-mainColor",
                       backgroundColor: "bg-transparent",

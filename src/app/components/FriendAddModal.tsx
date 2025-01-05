@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import Button from "./common/Button";
 
-import { API } from "@/app/utils/api";
-import { mainApi } from "@/app/utils/mainApi";
-import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
+import { ErrorAlert } from "@/app/utils/toastAlert";
+import { searchFriends, addFriend } from "./common/api/friendApi";
 
 import { FaPlus } from "react-icons/fa";
 
 interface Friend {
-  id: number;
+  id: string;
   nickname: string;
 }
 
@@ -34,6 +33,7 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  // 친구 검색
   const handleSearch = async () => {
     if (!inputValue.trim()) {
       setFriends([]);
@@ -44,42 +44,26 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     setHasSearched(true);
     
-    const dummyFriends = [
-      { id: 1, nickname: "엘리스" },
-      { id: 2, nickname: "김토끼" },
-      { id: 3, nickname: "이토끼" },
-      { id: 4, nickname: "박토끼" },
-      { id: 5, nickname: "최토끼" },
-    ];
-
-    const filteredFriends = dummyFriends.filter(friend =>
-      friend.nickname.includes(inputValue.trim())
-    );
-
-    setFriends(filteredFriends);
-    setLoading(false);
+    try {
+      const result = await searchFriends(inputValue.trim());
+      setFriends(result);
+    } catch (error) {
+      console.error(error);
+      ErrorAlert("친구 검색 중 오류가 발생했습니다.");
+      setFriends([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // 친구 추가
   const handleAdd = async (friend: Friend) => {
-      // 친구 요청 전송
-      const { FRIENDS_REQUEST_POST } = API.FRIENDS;
-      try {
-        const res = await mainApi({
-          url: FRIENDS_REQUEST_POST,
-          method: "POST",
-          data: { friendName: friend.nickname },
-        });
-
-        if (res.status === 200) {
-          SuccessAlert("친구 요청이 전송되었습니다.");
-          closeModal();
-        } else {
-          ErrorAlert("친구 요청 전송에 실패했습니다.");
-        }
-      } catch (e) {
-        console.error(e);
-        ErrorAlert("친구 요청 전송 중 오류가 발생했습니다.");
-      }
+    try {
+      await addFriend(friend.nickname);
+      closeModal();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const closeModal = () => {
