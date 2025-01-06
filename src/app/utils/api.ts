@@ -1,5 +1,3 @@
-import { base } from "next/dist/build/webpack/config/blocks/base";
-
 const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}`;
 // .env 파일에 아래 내용 추가해주세요
 // NEXT_PUBLIC_BASE_URL=http://kdt-react-node-1-team02.elicecoding.com:3000
@@ -78,21 +76,14 @@ export const API = {
       `${BASE_URL}/schedule/${scheduleId}/location`,
     SCHEDULE_DELEDT_LOCATION: (scheduleId: string, locationId: string) =>
       `${BASE_URL}/schedule/location/${scheduleId}/${locationId}`,
-    SCHEDULE_ADD_BUCKET: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/bucket`,
+
   },
   SEARCH: {
     SEARCH_RESULT: `${BASE_URL}/search/result`,
   },
-  CHAT: {
-    CHAT_ROOM_CREATE_OR_JOIN: `${BASE_URL}/chat-mock/createOrJoinRoom`,
-    CHAT_JOIN_ROOM: `${BASE_URL}/chat-mock/joinRoom`,
-    CHAT_ROOM_READ_ADMIN: `${BASE_URL}/chat-mock/getRoomByIdAndAdmin`,
-    CHAT_MSG_READ_USER: `${BASE_URL}/chat-mock/getMessagesByChatRoom`,
-    CHAT_SEND_MSG: `${BASE_URL}/chat-mock/sendMessage`,
-    CHAT_ROOM_LEAVE: `${BASE_URL}/chat-mock/leaveRoom`,
-  },
 };
 
+// SCHEDULE_ADD_BUCKET: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/bucket`,
 // SCHEDULE_ADD_CHECKLIST: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/check`,
 // SCHEDULE_LIST_UPDATE: (scheduleId:string, listsId:string) => `${BASE_URL}/schedule/${scheduleId}/${listsId}`,
 // SCHEDULE_LIST_DELETE: (scheduleId:string, listsId:string) => `${BASE_URL}/schedule/${scheduleId}/${listsId}`,
