@@ -10,6 +10,7 @@ import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 import { useRouter } from "next/navigation";
+import { isAxiosError } from "axios";
 
 type SignUpFormData = {
   email: string;
@@ -47,13 +48,15 @@ const SignUp = () => {
           router.push("/login");
         }, 1200);
       }
-    } catch (e: any) {
-      if (e.status === 409) {
-        ErrorAlert("이미 존재하는 이메일입니다.");
-      } else if (e.status === 422) {
-        ErrorAlert("이미 존재하는 이름입니다.");
-      } else {
-        ErrorAlert("회원가입에 실패하였습니다.");
+    } catch (e) {
+      if (isAxiosError(e)) {
+        if (e.status === 409) {
+          ErrorAlert("이미 존재하는 이메일입니다.");
+        } else if (e.status === 422) {
+          ErrorAlert("이미 존재하는 이름입니다.");
+        } else {
+          ErrorAlert("회원가입에 실패하였습니다.");
+        }
       }
     }
   };
