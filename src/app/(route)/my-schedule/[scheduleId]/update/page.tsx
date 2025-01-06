@@ -42,7 +42,8 @@ const EditSchedulePage = () => {
   const [friendList, setFriendList] = useState<string[]>([]);
   const [checkItems, setCheckItems] = useState<CheckListItem[]>([]);
   const [bucketItems, setBucketItems] = useState<BucketListItem[]>([]);
-  
+  const [reviewImage, setReviewImage] = useState<File | null>(null);
+
     // 일정 로드
   useEffect(() => {
     const loadSchedule = async () => {
@@ -84,12 +85,16 @@ const EditSchedulePage = () => {
     };
 
     try {
-      await updateSchedule(scheduleId as string, updateDto);
+      await updateSchedule(scheduleId as string, updateDto, reviewImage);
       SuccessAlert("일정이 성공적으로 수정되었습니다.");
       router.push('/my-schedule');
     } catch (error) {
       ErrorAlert("일정을 수정하는 중 문제가 발생했습니다.");
     }
+  };
+
+  const handleImageChange = (file: File | null) => {
+    setReviewImage(file);
   };
 
   return (
@@ -176,7 +181,9 @@ const EditSchedulePage = () => {
             <div className="p-4 border border-mainColor rounded-lg w-full">
               <h2>한 줄 후기</h2>
               <div className="flex">
-                <SelectImage />
+                <SelectImage 
+                  onImageChange={handleImageChange}
+                />
                 <textarea
                   value={review}
                   onChange={(e) => setReview(e.target.value)}
