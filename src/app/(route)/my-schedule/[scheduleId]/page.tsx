@@ -36,7 +36,7 @@ const TravelPlanPage: React.FC = () => {
         <p className="border-r border-mainColor pr-4">여행 기간 : {travelPlan.period}</p>
         <p>
           동행자 : 
-          {travelPlan.friendList.length > 1 ? (
+          {travelPlan.friendList.length > 0 ? (
             travelPlan.friendList.map((friend) => (
               <span key={friend.id} className="ml-2">{friend.name}</span>
             ))

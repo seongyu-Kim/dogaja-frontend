@@ -1,16 +1,20 @@
 import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
 import { CreateDto } from "@/app/type/scheduleCreateDto";
+import { addFriendsToSchedule } from "@/app/components/common/api/friendApi";
 
-export const createSchedule = async (data: CreateDto) => {
+export const createSchedule = async (scheduleId: string, data: CreateDto, friends: string[]) => {
   try {
     const { SCHEDULE_CREATE } = API.SCHEDULE;
+
     const response = await mainApi({
       url: SCHEDULE_CREATE,
       method: "POST",
       data,
       withAuth: true,
     });
+
+    await addFriendsToSchedule(scheduleId, friends);
 
     if (response.status === 201) {
       return { success: true, message: "일정이 성공적으로 저장되었습니다!" };
