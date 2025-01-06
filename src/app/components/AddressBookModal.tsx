@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import Modal from "./Modal";
 import Button from "./common/Button";
 import RequestModal from "./RequestModal";
@@ -114,9 +115,12 @@ const AddressBookModal: React.FC<{
               아직 친구목록이 없습니다ㅠㅠ<br />
               <div className="mt-8">
                 함께 여행하고 싶은 친구에게 공유하거나,<br />
-                <span className="font-semibold text-mainColor">
-                  친구구함 게시판
-                </span>
+                <Link
+                  href="/board/friend"
+                  className="font-semibold text-mainColor"
+                >
+                  [친구구함 게시판]
+                </Link>
                 을 통해 친구를 맺어보세요!
               </div>
             </div>

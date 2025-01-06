@@ -8,7 +8,7 @@ interface TravelDetailsProps {
 
 const TravelDetails: React.FC<TravelDetailsProps> = ({ travelPlan }) => {
   return (
-    <div className="flex gap-4 w-2/3">
+    <div className="flex gap-4 w-full">
       <TravelSegment title="출발 정보" info={travelPlan.startInfo} />
       <TravelSegment title="도착 정보" info={travelPlan.arriveInfo} />
     </div>

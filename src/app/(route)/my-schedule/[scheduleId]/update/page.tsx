@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchSchedule } from '../fetchSchedule';
 import { updateSchedule } from './updateSchedule';
-import { Review, Schedule, Title, UpdateDto } from "@/app/type/scheduleUpdateDto";
+import { Schedule, UpdateDto } from "@/app/type/scheduleUpdateDto";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 import { addFriendsToSchedule } from '@/app/components/common/api/friendApi';
 
 import { formatDate } from '@/app/components/common/formatDate';
-import { CheckListItem, BucketListItem } from '@/app/type/scheduleDetailType';
+import { CheckListItem, BucketListItem, TravelLocation } from '@/app/type/scheduleDetailType';
 import Checklist from '@/app/components/common/saveSchedule/Checklist';
 import AddressBookModal from "@/app/components/AddressBookModal";
 import CreateTravleSegment from "@/app/components/common/saveSchedule/TravleSegmant";
@@ -48,6 +48,7 @@ const EditSchedulePage = () => {
   const [checkItems, setCheckItems] = useState<CheckListItem[]>([]);
   const [bucketItems, setBucketItems] = useState<BucketListItem[]>([]);
   const [reviewImage, setReviewImage] = useState<File | null>(null);
+  const [locations, setLocations] = useState<TravelLocation[]>([]);
 
   const addCompanion = (companion: { id: string; name: string }) => {
     setCompanions((prev) => {
@@ -88,6 +89,7 @@ const EditSchedulePage = () => {
         setFriendList(schedule.friendList.map((friend) => friend.name));
         setCheckItems(schedule.checkList || []);
         setBucketItems(schedule.bucketList || []);
+        setLocations(schedule.locations || []);
       } catch (error) {
         ErrorAlert("일정을 불러오는 중 문제가 발생했습니다.");
       }
@@ -236,19 +238,25 @@ const EditSchedulePage = () => {
                 ></textarea>
               </div>
             </div>
-            <div className="p-4 border border-mainColor rounded-lg w-full min-h-[394px]">
+            <div className="p-4 border border-mainColor rounded-lg w-full min-h-[396px] max-h-[396px]">
               <h2>일정에 추가 된 장소</h2>
-              <div>
-                <div className="border border-mainColor rounded-lg flex items-center p-2 mt-2">
-                  <div className="border rounded-lg bg-gray-200 p-2 mr-2">
-                    <h2>이미지</h2>
-                  </div>
+              <div className="overflow-y-auto max-h-[335px] my-2">
+              {locations.length > 0 ? (
+                locations.map((location) => (
+                  <div
+                    key={location.id}
+                    className="border border-mainColor rounded-lg flex items-center p-2 mt-2"
+                  >
                   <div className="flex flex-col">
-                    <span className="text-xs pb-2">ㅇㅇ식당</span>
-                    <span className="text-xs">전화번호 : </span>
-                    <span className="text-xs">주소 : </span>
+                    <span className="text-sm font-semibold pb-1">{location.location}</span>
+                    <span className="text-xs pb-1">전화번호: {location.phone || "없음"}</span>
+                    <span className="text-xs">주소: {location.address || "정보 없음"}</span>
                   </div>
                 </div>
+                ))
+              ) : (
+                <p className="text-center text-sm text-gray-500 mt-2">아직 등록된 장소가 없습니다.</p>
+              )}
               </div>
             </div>
           </div>
