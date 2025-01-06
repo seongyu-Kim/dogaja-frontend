@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import Button from "./common/Button";
 
-import { API } from "@/app/utils/api";
-import { mainApi } from "@/app/utils/mainApi";
-import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
+import { SuccessAlert } from "@/app/utils/toastAlert";
+import { getFriendRequests, 
+        acceptFriendRequest, 
+        refuseFriendRequest } from "./common/api/friendApi";
+
 import { IoPersonAddSharp } from "react-icons/io5";
 
 interface Friend {
-  id: number;
-  name: string;
+  id: string;
+  nickname: string;
 }
 
 interface RequestModalProps {
@@ -29,69 +31,43 @@ const RequestModal: React.FC<RequestModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      getFriendRequests();
+      getFriendRequestsHandler();
     }
   }, [isOpen]);
 
-  const getFriendRequests = async () => {
-    const { FRIENDS_REQUEST_GET } = API.FRIENDS;
+  const getFriendRequestsHandler = async () => {
     try {
-      const res = await mainApi({
-        url: FRIENDS_REQUEST_GET,
-        method: "GET",
-        withAuth: true,
-      });
-      if (res.status === 200) {
-        setFriends(res.data as Friend[]);
-      }
+      const requests = await getFriendRequests();
+      setFriends(requests);
     } catch (e) {
       console.error(e);
-      ErrorAlert("친구요청 가져오기에 실패했습니다.");
     }
   };
 
-  const handleAcceptance = async (id: number) => {
-    const { FRIENDS_REQUEST_PATCH } = API.FRIENDS;
+  const handleAcceptance = async (friendId: string) => {
     try {
-      const res = await mainApi({
-        url: FRIENDS_REQUEST_PATCH(id),
-        method: "PATCH",
-        data: { status: "accepted" },
-        withAuth: true,
-      });
-      if (res.status === 200) {
-        SuccessAlert("친구 요청을 수락했습니다.");
-        setFriends((prevFriends) =>
-          prevFriends.filter((friend) => friend.id !== id),
-        );
-      }
+      await acceptFriendRequest(friendId);
+      SuccessAlert("친구 요청을 수락했습니다.");
+      setFriends((prevFriends) =>
+        prevFriends.filter((friend) => friend.id !== friendId),
+      );
     } catch (e) {
       console.error(e);
-      ErrorAlert("친구요청 수락에 실패했습니다.");
     }
   };
 
-  const handleRefusal = async (id: number) => {
+  const handleRefusal = async (friendId: string) => {
     const deleteConfirm = confirm("친구 요청을 거절 하시겠습니까?");
     if (!deleteConfirm) {
       return;
     }
-    const { FRIENDS_REQUEST_PATCH } = API.FRIENDS;
     try {
-      const res = await mainApi({
-        url: FRIENDS_REQUEST_PATCH(id),
-        method: "PATCH",
-        data: { status: "rejected" },
-        withAuth: true,
-      });
-      if (res.status === 200) {
-        setFriends((prevFriends) =>
-          prevFriends.filter((friend) => friend.id !== id),
-        );
-      }
+      await refuseFriendRequest(friendId);
+      setFriends((prevFriends) =>
+        prevFriends.filter((friend) => friend.id !== friendId),
+      );
     } catch (e) {
       console.error(e);
-      ErrorAlert("친구요청 거절에 실패했습니다.");
     }
   };
 
@@ -114,7 +90,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
               >
                 <span className="flex items-center gpa-2">
                   <IoPersonAddSharp className="text-gray-300 w-[40px] h-[40px] rounded-full" />
-                  {friend.name}
+                  {friend.nickname}
                 </span>
                 <div className="flex justify-center gap-3">
                   <Button
