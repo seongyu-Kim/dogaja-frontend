@@ -19,7 +19,7 @@ interface Friend {
 const AddressBookModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-  onAddFriend: (friendName: string) => void;
+  onAddFriend?: (friendName: string) => void;
   isSchedulePage?: boolean;
 }> = ({ isOpen, onClose, onAddFriend, isSchedulePage }) => {
   const [isRequestModalOpen, setRequestModalOpen] = useState(false);
