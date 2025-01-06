@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import KakaoMap from "@/app/(route)/map/page";
+import KakaoMap from "./KakaoMap";
 import { FaStar } from "react-icons/fa";
 import { LiaThumbtackSolid } from "react-icons/lia";
 import { TbMapSearch } from "react-icons/tb";
@@ -176,9 +176,7 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
         );
       }
     } catch (e) {
-      if (isAxiosError(e)) {
-        ErrorAlert("즐겨찾기 해제 실패");
-      }
+      ErrorAlert("즐겨찾기 해제 실패");
     }
   };
   return (
