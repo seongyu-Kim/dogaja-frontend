@@ -47,7 +47,6 @@ const AddPlaceModal = ({
       });
       setSchedules(res.data as Schedule[]);
     } catch (e) {
-      console.error(e);
       ErrorAlert("일정을 불러오는데 실패했습니다.");
     } finally {
       setIsLoading(false);
@@ -76,8 +75,11 @@ const AddPlaceModal = ({
         onClose();
       }
     } catch (e) {
-      console.error(e);
-      ErrorAlert("장소 추가에 실패했습니다.");
+      if (e.status === 400) {
+        ErrorAlert("일정에 존재하는 장소입니다.");
+      } else {
+        ErrorAlert("장소 추가에 실패하였습니다.");
+      }
     }
   };
 

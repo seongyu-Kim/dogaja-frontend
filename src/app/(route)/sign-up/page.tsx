@@ -48,7 +48,6 @@ const SignUp = () => {
         }, 1200);
       }
     } catch (e: any) {
-      console.error("회원가입 실패", e);
       if (e.status === 409) {
         ErrorAlert("이미 존재하는 이메일입니다.");
       } else if (e.status === 422) {
