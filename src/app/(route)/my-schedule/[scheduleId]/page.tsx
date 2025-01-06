@@ -58,23 +58,24 @@ const TravelPlanPage: React.FC = () => {
           type="bucket" />
       </div>
 
-        {travelPlan.image && (
-          <div className="w-2/3 mb-8">
-            <h2 className="text-lg mb-2">여행 사진</h2>
-            <img
-              src={travelPlan.image}
-              alt="Travel"
-              className="w-full h-auto rounded-lg shadow-lg"
-            />
-          </div>
-        )}
         <div className="w-2/3 mb-8 border-2 border-mainColor rounded-lg">
           <h2 className="text-lg mb-2 py-2 px-4 border-b-2 border-mainColor border-dashed bg-mainColor bg-opacity-25">
-            한 줄 후기
+            추억 남기기
           </h2>
-          <p className="text-gray-600 p-2">
-            {travelPlan.review || "아직 후기가 없어요! 추억을 위해 후기를 작성해주세요 :)"}
-          </p>
+          <div className="flex">
+            {travelPlan.image && (
+              <div className="border border-mainColor rounded-lg m-2 p-2 bg-gray-100">
+                <img
+                  src={`http://kdt-react-node-1-team02.elicecoding.com:3003${travelPlan.image}`}
+                  alt="후기 사진"
+                  className="w-32 h-auto rounded-lg shadow-lg bg-white"
+                />
+              </div>
+            )}
+            <p className="text-gray-600 p-2">
+              {travelPlan.review || "아직 후기가 없어요! 추억을 위해 후기를 작성해주세요 :)"}
+            </p>
+          </div>
         </div>
 
     </div>
