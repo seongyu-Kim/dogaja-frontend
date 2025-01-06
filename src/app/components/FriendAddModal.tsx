@@ -81,7 +81,7 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
       title="친구 추가"
       inputProps={{
         type: "text",
-        name: "nickname",
+        name: "name",
         placeholder: "닉네임을 입력하세요",
         value: inputValue,
         onChange: handleInputChange,
