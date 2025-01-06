@@ -131,7 +131,7 @@ const CreateSchedulePage = () => {
           </div>
           <div className="ml-2 w-full lg:w-1/3">
             동행자
-            <div className="flex items-center gap-2 text-sm my-3 border rounded-lg px-3 py-1 w-full">
+            <div className="flex items-center gap-2 text-sm my-3 border border-gray-300 rounded-lg px-3 py-1 w-full">
               <span className="flex flex-wrap gap-1 items-center justify-start w-full min-w-48 overflow-x-auto">
                 {companions.map((companion, index) => (
                   <span
@@ -195,7 +195,7 @@ const CreateSchedulePage = () => {
           </div>
 
           <div className="flex flex-col items-center mt-2 gap-2 w-[30%] min-w-64">
-            <div className="p-4 border border-mainColor rounded-lg w-full">
+            <div className="p-4 border border-mainColor rounded-lg w-full opacity-60 pointer-events-none">
               <h2>한 줄 후기</h2>
               <div className="flex">
                 <SelectImage />
