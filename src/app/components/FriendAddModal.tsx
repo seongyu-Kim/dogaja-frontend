@@ -6,6 +6,7 @@ import { ErrorAlert } from "@/app/utils/toastAlert";
 import { searchFriends, addFriend } from "./common/api/friendApi";
 
 import { FaPlus } from "react-icons/fa";
+import { IoPersonAddSharp } from "react-icons/io5";
 
 interface Friend {
   id: string;
@@ -115,9 +116,7 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
                 className="flex justify-between items-center py-2 px-4 border-b border-gray-300"
               >
                 <span className="flex items-center">
-                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">
-                    이미지
-                  </div>
+                  <IoPersonAddSharp className="text-gray-300 w-[40px] h-[40px] rounded-full" />
                   {friend.name}
                 </span>
                 <button

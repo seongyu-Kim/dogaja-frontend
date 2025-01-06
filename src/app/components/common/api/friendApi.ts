@@ -7,10 +7,6 @@ interface Friend {
   name: string;
 }
 
-interface ApiResponse {
-  friends: Friend[];
-}
-
 // 친구 검색
 export const searchFriends = async (nickname: string): Promise<Friend[]> => {
   const { FRIENDS_SEARCH } = API.FRIENDS;
@@ -23,13 +19,7 @@ export const searchFriends = async (nickname: string): Promise<Friend[]> => {
     });
 
     if (response.status === 200) {
-      const data = response.data as ApiResponse;
-
-      if (!Array.isArray(data.friends)) {
-        throw new Error("응답 데이터 형식이 올바르지 않습니다.");
-      }
-
-      return data.friends;
+      return response.data as Friend[];
     } else {
       throw new Error("친구 검색에 실패했습니다.");
     }
