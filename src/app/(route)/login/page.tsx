@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
+import { isAxiosError } from "axios";
 
 type LoginFormData = {
   email: string;
@@ -43,12 +44,14 @@ const Login = () => {
         router.push("/dashboard");
       }
     } catch (e) {
-      if (e.status === 401) {
-        ErrorAlert("이메일 또는 비밀번호가 일치하지 않습니다.");
-      } else if (e.status === 403) {
-        ErrorAlert("관리자 권한이 존재하지 않습니다.");
-      } else {
-        ErrorAlert("로그인 중 오류가 발생했습니다.");
+      if (isAxiosError(e)) {
+        if (e.status === 401) {
+          ErrorAlert("이메일 또는 비밀번호가 일치하지 않습니다.");
+        } else if (e.status === 403) {
+          ErrorAlert("관리자 권한이 존재하지 않습니다.");
+        } else {
+          ErrorAlert("로그인 중 오류가 발생했습니다.");
+        }
       }
     }
   };

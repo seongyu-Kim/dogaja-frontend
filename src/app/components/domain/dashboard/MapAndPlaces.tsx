@@ -8,6 +8,7 @@ import { API } from "@/app/utils/api";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import AddPlaceModal from "../../AddPlaceModal";
 import { useUserStore } from "@/app/store/userStore";
+import { isAxiosError } from "axios";
 
 interface Place {
   id?: string;
@@ -76,7 +77,9 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
         setFavorites(res.data as Fav[]);
       }
     } catch (e) {
-      ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
+      if (isAxiosError(e)) {
+        ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
+      }
     }
   };
 
@@ -141,10 +144,12 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
         );
       }
     } catch (e) {
-      if (e.status === 400) {
-        ErrorAlert("이미 즐겨찾기된 장소입니다.");
-      } else {
-        ErrorAlert("즐겨찾기 실패");
+      if (isAxiosError(e)) {
+        if (e.status === 400) {
+          ErrorAlert("이미 즐겨찾기된 장소입니다.");
+        } else {
+          ErrorAlert("즐겨찾기 실패");
+        }
       }
     }
   };
@@ -171,7 +176,9 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
         );
       }
     } catch (e) {
-      ErrorAlert("즐겨찾기 해제 실패");
+      if (isAxiosError(e)) {
+        ErrorAlert("즐겨찾기 해제 실패");
+      }
     }
   };
   return (
