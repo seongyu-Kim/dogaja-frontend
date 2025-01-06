@@ -7,17 +7,14 @@ import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { fileSize } from "@/app/utils/byteToSize";
 
 interface SelectImageProps {
-  comment?: boolean;
-  descriptionText?: string;
+  onImageChange?: (file: File | null) => void;
 }
 
 export default function SelectImage({
-  comment = false,
-  descriptionText = "",
+  onImageChange,
 }: SelectImageProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [commentText, setCommentText] = useState("");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -37,6 +34,7 @@ export default function SelectImage({
     }
 
     setImageFile(file);
+    onImageChange?.(file);
 
     // 미리보기 URL 생성
     const reader = new FileReader();
@@ -63,15 +61,6 @@ export default function SelectImage({
             <MdOutlineAddPhotoAlternate className="text-[50px] text-gray-400" />
           )}
         </div>
-        {comment && (
-          <div className="w-full h-[90%]">
-            <p>여행 소감</p>
-            <textarea
-              className="w-full h-full resize-none p-2 rounded-md border border-gray-400 focus:outline-none"
-              onChange={(e) => setCommentText(e.target.value)}
-            />
-          </div>
-        )}
       </div>
       <div className="flex-shrink-0">
         <ButtonBox onChange={handleImageChange} />
