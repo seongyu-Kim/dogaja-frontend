@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import KakaoMap from "@/app/(route)/map/page";
+import KakaoMap from "./KakaoMap";
 import { FaStar } from "react-icons/fa";
 import { LiaThumbtackSolid } from "react-icons/lia";
 import { TbMapSearch } from "react-icons/tb";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import AddPlaceModal from "../../AddPlaceModal";
+import { useUserStore } from "@/app/store/userStore";
+import { isAxiosError } from "axios";
 
 interface Place {
   id?: string;
@@ -25,23 +28,34 @@ interface Fav {
   address?: string;
 }
 
-const MapWithPlaces = ({
-  selectedLocation,
-  handleAddPlaceModal,
-}: {
-  selectedLocation: string;
-  handleAddPlaceModal: () => void;
-}) => {
+const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [favorites, setFavorites] = useState<Fav[]>([]);
+  //모달
+  const [isAddPlaceModal, setIsAddPlaceModal] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+
+  const { isLogin } = useUserStore();
+
+  const openAddPlaceModal = (place: Place) => {
+    setSelectedPlace(place);
+    setIsAddPlaceModal(true);
+  };
+
+  const closeAddPlaceModal = () => {
+    setSelectedPlace(null);
+    setIsAddPlaceModal(false);
+  };
 
   //즐찾 호출
   useEffect(() => {
-    const initializeData = async () => {
-      await fetchFavoritePlaces();
-    };
-    initializeData();
-  }, []);
+    if (isLogin) {
+      const initializeData = async () => {
+        await fetchFavoritePlaces();
+      };
+      initializeData();
+    }
+  }, [isLogin]);
 
   //병합 호출
   useEffect(() => {
@@ -63,32 +77,48 @@ const MapWithPlaces = ({
         setFavorites(res.data as Fav[]);
       }
     } catch (e) {
-      console.error("즐찾 불러오기 실패", e);
-      ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
+      if (isAxiosError(e)) {
+        ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
+      }
     }
   };
 
   //장소+즐찾 병합
   const mergePlacesWithFavorites = () => {
+    let hasChanges = false;
+
     const updatedPlaces = places.map((place) => {
       const favorite = favorites.find(
         (fav) => fav.location === place.place_name
       );
-      return {
+
+      const updatedPlace = {
         ...place,
         isFavorite: !!favorite,
         favoriteId: favorite?.id,
       };
+
+      if (
+        updatedPlace.isFavorite !== place.isFavorite ||
+        updatedPlace.favoriteId !== place.favoriteId
+      ) {
+        hasChanges = true;
+      }
+
+      return updatedPlace;
     });
 
-    if (places.toString() === updatedPlaces.toString()) {
-      return;
+    if (hasChanges) {
+      setPlaces(updatedPlaces);
     }
-    setPlaces(updatedPlaces);
   };
 
   //즐찾추가
   const addFavoritePlace = async (place: Place) => {
+    if (!isLogin) {
+      ErrorAlert("로그인 후 이용해주세요.");
+      return;
+    }
     try {
       const res = await mainApi({
         url: API.BOOKMARK.BOOKMARK_CREATE,
@@ -114,7 +144,13 @@ const MapWithPlaces = ({
         );
       }
     } catch (e) {
-      console.error(e);
+      if (isAxiosError(e)) {
+        if (e.status === 400) {
+          ErrorAlert("이미 즐겨찾기된 장소입니다.");
+        } else {
+          ErrorAlert("즐겨찾기 실패");
+        }
+      }
     }
   };
 
@@ -140,7 +176,7 @@ const MapWithPlaces = ({
         );
       }
     } catch (e) {
-      console.error(e);
+      ErrorAlert("즐겨찾기 해제 실패");
     }
   };
   return (
@@ -178,7 +214,7 @@ const MapWithPlaces = ({
 
                 <div className="flex mr-3 space-x-4">
                   <div
-                    onClick={handleAddPlaceModal}
+                    onClick={() => openAddPlaceModal(place)}
                     className="cursor-pointer hover:text-green-500"
                   >
                     + 일정에 추가하기
@@ -200,6 +236,11 @@ const MapWithPlaces = ({
           )}
         </div>
       </div>
+      <AddPlaceModal
+        isOpen={isAddPlaceModal}
+        onClose={closeAddPlaceModal}
+        selectedPlace={selectedPlace}
+      />
     </div>
   );
 };

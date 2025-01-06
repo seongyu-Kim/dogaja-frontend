@@ -1,5 +1,3 @@
-import { base } from "next/dist/build/webpack/config/blocks/base";
-
 const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}`;
 // .env 파일에 아래 내용 추가해주세요
 // NEXT_PUBLIC_BASE_URL=http://kdt-react-node-1-team02.elicecoding.com:3000
@@ -64,6 +62,8 @@ export const API = {
     SCHEDULE_GET: (scheduleId: string) => `${BASE_URL}/schedule/${scheduleId}`,
     SCHEDULE_UPDATE: (scheduleId: string) =>
       `${BASE_URL}/schedule/${scheduleId}`,
+    SCHEDULE_IMAGE_UPDATE: (scheduleId: string) =>
+      `${BASE_URL}/schedule/${scheduleId}/image`,
     SCHEDULE_DELETE: (scheduleId: string) =>
       `${BASE_URL}/schedule/${scheduleId}`,
     SCHEDULE_LIST_CHECK: (scheduleId: string, listsId: string) =>
@@ -76,6 +76,7 @@ export const API = {
       `${BASE_URL}/schedule/${scheduleId}/location`,
     SCHEDULE_DELEDT_LOCATION: (scheduleId: string, locationId: string) =>
       `${BASE_URL}/schedule/location/${scheduleId}/${locationId}`,
+
   },
   SEARCH: {
     SEARCH_RESULT: `${BASE_URL}/search/result`,

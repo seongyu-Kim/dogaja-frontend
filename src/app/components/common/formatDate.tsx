@@ -1,21 +1,11 @@
 import React from 'react';
 
-export const formatDate = (isoString: string) => {
-  const date = new Date(isoString);
+export const formatDate = (date: string | Date) => {
+  if (!date) return '';
 
-  const formattedDate = date.toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+  const dateObject = typeof date === 'string' ? new Date(date) : date;
 
-  const formattedTime = date.toLocaleTimeString("ko-KR", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-
-  return `${formattedDate} ${formattedTime}`;
+  return dateObject.toLocaleDateString('ko-KR');
 };
 
 interface FormattedDateProps {

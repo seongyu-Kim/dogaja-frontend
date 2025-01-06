@@ -4,23 +4,28 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchSchedule } from '../fetchSchedule';
 import { updateSchedule } from './updateSchedule';
-import { Review, Schedule, Title, UpdateDto } from "@/app/type/scheduleUpdateDto";
-import { mainApi } from "@/app/utils/mainApi";
-import { API } from "@/app/utils/api";
+import { Schedule, UpdateDto } from "@/app/type/scheduleUpdateDto";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
+import { addFriendsToSchedule } from '@/app/components/common/api/friendApi';
 
 import { formatDate } from '@/app/components/common/formatDate';
-import { CheckListItem, BucketListItem } from '@/app/type/scheduleDetailType';
+import { CheckListItem, BucketListItem, TravelLocation } from '@/app/type/scheduleDetailType';
 import Checklist from '@/app/components/common/saveSchedule/Checklist';
+import AddressBookModal from "@/app/components/AddressBookModal";
 import CreateTravleSegment from "@/app/components/common/saveSchedule/TravleSegmant";
 import Input from "@/app/components/common/Input";
 import SelectImage from "@/app/components/common/SelectImage";
+
+import { IoPersonAddOutline } from "react-icons/io5";
 
 const EditSchedulePage = () => {
   const { scheduleId } = useParams();
   const router = useRouter();
 
+  const [friendsModalOpen, setFriendsModalOpen] = useState(false);
+
   const [title, setTitle] = useState<string>("");
+  const [companions, setCompanions] = useState<{ id: string; name: string }[]>([]);
   const [departureSchedule, setDepartureSchedule] = useState<Schedule>({
     date: null,
     start: "",
@@ -42,6 +47,24 @@ const EditSchedulePage = () => {
   const [friendList, setFriendList] = useState<string[]>([]);
   const [checkItems, setCheckItems] = useState<CheckListItem[]>([]);
   const [bucketItems, setBucketItems] = useState<BucketListItem[]>([]);
+  const [reviewImage, setReviewImage] = useState<File | null>(null);
+  const [locations, setLocations] = useState<TravelLocation[]>([]);
+
+  const addCompanion = (companion: { id: string; name: string }) => {
+    setCompanions((prev) => {
+      const newCompanions = [...prev, companion];
+      setFriendList(newCompanions.map(c => c.name));
+      return newCompanions;
+    });
+  };
+
+  const removeCompanion = (index: number) => {
+    setCompanions((prev) => {
+      const updatedCompanions = prev.filter((_, i) => i !== index);
+      setFriendList(updatedCompanions.map(c => c.name)); // 친구 목록 업데이트
+      return updatedCompanions;
+    });
+  };
   
     // 일정 로드
   useEffect(() => {
@@ -59,13 +82,14 @@ const EditSchedulePage = () => {
         });
         setReview(schedule.review || "");
 
-        const formattedStartDate = formatDate(schedule.startInfo.date);
-        const formattedArriveDate = formatDate(schedule.arriveInfo.date);
+        const formattedStartDate = formatDate(new Date(schedule.startInfo.date));
+        const formattedArriveDate = formatDate(new Date(schedule.arriveInfo.date));
 
         setTravelDuration(`${formattedStartDate} ~ ${formattedArriveDate}`);
         setFriendList(schedule.friendList.map((friend) => friend.name));
         setCheckItems(schedule.checkList || []);
         setBucketItems(schedule.bucketList || []);
+        setLocations(schedule.locations || []);
       } catch (error) {
         ErrorAlert("일정을 불러오는 중 문제가 발생했습니다.");
       }
@@ -83,13 +107,22 @@ const EditSchedulePage = () => {
       reviewDto: { review: review || "" },
     };
 
+    const friends = companions.map(companion => companion.id);
+
     try {
-      await updateSchedule(scheduleId as string, updateDto);
+      const res =  await updateSchedule(scheduleId as string, updateDto);
+      await addFriendsToSchedule(scheduleId as string, friends);
+      console.log(res);
       SuccessAlert("일정이 성공적으로 수정되었습니다.");
       router.push('/my-schedule');
     } catch (error) {
+      console.error(error);
       ErrorAlert("일정을 수정하는 중 문제가 발생했습니다.");
     }
+  };
+
+  const handleImageChange = (file: File | null) => {
+    setReviewImage(file);
   };
 
   return (
@@ -118,27 +151,44 @@ const EditSchedulePage = () => {
             </div>
           </div>
 
-          <div className="ml-2 w-full lg:w-1/3 opacity-60 pointer-events-none">
+          <div className="ml-2 w-full lg:w-1/3">
             동행자
             <div className="flex items-center gap-2 text-sm my-3 border rounded-lg px-3 py-1 w-full">
               <span className="flex flex-wrap gap-1 items-center justify-start w-full min-w-48 overflow-x-auto">
-                {friendList.length > 1 ? (
+                {friendList.length > 0 ? (
                   friendList.map((friend, index) => (
                     <span
                       key={index}
                       className="bg-gray-100 border border-gray-200 text-mainColor text-xs px-1 py-0.5 my-0.5 rounded-full flex items-center whitespace-nowrap"
                     >
                       {friend}
+                      <button
+                        onClick={() => removeCompanion(index)} // 삭제 버튼
+                        className="text-red-500 ml-1"
+                      >
+                        ×
+                      </button>
                     </span>
                   ))
                 ) : (
                   <span className="text-gray-400">동행자가 없습니다.</span>
                 )}
               </span>
+              <button
+                onClick={() => setFriendsModalOpen(true)}
+                className="text-mainColor text-xl"
+              >
+                <IoPersonAddOutline className="hover:scale-110"/>
+              </button>
             </div>
           </div>
         </div>
-
+        <AddressBookModal
+          isOpen={friendsModalOpen}
+          onClose={() => setFriendsModalOpen(false)}
+          onAddFriend={addCompanion}
+          isSchedulePage={true}
+        />
         <div className="flex justify-center w-full min-w-[950px] gap-2">
           <div className="w-[70%] min-w-[720px]">
             <div className="flex justify-center mt-2 gap-2 w-full">
@@ -176,7 +226,10 @@ const EditSchedulePage = () => {
             <div className="p-4 border border-mainColor rounded-lg w-full">
               <h2>한 줄 후기</h2>
               <div className="flex">
-                <SelectImage />
+                <SelectImage 
+                  onImageChange={handleImageChange}
+                  scheduleId={scheduleId as string}
+                />
                 <textarea
                   value={review}
                   onChange={(e) => setReview(e.target.value)}
@@ -185,19 +238,25 @@ const EditSchedulePage = () => {
                 ></textarea>
               </div>
             </div>
-            <div className="opacity-60 p-4 border border-mainColor rounded-lg w-full min-h-[394px]">
+            <div className="p-4 border border-mainColor rounded-lg w-full min-h-[396px] max-h-[396px]">
               <h2>일정에 추가 된 장소</h2>
-              <div>
-                <div className="border border-mainColor rounded-lg flex items-center p-2 mt-2">
-                  <div className="border rounded-lg bg-gray-200 p-2 mr-2">
-                    <h2>이미지</h2>
-                  </div>
+              <div className="overflow-y-auto max-h-[335px] my-2">
+              {locations.length > 0 ? (
+                locations.map((location) => (
+                  <div
+                    key={location.id}
+                    className="border border-mainColor rounded-lg flex items-center p-2 mt-2"
+                  >
                   <div className="flex flex-col">
-                    <span className="text-xs pb-2">ㅇㅇ식당</span>
-                    <span className="text-xs">전화번호 : </span>
-                    <span className="text-xs">주소 : </span>
+                    <span className="text-sm font-semibold pb-1">{location.location}</span>
+                    <span className="text-xs pb-1">전화번호: {location.phone || "없음"}</span>
+                    <span className="text-xs">주소: {location.address || "정보 없음"}</span>
                   </div>
                 </div>
+                ))
+              ) : (
+                <p className="text-center text-sm text-gray-500 mt-2">아직 등록된 장소가 없습니다.</p>
+              )}
               </div>
             </div>
           </div>

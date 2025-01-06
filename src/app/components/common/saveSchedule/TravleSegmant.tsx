@@ -35,7 +35,7 @@ const CreateTravleSegment: React.FC<TravelSegmentsProps> = ({ schedule, setSched
       <div className="flex flex-col gap-2 border-t border-mainColor pt-2">
         <div className="flex items-center text-sm mb-1">
           <span className="pr-2 w-1/4">날짜/시간</span>
-          <div className="flex items-center w-3/4 border rounded-lg px-3 py-1">
+          <div className="flex items-center justify-between w-3/4 border border-gray-300 rounded-lg px-3 py-1">
             <DatePicker
               selected={schedule.date}
               onChange={handleDateChange}
@@ -45,7 +45,7 @@ const CreateTravleSegment: React.FC<TravelSegmentsProps> = ({ schedule, setSched
               dateFormat="yyyy/MM/dd HH:mm"
               placeholderText="날짜 및 시간을 선택하세요"
               open={isDatePickerOpen}
-              className="focus:outline-none"
+              className="focus:outline-none w-full"
               onClickOutside={() => setIsDatePickerOpen(false)}
             />
             <FaRegCalendarCheck

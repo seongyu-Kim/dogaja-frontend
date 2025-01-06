@@ -3,6 +3,7 @@ import { FaBookmark, FaStar } from "react-icons/fa";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { useUserStore } from "@/app/store/userStore";
 
 interface Fav {
   id?: string;
@@ -13,9 +14,13 @@ interface Fav {
 }
 const Favorites = () => {
   const [favorites, setFavorites] = useState<Fav[]>([]);
+  const { isLogin } = useUserStore();
+
   useEffect(() => {
-    fetchFavoritePlaces();
-  }, []);
+    if (isLogin) {
+      fetchFavoritePlaces();
+    }
+  }, [isLogin]);
 
   //즐찾 리스트
   const fetchFavoritePlaces = async () => {
@@ -32,8 +37,9 @@ const Favorites = () => {
         );
       }
     } catch (e) {
-      console.error("즐찾 불러오기 실패", e);
-      ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
+      if (isLogin) {
+        ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
+      }
     }
   };
 
@@ -53,7 +59,6 @@ const Favorites = () => {
         await fetchFavoritePlaces();
       }
     } catch (e) {
-      console.error(e);
       ErrorAlert("즐겨찾기 삭제하는데 실패하였습니다.");
     }
   };

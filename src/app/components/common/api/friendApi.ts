@@ -61,9 +61,10 @@ export const addFriend = async (friendName: string) => {
       url: FRIENDS_REQUEST_POST,
       method: "POST",
       data: { friendName },
+      withAuth: true,
     });
 
-    if (res.status === 200) {
+    if (res.status === 201) {
       SuccessAlert("친구 요청이 전송되었습니다.");
       return true;
     } else {
@@ -166,5 +167,28 @@ export const refuseFriendRequest = async (friendId: string) => {
     console.error(error);
     ErrorAlert("친구요청 거절에 실패했습니다.");
     throw error;
+  }
+};
+
+// 일정에 친구(동행자) 추가
+export const addFriendsToSchedule = async (scheduleId: string, friends: string[]) => {
+  try {
+    const { SCHEDULE_ADD_FRIEND } = API.SCHEDULE;
+
+    if (friends.length > 0) {
+      const response = await mainApi({
+        url: SCHEDULE_ADD_FRIEND(scheduleId),
+        method: "PATCH",
+        data: { friends },
+        withAuth: true,
+      });
+
+      return response;
+    }
+
+    return { status: 200, message: "No friends to add." };
+  } catch (error) {
+    console.error("Error adding friends to schedule:", error);
+    throw new Error("친구 추가 중 오류가 발생했습니다.");
   }
 };

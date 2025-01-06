@@ -27,7 +27,7 @@ const List: React.FC<ListProps> = ({ scheduleId, items, type }) => {
   };
 
   return (
-    <div className="border-2 w-full border-mainColor rounded-lg">
+    <div className="border-2 w-full border-mainColor rounded-lg min-h-72 max-h-72">
       <h2 className="text-lg py-2 px-4 border-b-2 border-mainColor border-dashed bg-mainColor bg-opacity-25">
         {type === "check" ? "준비물 체크리스트" : "이번 여행 버킷리스트"}
       </h2>

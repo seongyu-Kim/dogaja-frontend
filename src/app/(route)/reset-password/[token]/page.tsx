@@ -10,6 +10,7 @@ import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { useRouter } from "next/navigation";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { isAxiosError } from "axios";
 
 type ResetPasswordFormData = {
   newPassword: string;
@@ -53,10 +54,12 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
         }, 1200);
       }
     } catch (e) {
-      if (e.status === 400) {
-        ErrorAlert("유효하지 않은 토큰입니다.");
-      } else {
-        ErrorAlert("비밀번호 변경 실패");
+      if (isAxiosError(e)) {
+        if (e.status === 400) {
+          ErrorAlert("유효하지 않은 토큰입니다.");
+        } else {
+          ErrorAlert("비밀번호 변경 실패");
+        }
       }
     }
   };

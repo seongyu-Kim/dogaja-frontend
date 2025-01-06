@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Input from "@/app/components/common/Input";
-import AddPlaceModal from "@/app/components/AddPlaceModal";
 import MapWithPlaces from "@/app/components/domain/dashboard/MapAndPlaces";
 import WeatherAndEvents from "@/app/components/domain/dashboard/WeatherAndEvents";
 import { IoCloseSharp } from "react-icons/io5";
@@ -69,14 +68,11 @@ const Dashboard: React.FC = () => {
   );
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const [isAddPlaceModal, setIsAddPlaceModal] = useState(false);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [eventsData, setEventsData] = useState<EventData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isWeatherLoading, setIsWeatherLoading] = useState<boolean>(false);
   const [isEventsLoading, setIsEventsLoading] = useState<boolean>(false);
-
-  const handleAddPlaceModal = () => setIsAddPlaceModal((prev) => !prev);
 
   const handleSearchClick = () => {
     setSearchValue(selectedLocation);
@@ -129,7 +125,6 @@ const Dashboard: React.FC = () => {
       if (isAxiosError(e) && e.response) {
         setError("Axios에러 발생");
       } else {
-        console.log("Axios가 아닌 에러 발생:", e);
         setError("요청 처리 중 문제가 발생했습니다.");
       }
     } finally {
@@ -191,10 +186,7 @@ const Dashboard: React.FC = () => {
 
       <div className="flex justify-center min-h-[calc(92vh)]">
         <div className="flex w-full max-w-7xl">
-          <MapWithPlaces
-            selectedLocation={selectedLocation}
-            handleAddPlaceModal={handleAddPlaceModal}
-          />
+          <MapWithPlaces selectedLocation={selectedLocation} />
           <WeatherAndEvents
             weather={weatherData}
             events={eventsData}
@@ -204,8 +196,6 @@ const Dashboard: React.FC = () => {
           />
         </div>
       </div>
-
-      <AddPlaceModal isOpen={isAddPlaceModal} onClose={handleAddPlaceModal} />
     </div>
   );
 };
