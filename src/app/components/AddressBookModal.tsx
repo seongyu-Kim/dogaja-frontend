@@ -20,7 +20,9 @@ interface Friend {
 const AddressBookModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-}> = ({ isOpen, onClose }) => {
+  onAddFriend: (friendName: string) => void;
+  isSchedulePage?: boolean;
+}> = ({ isOpen, onClose, onAddFriend, isSchedulePage }) => {
   const [isRequestModalOpen, setRequestModalOpen] = useState(false);
   const [isFriendAddModalOpen, setFriendAddModalOpen] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
@@ -82,6 +84,11 @@ const AddressBookModal: React.FC<{
     setFriendAddModalOpen(true);
   };
 
+  const handleAddSchedule = (friendName: string) => {
+    onAddFriend(friendName);
+    onClose();
+  };
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} title="주소록">
@@ -96,6 +103,18 @@ const AddressBookModal: React.FC<{
                   <IoPersonCircleOutline className="text-gray-300 w-[50px] h-[50px]" />
                   {friend.name}
                 </span>
+                {isSchedulePage && (
+                  <Button
+                    onClick={() => handleAddSchedule(friend.name)} // 친구 선택 시 처리
+                    style={{
+                      textColor: "text-mainColor",
+                      backgroundColor: "bg-transparent",
+                      hoverTextColor: "hover:text-mainColorHover",
+                    }}
+                  >
+                    추가
+                  </Button>
+                )}
                 <Button
                   onClick={() => handleDelete(friend.id)}
                   style={{
@@ -144,7 +163,6 @@ const AddressBookModal: React.FC<{
       <FriendAddModal
         isOpen={isFriendAddModalOpen}
         onClose={() => setFriendAddModalOpen(false)}
-        mode="friendRequest"
       />
     </>
   );
