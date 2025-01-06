@@ -27,7 +27,7 @@ export interface CheckListItem {
   type: "check";
 }
 
-interface Location {
+export interface TravelLocation {
   id: number;
   location: string;
   address: string;
@@ -53,6 +53,6 @@ export interface TravelPlan {
   arriveInfo: StartArriveInfo;
   bucketList: BucketListItem[];
   checkList: CheckListItem[];
-  locations: Location[];
+  locations: TravelLocation[];
   friendList: Friend[];
 }
