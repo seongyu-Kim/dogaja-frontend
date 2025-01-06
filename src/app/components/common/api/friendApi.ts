@@ -17,9 +17,8 @@ export const searchFriends = async (name: string): Promise<Friend[]> => {
 
   try {
     const response = await mainApi({
-      url: FRIENDS_SEARCH,
+      url: FRIENDS_SEARCH(name),
       method: "GET",
-      data: { name },
       withAuth: true,
     });
 
@@ -42,7 +41,6 @@ export const searchFriends = async (name: string): Promise<Friend[]> => {
 
 // 친구 목록 가져오기
 export const getFriendList = async (): Promise<Friend[]> => {
-
   const { FRIENDS_LIST_GET } = API.FRIENDS;
 
   try {
@@ -91,11 +89,10 @@ export const addFriend = async (friendName: string) => {
 
 // 친구 삭제
 export const deleteFriend = async (friendId: string) => {
-
   const deleteConfirm = confirm("정말 친구 목록에서 삭제하시겠습니까?");
-    if (!deleteConfirm) {
-      return;
-    }
+  if (!deleteConfirm) {
+    return;
+  }
 
   const { FRIENDS_DELETE } = API.FRIENDS;
 
