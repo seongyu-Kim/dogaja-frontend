@@ -226,6 +226,7 @@ const EditSchedulePage = () => {
               <div className="flex">
                 <SelectImage 
                   onImageChange={handleImageChange}
+                  scheduleId={scheduleId as string}
                 />
                 <textarea
                   value={review}

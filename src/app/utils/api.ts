@@ -64,6 +64,8 @@ export const API = {
     SCHEDULE_GET: (scheduleId: string) => `${BASE_URL}/schedule/${scheduleId}`,
     SCHEDULE_UPDATE: (scheduleId: string) =>
       `${BASE_URL}/schedule/${scheduleId}`,
+    SCHEDULE_IMAGE_UPDATE: (scheduleId: string) =>
+      `${BASE_URL}/schedule/${scheduleId}/image`,
     SCHEDULE_DELETE: (scheduleId: string) =>
       `${BASE_URL}/schedule/${scheduleId}`,
     SCHEDULE_LIST_CHECK: (scheduleId: string, listsId: string) =>
@@ -76,6 +78,7 @@ export const API = {
       `${BASE_URL}/schedule/${scheduleId}/location`,
     SCHEDULE_DELEDT_LOCATION: (scheduleId: string, locationId: string) =>
       `${BASE_URL}/schedule/location/${scheduleId}/${locationId}`,
+    SCHEDULE_ADD_BUCKET: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/bucket`,
   },
   SEARCH: {
     SEARCH_RESULT: `${BASE_URL}/search/result`,
@@ -90,7 +93,6 @@ export const API = {
   },
 };
 
-// SCHEDULE_ADD_BUCKET: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/bucket`,
 // SCHEDULE_ADD_CHECKLIST: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/check`,
 // SCHEDULE_LIST_UPDATE: (scheduleId:string, listsId:string) => `${BASE_URL}/schedule/${scheduleId}/${listsId}`,
 // SCHEDULE_LIST_DELETE: (scheduleId:string, listsId:string) => `${BASE_URL}/schedule/${scheduleId}/${listsId}`,
