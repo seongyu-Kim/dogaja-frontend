@@ -3,8 +3,8 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { MdOutlinePhoto } from "react-icons/md";
 import { BoardListType } from "@/app/type/boardListType";
+
 interface ListProps {
-  // 임시 타입
   list: BoardListType[];
   preview?: boolean;
   boardType?: string;
