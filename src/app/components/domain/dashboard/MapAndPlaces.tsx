@@ -6,6 +6,7 @@ import { TbMapSearch } from "react-icons/tb";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import AddPlaceModal from "../../AddPlaceModal";
 
 interface Place {
   id?: string;
@@ -25,15 +26,22 @@ interface Fav {
   address?: string;
 }
 
-const MapWithPlaces = ({
-  selectedLocation,
-  handleAddPlaceModal,
-}: {
-  selectedLocation: string;
-  handleAddPlaceModal: () => void;
-}) => {
+const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [favorites, setFavorites] = useState<Fav[]>([]);
+  //모달
+  const [isAddPlaceModal, setIsAddPlaceModal] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+
+  const openAddPlaceModal = (place: Place) => {
+    setSelectedPlace(place);
+    setIsAddPlaceModal(true);
+  };
+
+  const closeAddPlaceModal = () => {
+    setSelectedPlace(null);
+    setIsAddPlaceModal(false);
+  };
 
   //즐찾 호출
   useEffect(() => {
@@ -178,7 +186,7 @@ const MapWithPlaces = ({
 
                 <div className="flex mr-3 space-x-4">
                   <div
-                    onClick={handleAddPlaceModal}
+                    onClick={() => openAddPlaceModal(place)}
                     className="cursor-pointer hover:text-green-500"
                   >
                     + 일정에 추가하기
@@ -200,6 +208,11 @@ const MapWithPlaces = ({
           )}
         </div>
       </div>
+      <AddPlaceModal
+        isOpen={isAddPlaceModal}
+        onClose={closeAddPlaceModal}
+        selectedPlace={selectedPlace}
+      />
     </div>
   );
 };
