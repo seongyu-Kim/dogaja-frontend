@@ -3,15 +3,17 @@ import Modal from "./Modal";
 import Button from "./common/Button";
 
 import { SuccessAlert } from "@/app/utils/toastAlert";
-import { getFriendRequests, 
-        acceptFriendRequest, 
-        refuseFriendRequest } from "./common/api/friendApi";
+import {
+  getFriendRequests,
+  acceptFriendRequest,
+  refuseFriendRequest,
+} from "./common/api/friendApi";
 
 import { IoPersonAddSharp } from "react-icons/io5";
 
 interface Friend {
   id: string;
-  nickname: string;
+  name: string;
 }
 
 interface RequestModalProps {
@@ -90,7 +92,7 @@ const RequestModal: React.FC<RequestModalProps> = ({
               >
                 <span className="flex items-center gpa-2">
                   <IoPersonAddSharp className="text-gray-300 w-[40px] h-[40px] rounded-full" />
-                  {friend.nickname}
+                  {friend.name}
                 </span>
                 <div className="flex justify-center gap-3">
                   <Button
