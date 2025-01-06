@@ -61,8 +61,10 @@ const AddressBookModal: React.FC<{
   };
 
   const handleAddSchedule = (friendName: string) => {
-    onAddFriend(friendName);
-    onClose();
+    if (onAddFriend) {
+      onAddFriend(friendName);
+      onClose();
+    }
   };
 
   return (
