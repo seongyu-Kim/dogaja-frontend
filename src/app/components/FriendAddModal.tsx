@@ -9,7 +9,7 @@ import { FaPlus } from "react-icons/fa";
 
 interface Friend {
   id: string;
-  nickname: string;
+  name: string;
 }
 
 interface FriendAddModalProps {
@@ -59,7 +59,7 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
   // 친구 추가
   const handleAdd = async (friend: Friend) => {
     try {
-      await addFriend(friend.nickname);
+      await addFriend(friend.name);
       closeModal();
     } catch (error) {
       console.error(error);
@@ -81,7 +81,7 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
       title="친구 추가"
       inputProps={{
         type: "text",
-        name: "nickname",
+        name: "name",
         placeholder: "닉네임을 입력하세요",
         value: inputValue,
         onChange: handleInputChange,
@@ -114,7 +114,7 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
               <li key={friend.id} className="flex justify-between items-center py-2 px-4 border-b border-gray-300">
                 <span className="flex items-center">
                   <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">이미지</div>
-                  {friend.nickname}
+                  {friend.name}
                 </span>
                 <button
                   className="bg-mainColor text-sm hover:bg-mainHover text-white px-1.5 py-1.5 rounded"

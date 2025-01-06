@@ -4,7 +4,7 @@ import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 
 interface Friend {
   id: string;
-  nickname: string;
+  name: string;
 }
 
 interface ApiResponse {
@@ -12,14 +12,14 @@ interface ApiResponse {
 }
 
 // 친구 검색
-export const searchFriends = async (nickname: string): Promise<Friend[]> => {
+export const searchFriends = async (name: string): Promise<Friend[]> => {
   const { FRIENDS_SEARCH } = API.FRIENDS;
 
   try {
     const response = await mainApi({
       url: FRIENDS_SEARCH,
       method: "GET",
-      data: { nickname },
+      data: { name },
       withAuth: true,
     });
 

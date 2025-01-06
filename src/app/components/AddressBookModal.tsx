@@ -13,7 +13,7 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 
 interface Friend {
   id: string;
-  nickname: string;
+  name: string;
 }
 
 const AddressBookModal: React.FC<{
@@ -78,11 +78,11 @@ const AddressBookModal: React.FC<{
               >
                 <span className="flex items-center gap-2">
                   <IoPersonCircleOutline className="text-gray-300 w-[50px] h-[50px]" />
-                  {friend.nickname}
+                  {friend.name}
                 </span>
                 {isSchedulePage && (
                   <Button
-                    onClick={() => handleAddSchedule(friend.nickname)} // 친구 선택 시 처리
+                    onClick={() => handleAddSchedule(friend.name)} // 친구 선택 시 처리
                     style={{
                       textColor: "text-mainColor",
                       backgroundColor: "bg-transparent",
