@@ -49,12 +49,14 @@ export default function ReportPage() {
   //신고 게시판 목록 불러오기
   const getReportList = async () => {
     const { REPORT_GET } = API.REPORT;
+
     try {
       const res = await mainApi({
         url: REPORT_GET,
         method: "GET",
         withAuth: true,
       });
+
       if (res.status === 200) {
         setList(res.data as ReportListType[]);
         return;
@@ -77,6 +79,7 @@ export default function ReportPage() {
         router.push(`${boardPath}?page=${page}`);
         return;
       }
+
       router.push(
         `${boardPath.split("/").slice(0, -1).join("/")}?page=${page}`,
       );

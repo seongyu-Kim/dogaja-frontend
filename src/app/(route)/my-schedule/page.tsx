@@ -113,7 +113,7 @@ export default function MySchedulePage() {
     </div>
   );
 }
-//임시 추후 타입 지정
+
 function Description({
   list,
   onDelete,
@@ -122,14 +122,13 @@ function Description({
   onDelete: (id: number) => void;
 }) {
   const { user: loginUser } = useUserStore();
+
   return (
     <ul className="flex flex-col items-center justify-center w-full gap-4">
       {list!.map(
         ({ id, title, user, location, period, review, image, friends }) => {
-          const route = usePathname();
           const [start, end, day] = days(period);
           return (
-            //   임시 추후 일정 상세 보기 페이지로 이동
             <div
               key={id}
               className="w-full h-[150px] border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
