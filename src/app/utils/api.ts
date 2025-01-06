@@ -81,12 +81,7 @@ export const API = {
     SEARCH_RESULT: `${BASE_URL}/search/result`,
   },
   CHAT: {
-    CHAT_ROOM_CREATE_OR_JOIN: `${BASE_URL}/chat-mock/createOrJoinRoom`,
-    CHAT_JOIN_ROOM: `${BASE_URL}/chat-mock/joinRoom`,
-    CHAT_ROOM_READ_ADMIN: `${BASE_URL}/chat-mock/getRoomByIdAndAdmin`,
-    CHAT_MSG_READ_USER: `${BASE_URL}/chat-mock/getMessagesByChatRoom`,
-    CHAT_SEND_MSG: `${BASE_URL}/chat-mock/sendMessage`,
-    CHAT_ROOM_LEAVE: `${BASE_URL}/chat-mock/leaveRoom`,
+    CHAT_ROOM_LIST_READ: `${BASE_URL}/chat/rooms`,
   },
 };
 
