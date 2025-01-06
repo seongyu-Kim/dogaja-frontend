@@ -9,6 +9,7 @@ export const getSocket = () => {
       timeout: 10000,
       reconnection: true,
       reconnectionAttempts: 5,
+      auth: { token: localStorage.getItem("token") },
     });
   }
   return socket;

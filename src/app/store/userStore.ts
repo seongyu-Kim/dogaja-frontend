@@ -7,6 +7,7 @@ type User = {
   name: string;
   email: string;
   admin: boolean;
+  id: string;
 } | null;
 
 type UserState = {

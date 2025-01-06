@@ -1,6 +1,6 @@
 import { IoIosClose } from "react-icons/io";
 import React, { useEffect, useRef, useState } from "react";
-import { MessageType } from "@/app/type/ChatType";
+import { MessagesType, MessageType } from "@/app/type/ChatType";
 import { useUserStore } from "@/app/store/userStore";
 import { disconnectSocket, getSocket } from "@/app/utils/websocket";
 import { Socket } from "socket.io-client";
@@ -18,7 +18,8 @@ export default function UserChatArea({
     <>
       {adminChatClick && (
         <div className="z-50 overflow-y-hidden flex gap-3 flex-col items-center group bg-white border border-gray-300 shadow-2xl fixed bottom-5 right-5 py-1 px-1 rounded-md w-[400px] h-[700px]">
-          <div className="flex justify-end w-full">
+          <div className="flex justify-between w-full px-4 items-center">
+            <h3 className="font-semibold text-gray-700">1:1 문의</h3>
             <IoIosClose
               onClick={() => {
                 setAdminChatClick(!adminChatClick);
@@ -28,7 +29,7 @@ export default function UserChatArea({
             />
           </div>
           <div className="flex items-center w-full h-full border-t border-gray-300">
-            <ChatInput />
+            <UserChatInput />
           </div>
         </div>
       )}
@@ -36,89 +37,9 @@ export default function UserChatArea({
   );
 }
 
-function ChatInput() {
-  const [chatLog, setChatLog] = useState<MessageType[]>([
-    {
-      message: "더미데이터~1",
-      timestamp: "오후 2:30",
-      user: "me",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터~2",
-      timestamp: "오후 2:30",
-      user: "me",
-    },
-    {
-      message: "더미데이터~3",
-      timestamp: "오후 2:30",
-      user: "me",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-    {
-      message: "더미데이터~",
-      timestamp: "오후 2:30",
-      user: "me",
-    },
-    {
-      message: "더미데이터2",
-      timestamp: "오후 2:31",
-      user: "other",
-    },
-  ]);
+function UserChatInput() {
+  const [chatLog, setChatLog] = useState<MessagesType[]>([]);
+  const [roomId, setRoomId] = useState<number | null>(null);
   const messageRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<Socket | null>(null);
@@ -132,46 +53,57 @@ function ChatInput() {
     socketRef.current = getSocket();
     const chatSocket = socketRef.current;
 
-    chatSocket.on("message", getMessagesSocketHandler);
-
-    // 이전 메시지 수신
-    chatSocket.on("previousMessages", (messages: MessageType[]) => {
-      setChatLog(messages);
+    // 새 메시지 수신 처리
+    chatSocket.on("message", (message: MessagesType) => {
+      setChatLog((prevChatLog) => [...prevChatLog, message]);
     });
 
+    //채팅방 입장 메시지 수신
+    chatSocket.on("roomJoined", ({ roomId, messages }) => {
+      setChatLog(messages);
+      setRoomId(roomId);
+    });
+
+    // 채팅방 생성 또는 입장
+    const initializeChat = async () => {
+      chatSocket.emit("createOrJoinRoom", { id: user.id });
+    };
+    initializeChat();
+
     return () => {
-      chatSocket.off("message", getMessagesSocketHandler);
-      chatSocket.off("previousMessages");
+      chatSocket.off("sendMessage");
+      chatSocket.off("getMessagesByChatRoom");
       disconnectSocket();
     };
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     scrollToBottom();
-  }, []);
+  }, [chatLog]);
 
-  const submitMessageApiHandler = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ) => {
+  //메시지 전송
+  const submitMessageHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const chatSocket = socketRef.current;
-    if (messageRef.current?.value && chatSocket) {
-      const newMessage = {
-        message: messageRef.current.value,
-        timestamp: new Date().toLocaleTimeString("ko-KR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        user: "me",
-        roomId: null, // 방을 선택하지 않음
-      };
-      chatSocket.emit("message", newMessage); // 관리자에게 전송
-      messageRef.current.value = "";
-    }
-  };
+    if (!messageRef.current?.value || !user || !roomId) return;
 
-  const getMessagesSocketHandler = (data: MessageType) => {
-    setChatLog((prevChatLog) => [...prevChatLog, data]);
+    const messageContent = messageRef.current.value;
+
+    // 새 메시지 객체 생성
+    const newMessage: MessageType = {
+      roomId: roomId,
+      message: messageContent,
+      senderName: user.name,
+    };
+
+    // 입력창 초기화
+    messageRef.current.value = "";
+
+    try {
+      // 웹소켓으로 메시지 전송
+      socketRef.current?.emit("sendMessage", newMessage);
+    } catch (error) {
+      console.error("메시지 전송 실패:", error);
+    }
   };
 
   const scrollToBottom = () => {
@@ -184,44 +116,37 @@ function ChatInput() {
     <div className="flex flex-col w-full h-full">
       <div
         ref={containerRef}
-        className="space-y-4 px-2 py-2 overflow-y-auto pb-16"
+        className="space-y-4 px-2 py-2 overflow-y-auto pb-16 h-full"
       >
-        {chatLog.map((message, index) => (
+        {chatLog.map(({ messageId, content, senderName }) => (
           <div
-            key={index}
-            className={`flex ${message.user === "me" ? "justify-end" : "justify-start"}`}
+            key={messageId}
+            className={`flex ${senderName === `${user!.name}` ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`flex items-end gap-2 ${message.user === "me" ? "flex-row-reverse" : "flex-row"}`}
+              className={`flex items-end gap-2 ${senderName === `${user!.name}` ? "flex-row-reverse" : "flex-row"}`}
             >
-              {message.user !== "me" && (
+              {senderName !== `${user!.name}` && (
                 <div className="w-8 h-8 bg-gray-200 rounded-full flex-shrink-0" />
               )}
               <div className="flex flex-col gap-1">
                 <div
                   className={`max-w-md px-4 py-2 rounded-2xl
                       ${
-                        message.user === "me"
+                        senderName === `${user!.name}`
                           ? "bg-rose-200 text-gray-800"
                           : "bg-gray-200 text-gray-800"
                       }`}
                 >
-                  {message.message}
+                  {content}
                 </div>
-                {message.timestamp && (
-                  <span
-                    className={`text-xs text-gray-500 ${message.user === "me" ? "text-right" : "text-left"}`}
-                  >
-                    {message.timestamp}
-                  </span>
-                )}
               </div>
             </div>
           </div>
         ))}
       </div>
       <div className="border-t border-gray-300 p-2 sticky bottom-0 left-0 w-full bg-white">
-        <form onSubmit={submitMessageApiHandler} className="flex gap-2 w-full">
+        <form onSubmit={submitMessageHandler} className="flex gap-2 w-full">
           <input
             ref={messageRef}
             type="text"
