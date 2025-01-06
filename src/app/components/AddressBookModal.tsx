@@ -13,7 +13,7 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 
 interface Friend {
   id: string;
-  nickname: string;
+  name: string;
 }
 
 const AddressBookModal: React.FC<{
@@ -31,7 +31,7 @@ const AddressBookModal: React.FC<{
     getFriendListHandler();
   }, []);
 
-  const getFriendListHandler  = async () => {
+  const getFriendListHandler = async () => {
     //임시 - 유저 정보 없으면 API 호출 불가
     if (!user) return;
     try {
@@ -44,10 +44,9 @@ const AddressBookModal: React.FC<{
 
   // 친구 삭제
   const handleDelete = async (friendId: string) => {
-    
     try {
       await deleteFriend(friendId.toString());
-      setFriends(friends.filter(friend => friend.id !== friendId)); // 삭제 후 친구 목록에서 제거
+      setFriends(friends.filter((friend) => friend.id !== friendId)); // 삭제 후 친구 목록에서 제거
     } catch (error) {
       console.error(error);
     }
@@ -78,11 +77,11 @@ const AddressBookModal: React.FC<{
               >
                 <span className="flex items-center gap-2">
                   <IoPersonCircleOutline className="text-gray-300 w-[50px] h-[50px]" />
-                  {friend.nickname}
+                  {friend.name}
                 </span>
                 {isSchedulePage && (
                   <Button
-                    onClick={() => handleAddSchedule(friend.nickname)} // 친구 선택 시 처리
+                    onClick={() => handleAddSchedule(friend.name)} // 친구 선택 시 처리
                     style={{
                       textColor: "text-mainColor",
                       backgroundColor: "bg-transparent",
