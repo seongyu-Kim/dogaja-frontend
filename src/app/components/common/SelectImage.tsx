@@ -1,20 +1,40 @@
 "use client";
 
 import Button from "@/app/components/common/Button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ErrorAlert } from "@/app/utils/toastAlert";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { fileSize } from "@/app/utils/byteToSize";
+import { mainApi } from "@/app/utils/mainApi";
+import { API } from "@/app/utils/api";
+import { fetchSchedule } from "@/app/(route)/my-schedule/[scheduleId]/fetchSchedule";
+import { TravelPlan } from '@/app/type/scheduleDetailType';
 
 interface SelectImageProps {
   onImageChange?: (file: File | null) => void;
+  scheduleId: string;
 }
 
 export default function SelectImage({
   onImageChange,
+  scheduleId,
 }: SelectImageProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [travelPlan, setTravelPlan] = useState<TravelPlan>();
+
+  useEffect(() => {
+    const loadSchedule = async () => {
+      if (!scheduleId) return;
+      try {
+        const data = await fetchSchedule(scheduleId as string);
+        setTravelPlan(data);
+      } catch (error) {
+        console.error("Error fetching travel plan:", error);
+      }
+    };
+    loadSchedule();
+  }, [scheduleId]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -42,6 +62,29 @@ export default function SelectImage({
       setPreview(reader.result as string);
     };
     reader.readAsDataURL(file);
+    uploadImage(file);
+  };
+
+  const uploadImage = async (file: File) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+       const response = await mainApi({
+        url: API.SCHEDULE.SCHEDULE_IMAGE_UPDATE(scheduleId),
+        method: "PUT",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }, 
+        withAuth: true,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      ErrorAlert("이미지 업로드 중 문제가 발생했습니다.");
+    }
   };
 
   return (
@@ -49,11 +92,19 @@ export default function SelectImage({
     <div className="flex flex-col gap-2 w-full min-h-44 max-w-32 min-w-20 border rounded-lg p-1.5 text-center overflow-hidden">
       <div className="pb-1 border-b border-gray-400 w-full flex items-start flex-grow">
         <div className="w-full h-full flex flex-col items-center justify-center gap-1">
-          {imageFile ? (
+          {travelPlan?.image ? (
+            <div className="border border-mainColor rounded-lg m-2 p-2 bg-gray-100">
+              <img
+                src={`http://kdt-react-node-1-team02.elicecoding.com:3003${travelPlan.image}`}
+                alt="저장된 이미지"
+                className="h-auto rounded-lg shadow-lg bg-white"
+              />
+            </div>
+          ) : imageFile ? (
             <div className="w-full flex items-center justify-center">
               <img
                 src={preview!}
-                alt="이미지"
+                alt="추가된 이미지"
                 className="max-w-full max-h-36 object-cover rounded-lg"
               />
             </div>
