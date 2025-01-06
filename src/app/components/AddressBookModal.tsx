@@ -19,7 +19,7 @@ interface Friend {
 const AddressBookModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-  onAddFriend: (friendName: string) => void;
+  onAddFriend?: (friendName: string) => void;
   isSchedulePage?: boolean;
 }> = ({ isOpen, onClose, onAddFriend, isSchedulePage }) => {
   const [isRequestModalOpen, setRequestModalOpen] = useState(false);
@@ -31,7 +31,7 @@ const AddressBookModal: React.FC<{
     getFriendListHandler();
   }, []);
 
-  const getFriendListHandler  = async () => {
+  const getFriendListHandler = async () => {
     //임시 - 유저 정보 없으면 API 호출 불가
     if (!user) return;
     try {
@@ -44,10 +44,9 @@ const AddressBookModal: React.FC<{
 
   // 친구 삭제
   const handleDelete = async (friendId: string) => {
-    
     try {
       await deleteFriend(friendId.toString());
-      setFriends(friends.filter(friend => friend.id !== friendId)); // 삭제 후 친구 목록에서 제거
+      setFriends(friends.filter((friend) => friend.id !== friendId)); // 삭제 후 친구 목록에서 제거
     } catch (error) {
       console.error(error);
     }
@@ -62,8 +61,10 @@ const AddressBookModal: React.FC<{
   };
 
   const handleAddSchedule = (friendName: string) => {
-    onAddFriend(friendName);
-    onClose();
+    if (onAddFriend) {
+      onAddFriend(friendName);
+      onClose();
+    }
   };
 
   return (

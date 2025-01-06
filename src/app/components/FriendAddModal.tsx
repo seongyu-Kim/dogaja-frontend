@@ -43,7 +43,7 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
 
     setLoading(true);
     setHasSearched(true);
-    
+
     try {
       const result = await searchFriends(inputValue.trim());
       setFriends(result);
@@ -75,9 +75,9 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onClose={closeModal} 
+    <Modal
+      isOpen={isOpen}
+      onClose={closeModal}
       title="친구 추가"
       inputProps={{
         type: "text",
@@ -86,12 +86,11 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
         value: inputValue,
         onChange: handleInputChange,
         onKeyDown: handleKeyDown,
-      }} 
+      }}
       onSubmit={handleSearch}
     >
       <Button
         onClick={handleSearch}
-        
         className="text-sm w-full"
         style={{
           backgroundColor: "bg-mainColor",
@@ -110,10 +109,15 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
       {friends.length > 0 && (
         <div className="mt-4 max-h-36 overflow-y-auto border border-gray-200 rounded">
           <ul>
-            {friends.map(friend => (
-              <li key={friend.id} className="flex justify-between items-center py-2 px-4 border-b border-gray-300">
+            {friends.map((friend) => (
+              <li
+                key={friend.id}
+                className="flex justify-between items-center py-2 px-4 border-b border-gray-300"
+              >
                 <span className="flex items-center">
-                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">이미지</div>
+                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">
+                    이미지
+                  </div>
                   {friend.name}
                 </span>
                 <button

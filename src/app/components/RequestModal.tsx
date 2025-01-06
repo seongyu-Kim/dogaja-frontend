@@ -3,9 +3,11 @@ import Modal from "./Modal";
 import Button from "./common/Button";
 
 import { SuccessAlert } from "@/app/utils/toastAlert";
-import { getFriendRequests, 
-        acceptFriendRequest, 
-        refuseFriendRequest } from "./common/api/friendApi";
+import {
+  getFriendRequests,
+  acceptFriendRequest,
+  refuseFriendRequest,
+} from "./common/api/friendApi";
 
 import { IoPersonAddSharp } from "react-icons/io5";
 
