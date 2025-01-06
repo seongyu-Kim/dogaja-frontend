@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 
 const UserSettings = () => {
-  const { user, fetchUser } = useUserStore();
+  const { user, fetchUser, isLogin } = useUserStore();
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
   const [isChangingPassword, setIsChangingPassword] = useState<boolean>(false);
   const router = useRouter();
@@ -26,8 +26,10 @@ const UserSettings = () => {
   });
 
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+    if (isLogin) {
+      fetchUser();
+    }
+  }, [fetchUser, isLogin]);
 
   useEffect(() => {
     if (user) {
@@ -37,6 +39,11 @@ const UserSettings = () => {
 
   // 이름 변경
   const handleNameChange: SubmitHandler<FieldValues> = async (data) => {
+    if (!isLogin) {
+      ErrorAlert("로그인 후 이용해주세요.");
+      return;
+    }
+
     try {
       const res = await mainApi({
         url: API.USER.NAME_UPDATE,
@@ -51,13 +58,17 @@ const UserSettings = () => {
         SuccessAlert("닉네임이 변경되었습니다.");
       }
     } catch (e) {
-      console.error(e);
       ErrorAlert("닉네임 변경에 실패하였습니다.");
     }
   };
 
   // 비밀번호 변경
   const handlePasswordChange: SubmitHandler<FieldValues> = async (data) => {
+    if (!isLogin) {
+      ErrorAlert("로그인 후 이용해주세요.");
+      return;
+    }
+
     if (data.newPassword !== data.confirmPassword) {
       ErrorAlert("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
       return;
@@ -80,13 +91,17 @@ const UserSettings = () => {
         SuccessAlert("비밀번호가 변경되었습니다.");
       }
     } catch (e) {
-      console.error(e);
       ErrorAlert("비밀번호 변경에 실패하였습니다.");
     }
   };
 
   // 회원탈퇴
   const handleUserDelete = async () => {
+    if (!isLogin) {
+      ErrorAlert("로그인 후 이용해주세요.");
+      return;
+    }
+
     if (window.confirm("정말로 계정을 탈퇴하시겠습니까?")) {
       try {
         const res = await mainApi({
@@ -103,7 +118,6 @@ const UserSettings = () => {
           }, 1200);
         }
       } catch (e) {
-        console.error(e);
         ErrorAlert("회원탈퇴에 실패하였습니다.");
       }
     }
@@ -165,7 +179,13 @@ const UserSettings = () => {
                 textSize: "text-sm",
                 padding: "px-3 py-1",
               }}
-              onClick={() => setIsEditingName(true)}
+              onClick={() => {
+                if (!isLogin) {
+                  ErrorAlert("로그인 후 이용해주세요.");
+                  return;
+                }
+                setIsEditingName(true);
+              }}
             >
               <MdEdit className="w-5 h-auto" />
             </Button>
@@ -184,7 +204,13 @@ const UserSettings = () => {
               textSize: "text-sm",
               padding: "px-3 py-1",
             }}
-            onClick={() => setIsChangingPassword(true)}
+            onClick={() => {
+              if (!isLogin) {
+                ErrorAlert("로그인 후 이용해주세요.");
+                return;
+              }
+              setIsChangingPassword(true);
+            }}
           >
             비밀번호 변경
           </Button>
@@ -280,7 +306,13 @@ const UserSettings = () => {
       <div className="absolute bottom-4 right-4">
         <Button
           className="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1"
-          onClick={handleUserDelete}
+          onClick={() => {
+            if (!isLogin) {
+              ErrorAlert("로그인 후 이용해주세요.");
+              return;
+            }
+            handleUserDelete();
+          }}
         >
           탈퇴하기
         </Button>
