@@ -71,9 +71,13 @@ const AddPlaceModal = ({ isOpen, onClose }: AddPlaceModalProps) => {
   // };
 
   return isOpen ? (
-    <Modal isOpen={isOpen} onClose={onClose} title="장소 추가">
-      <div className="p-4 bg-white rounded-lg shadow-lg">
-        <h2 className="text-lg font-bold mb-4">추천 장소 추가</h2>
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose} 
+      title="일정 선택" 
+      explanation="어떤 일정에 추가하시겠습니까?"
+    >
+      <div className="max-h-60 overflow-y-auto mb-4">
 
         {isLoading ? (
           <p>일정을 불러오는 중...</p>
@@ -83,15 +87,15 @@ const AddPlaceModal = ({ isOpen, onClose }: AddPlaceModalProps) => {
               schedules.map((schedule) => (
                 <div
                   key={schedule.id}
-                  className="flex justify-between items-center p-2 border-b"
+                  className="flex justify-between px-4 items-center py-2 border-b border-gray-300"
                 >
                   <div>
                     <h3 className="font-semibold">{schedule.title}</h3>
                     <p className="text-sm">{schedule.category}</p>
                   </div>
                   <Button
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-                    onClick={() => SuccessAlert("일정이 추가되엇슴니다람지")}
+                    className="bg-mainColor hover:bg-mainHover text-white px-3 py-1 rounded-lg text-sm"
+                    onClick={() => SuccessAlert("일정이 추가되엇슴니다람지🐿")}
                   >
                     추가
                   </Button>
@@ -102,15 +106,6 @@ const AddPlaceModal = ({ isOpen, onClose }: AddPlaceModalProps) => {
             )}
           </div>
         )}
-
-        <div className="flex justify-end mt-4">
-          <Button
-            className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded mr-2"
-            onClick={onClose}
-          >
-            닫기
-          </Button>
-        </div>
       </div>
     </Modal>
   ) : null;
