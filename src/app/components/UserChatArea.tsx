@@ -17,7 +17,7 @@ export default function UserChatArea({
   return (
     <>
       {adminChatClick && (
-        <div className="overflow-y-hidden flex gap-3 flex-col items-center group bg-white border border-gray-300 shadow-2xl fixed bottom-5 right-5 py-1 px-1 rounded-md w-[400px] h-[700px]">
+        <div className="z-50 overflow-y-hidden flex gap-3 flex-col items-center group bg-white border border-gray-300 shadow-2xl fixed bottom-5 right-5 py-1 px-1 rounded-md w-[400px] h-[700px]">
           <div className="flex justify-end w-full">
             <IoIosClose
               onClick={() => {
