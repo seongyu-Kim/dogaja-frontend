@@ -3,6 +3,7 @@ import { FaListAlt } from "react-icons/fa";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { ErrorAlert } from "@/app/utils/toastAlert";
+import { useUserStore } from "@/app/store/userStore";
 
 interface myPost {
   id?: string;
@@ -12,9 +13,12 @@ interface myPost {
 
 const MyPosts = () => {
   const [myPosts, setMyPosts] = useState<myPost[]>([]);
+  const { isLogin } = useUserStore();
 
-  //내가 쓴 글
+  // 내가 쓴 글
   const fetchMyPost = async () => {
+    if (!isLogin) return;
+
     try {
       const res = await mainApi({
         url: API.BOARD.BOARD_MY_POST,
@@ -24,14 +28,15 @@ const MyPosts = () => {
 
       setMyPosts((res.data as { posts: myPost[] }).posts);
     } catch (e) {
-      console.error(e);
       ErrorAlert("나의 게시글을 불러오는데 실패하였습니다.");
     }
   };
 
   useEffect(() => {
-    fetchMyPost();
-  }, []);
+    if (isLogin) {
+      fetchMyPost();
+    }
+  }, [isLogin]);
 
   return (
     <div className="bg-gray-200 rounded-lg shadow-md h-[45vh] overflow-hidden">

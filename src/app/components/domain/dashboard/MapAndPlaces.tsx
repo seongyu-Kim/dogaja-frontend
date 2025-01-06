@@ -7,6 +7,7 @@ import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 import AddPlaceModal from "../../AddPlaceModal";
+import { useUserStore } from "@/app/store/userStore";
 
 interface Place {
   id?: string;
@@ -33,6 +34,8 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
   const [isAddPlaceModal, setIsAddPlaceModal] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
+  const { isLogin } = useUserStore();
+
   const openAddPlaceModal = (place: Place) => {
     setSelectedPlace(place);
     setIsAddPlaceModal(true);
@@ -45,11 +48,13 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
 
   //즐찾 호출
   useEffect(() => {
-    const initializeData = async () => {
-      await fetchFavoritePlaces();
-    };
-    initializeData();
-  }, []);
+    if (isLogin) {
+      const initializeData = async () => {
+        await fetchFavoritePlaces();
+      };
+      initializeData();
+    }
+  }, [isLogin]);
 
   //병합 호출
   useEffect(() => {
@@ -71,32 +76,46 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
         setFavorites(res.data as Fav[]);
       }
     } catch (e) {
-      console.error("즐찾 불러오기 실패", e);
       ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
     }
   };
 
   //장소+즐찾 병합
   const mergePlacesWithFavorites = () => {
+    let hasChanges = false;
+
     const updatedPlaces = places.map((place) => {
       const favorite = favorites.find(
         (fav) => fav.location === place.place_name
       );
-      return {
+
+      const updatedPlace = {
         ...place,
         isFavorite: !!favorite,
         favoriteId: favorite?.id,
       };
+
+      if (
+        updatedPlace.isFavorite !== place.isFavorite ||
+        updatedPlace.favoriteId !== place.favoriteId
+      ) {
+        hasChanges = true;
+      }
+
+      return updatedPlace;
     });
 
-    if (places.toString() === updatedPlaces.toString()) {
-      return;
+    if (hasChanges) {
+      setPlaces(updatedPlaces);
     }
-    setPlaces(updatedPlaces);
   };
 
   //즐찾추가
   const addFavoritePlace = async (place: Place) => {
+    if (!isLogin) {
+      ErrorAlert("로그인 후 이용해주세요.");
+      return;
+    }
     try {
       const res = await mainApi({
         url: API.BOOKMARK.BOOKMARK_CREATE,
@@ -122,7 +141,11 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
         );
       }
     } catch (e) {
-      console.error(e);
+      if (e.status === 400) {
+        ErrorAlert("이미 즐겨찾기된 장소입니다.");
+      } else {
+        ErrorAlert("즐겨찾기 실패");
+      }
     }
   };
 
@@ -148,7 +171,7 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
         );
       }
     } catch (e) {
-      console.error(e);
+      ErrorAlert("즐겨찾기 해제 실패");
     }
   };
   return (
