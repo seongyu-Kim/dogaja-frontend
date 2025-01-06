@@ -4,6 +4,7 @@ import Modal from "./Modal";
 import { mainApi } from "../utils/mainApi";
 import { API } from "../utils/api";
 import { SuccessAlert, ErrorAlert } from "../utils/toastAlert";
+import { isAxiosError } from "axios";
 
 interface AddPlaceModalProps {
   isOpen: boolean;
@@ -75,10 +76,12 @@ const AddPlaceModal = ({
         onClose();
       }
     } catch (e) {
-      if (e.status === 400) {
-        ErrorAlert("일정에 존재하는 장소입니다.");
-      } else {
-        ErrorAlert("장소 추가에 실패하였습니다.");
+      if (isAxiosError(e)) {
+        if (e.status === 400) {
+          ErrorAlert("일정에 존재하는 장소입니다.");
+        } else {
+          ErrorAlert("장소 추가에 실패하였습니다.");
+        }
       }
     }
   };
