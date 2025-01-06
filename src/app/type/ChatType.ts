@@ -1,14 +1,12 @@
 export interface MessageType {
+  roomId: number;
   message: string;
-  timestamp?: string;
-  user?: string;
+  senderName: string;
 }
 
 export interface ChatRoom {
-  name: string;
-  messages: number;
-  lastMessage?: string;
-  roomId: string; // 채팅방 식별자 추가
+  roomId: number;
+  roomName: string;
 }
 /////////////////////위는 임시 더미데이터 타입
 
@@ -18,10 +16,10 @@ export interface AdminRoomReadType {
     user: string;
     admin: string;
   };
-  message: messageType[];
+  messages: MessagesType[];
 }
 
-interface messageType {
+export interface MessagesType {
   messageId: number;
   content: string;
   senderName: string;

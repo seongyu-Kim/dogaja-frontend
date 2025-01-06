@@ -81,6 +81,9 @@ export const API = {
   SEARCH: {
     SEARCH_RESULT: `${BASE_URL}/search/result`,
   },
+  CHAT: {
+    CHAT_ROOM_LIST_READ: `${BASE_URL}/chat/rooms`,
+  },
 };
 
 // SCHEDULE_ADD_BUCKET: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/bucket`,
