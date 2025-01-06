@@ -75,6 +75,9 @@ export const API = {
     SCHEDULE_DELEDT_LOCATION: (scheduleId: string, locationId: string) =>
       `${BASE_URL}/schedule/location/${scheduleId}/${locationId}`,
   },
+  SEARCH: {
+    SEARCH_RESULT: `${BASE_URL}/search/result`,
+  },
 };
 
 // SCHEDULE_ADD_BUCKET: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/bucket`,
