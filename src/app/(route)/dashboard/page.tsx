@@ -125,7 +125,6 @@ const Dashboard: React.FC = () => {
       if (isAxiosError(e) && e.response) {
         setError("Axios에러 발생");
       } else {
-        console.log("Axios가 아닌 에러 발생:", e);
         setError("요청 처리 중 문제가 발생했습니다.");
       }
     } finally {

@@ -43,7 +43,6 @@ const Login = () => {
         router.push("/dashboard");
       }
     } catch (e) {
-      console.error("로그인 실패", e);
       if (e.status === 401) {
         ErrorAlert("이메일 또는 비밀번호가 일치하지 않습니다.");
       } else if (e.status === 403) {
