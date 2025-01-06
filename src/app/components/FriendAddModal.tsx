@@ -115,7 +115,9 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
                 className="flex justify-between items-center py-2 px-4 border-b border-gray-300"
               >
                 <span className="flex items-center">
-                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">이미지</div>
+                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">
+                    이미지
+                  </div>
                   {friend.name}
                 </span>
                 <button
