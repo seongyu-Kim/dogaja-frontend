@@ -9,11 +9,19 @@ import { mainApi } from "@/app/utils/mainApi";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 import Logo from "@/app/assets/Do_logo_non_text.png";
 import { FaRegAddressBook } from "react-icons/fa6";
-import { PiBellBold } from "react-icons/pi";
+import { PiBellBold, PiBellRingingFill } from "react-icons/pi";
 import SlideMenu from "./Slidemenu";
 import AddressBookModal from "../AddressBookModal";
-import NotificationList, { Notification } from "../NotificationList";
+import NotificationList from "../NotificationList";
 import { useUserStore } from "@/app/store/userStore";
+
+export interface Notification {
+  id: string;
+  type: "friend" | "invite";
+  userId: number;
+  name: string;
+  code: string;
+}
 
 export default function Navbar() {
   const router = useRouter();
@@ -82,6 +90,8 @@ export default function Navbar() {
     router.push(`/post/${notification.id}`);
   };
 
+  // const hasNotifications = notifications.length > 0;
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-10 w-full border-b-4 border-mainColor text-white p-4 flex justify-between items-center bg-white">
       <div>
@@ -100,14 +110,20 @@ export default function Navbar() {
               className="cursor-pointer text-mainColor text-2xl focus:outline-none"
               onClick={toggleNotifications}
             >
-              <PiBellBold className="hover:scale-105 transition-all duration-300 ease-in-out" />
+              {/* {hasNotifications ? (
+                <PiBellRingingFill className="hover:scale-105 transition-all duration-300 ease-in-out" />
+              ) : ( */}
+                <PiBellBold className="hover:scale-105 transition-all duration-300 ease-in-out" />
+              {/* )}
+              {hasNotifications && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full px-1 text-xs">
+                  {notifications.length}
+                </span>
+              )} */}
             </button>
             {showNotifications && (
               <div className="absolute right-0 w-60 mt-4">
-                <NotificationList
-                  notifications={notifications}
-                  onNotificationClick={handleNotificationClick}
-                />
+                <NotificationList />
               </div>
             )}
           </li>
