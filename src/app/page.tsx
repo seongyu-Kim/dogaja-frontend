@@ -20,9 +20,10 @@ const Main: React.FC = () => {
     setSearchValue(e.target.value);
   };
 
-  const handleSearch = () => {
-    if (searchValue.trim() !== "") {
-      router.push(`/dashboard?search=${encodeURIComponent(searchValue)}`);
+  const handleSearch = (locationName?: string) => {
+    const query = locationName || searchValue;
+    if (query.trim() !== "") {
+      router.push(`/dashboard?search=${encodeURIComponent(query)}`);
     }
   };
 
@@ -65,7 +66,7 @@ const Main: React.FC = () => {
                           ? "border-b border-mainColor"
                           : ""
                       }`}
-                      onClick={handleSearch}
+                      onClick={() => handleSearch(location)}
                     >
                       <LuMapPin className="text-lg" />
                       {location}
