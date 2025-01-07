@@ -1,6 +1,6 @@
 export interface NotificationType {
   id: string;
-  sendername: string;
+  senderName: string;
   type: "friend_request" | "schedule_invite" ;
   isRead: boolean;
 }
