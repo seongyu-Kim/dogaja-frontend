@@ -40,7 +40,7 @@ export default function BoardDetailViewButtonBox({
   };
   return (
     <div className="flex items-center justify-between">
-      <button onClick={handleOpenModal}>신고</button>
+      {user && <button onClick={handleOpenModal}>신고</button>}
       <div className="flex gap-2">
         {user && (
           <Link href="./create">
