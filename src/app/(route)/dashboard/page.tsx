@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Input from "@/app/components/common/Input";
 import MapWithPlaces from "@/app/components/domain/dashboard/MapAndPlaces";
 import WeatherAndEvents from "@/app/components/domain/dashboard/WeatherAndEvents";
@@ -11,6 +11,7 @@ import locations from "@/app/assets/locations";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { isAxiosError } from "axios";
+import { useSearchParams } from "next/navigation";
 
 interface ApiResponse {
   nameData: string;
@@ -62,22 +63,20 @@ interface EventData {
 }
 
 const Dashboard: React.FC = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
+  const searchParams = useSearchParams();
+  const initialLocation = searchParams.get("search") || "";
+
+  const [searchValue, setSearchValue] = useState<string>(initialLocation);
   const [locationsList] = useState<string[]>(
     locations.map((location) => location.name)
   );
-  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [selectedLocation, setSelectedLocation] = useState<string>(initialLocation);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [eventsData, setEventsData] = useState<EventData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isWeatherLoading, setIsWeatherLoading] = useState<boolean>(false);
   const [isEventsLoading, setIsEventsLoading] = useState<boolean>(false);
-
-  const handleSearchClick = () => {
-    setSearchValue(selectedLocation);
-    setShowDropdown(true);
-  };
 
   const handleLocationSelect = async (location: string) => {
     setSearchValue(location);
@@ -133,6 +132,12 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (initialLocation) {
+      handleLocationSelect(initialLocation);
+    }
+  }, [initialLocation]);
+
   const filteredLocations = showDropdown
     ? locationsList.filter((location) => location.includes(searchValue))
     : [];
@@ -147,7 +152,7 @@ const Dashboard: React.FC = () => {
             name="search"
             placeholder="서울의 명소를 검색해보세요."
             value={searchValue}
-            onClick={handleSearchClick}
+            onClick={() => setShowDropdown(true)}
             onChange={(e) => {
               setSearchValue(e.target.value);
               setShowDropdown(true);
