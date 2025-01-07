@@ -5,8 +5,13 @@ import { BOARD_TYPES } from "@/app/utils/board-config";
 import List from "@/app/components/domain/board/List";
 import { useEffect, useState } from "react";
 import { BoardListType } from "@/app/type/boardListType";
-import boardTypeRequest from "@/app/utils/boardTypeRequest";
 import { ErrorAlert } from "@/app/utils/toastAlert";
+import {
+  getAskBoardList,
+  getFriendBoardList,
+  getReviewBoardList,
+  getWithBoardList,
+} from "@/app/actions";
 
 type BOARD_TYPES_KEY = keyof typeof BOARD_TYPES;
 
@@ -20,18 +25,19 @@ export default function BoardListPage() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const result: Record<string, BoardListType[]> = {};
+        const res = await Promise.all([
+          getFriendBoardList(),
+          getAskBoardList(),
+          getReviewBoardList(),
+          getWithBoardList(),
+        ]);
 
-        await Promise.all(
-          boardTypeKeys.map(async (boardType) => {
-            const data = await boardTypeRequest(boardType as BOARD_TYPES_KEY);
-
-            if (data) {
-              result[boardType] = data;
-              return;
-            }
-            result[boardType] = [];
-          }),
+        const result = boardTypeKeys.reduce(
+          (acc, key, index) => {
+            acc[key] = res[index] || [];
+            return acc;
+          },
+          {} as Record<string, BoardListType[]>,
         );
 
         setBoardData(result);
