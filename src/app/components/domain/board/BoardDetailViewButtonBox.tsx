@@ -24,15 +24,19 @@ export default function BoardDetailViewButtonBox({
 
   const handleOpenModal = () => setReportModal((prev) => !prev);
   const handleCloseModal = () => setReportModal(false);
+
   const handleDeleteClick = async () => {
     const deleteCheck = confirm("게시글을 삭제하시겠습니까?");
+
     if (deleteCheck) {
       const res = await deletePost(Number(postId));
+
       if (res === 200) {
         SuccessAlert("게시글이 삭제되었습니다");
         router.push("./");
         return;
       }
+
       if (res !== 200) {
         ErrorAlert("게시글 삭제 실패");
       }
@@ -40,7 +44,7 @@ export default function BoardDetailViewButtonBox({
   };
   return (
     <div className="flex items-center justify-between">
-      <button onClick={handleOpenModal}>신고</button>
+      {user && <button onClick={handleOpenModal}>신고</button>}
       <div className="flex gap-2">
         {user && (
           <Link href="./create">
