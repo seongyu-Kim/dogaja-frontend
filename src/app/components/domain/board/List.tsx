@@ -24,6 +24,7 @@ export default function List({
   if (!list) {
     return null;
   }
+
   const searchParams = useSearchParams().get("page");
   const route = usePathname();
 
@@ -52,7 +53,7 @@ export default function List({
                     )}
                   </div>
                 )}
-                <div className="w-[85%]">
+                <div className="flex gap-1 w-[85%]">
                   {parseInt(postId!) == id && (
                     <p className="font-semibold text-xl">{"→"}</p>
                   )}

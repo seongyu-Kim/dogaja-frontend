@@ -25,6 +25,7 @@ export default function BoardListPage() {
         await Promise.all(
           boardTypeKeys.map(async (boardType) => {
             const data = await boardTypeRequest(boardType as BOARD_TYPES_KEY);
+
             if (data) {
               result[boardType] = data;
               return;

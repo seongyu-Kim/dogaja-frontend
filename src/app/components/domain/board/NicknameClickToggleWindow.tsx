@@ -17,9 +17,10 @@ export default function NicknameClickToggleWindow({
   const handleRequestFriendClick = async () => {
     if (!name) return;
     const requestConfirm = confirm(`${name}님에게 친구 요청을 보내시겠습니까?`);
+
     if (requestConfirm) {
       const res = await requestFriend(name);
-      //임시 아래 상태코드 이야기 해봐야함
+
       if (res === 200 || res === 201) {
         SuccessAlert(`${name}님에게 친구 요청을 보냈습니다`);
         onClose(false);
@@ -34,6 +35,7 @@ export default function NicknameClickToggleWindow({
       ErrorAlert("친구 요청 실패");
     }
   };
+
   return (
     <ul
       style={{

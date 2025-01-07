@@ -12,6 +12,7 @@ export const getSocket = () => {
       auth: { token: localStorage.getItem("token") },
     });
   }
+
   return socket;
 };
 

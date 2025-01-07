@@ -17,11 +17,13 @@ export default function NickNameBox({ name }: Props) {
   useEffect(() => {
     const handelOutsidClick = (e: MouseEvent) => {
       const current = toggleWindowRef.current;
+
       if (current && !current.contains(e.target as Node)) {
         setToggleWindow(false);
       }
     };
     document.addEventListener("mousedown", handelOutsidClick);
+
     return () => {
       document.removeEventListener("mousedown", handelOutsidClick);
     };
@@ -29,6 +31,7 @@ export default function NickNameBox({ name }: Props) {
 
   const handleNickNameClick = (e: React.MouseEvent<HTMLParagraphElement>) => {
     const { clientX, clientY } = e;
+
     setPosition({ x: clientX, y: clientY });
     setToggleWindow((prev) => !prev);
   };
