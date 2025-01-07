@@ -5,6 +5,8 @@ import { ChatRoom, MessagesType, MessageType } from "@/app/type/ChatType";
 import { disconnectSocket, getSocket } from "@/app/utils/websocket";
 import { Socket } from "socket.io-client";
 import { getRoomList } from "@/app/utils/chatApi";
+import UserMessage from "@/app/components/domain/chat/UserMessage";
+import { IoPersonCircleOutline } from "react-icons/io5";
 
 export default function ChatPage() {
   //임시 - 아래 타입들 API 나오기 전에 상상코딩된 부분이라 수정 예정
@@ -116,7 +118,7 @@ export default function ChatPage() {
                 ${selectedRoom === room.roomId ? "bg-gray-300" : ""}`}
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gray-200 rounded-full" />
+                <IoPersonCircleOutline className="w-10 h-10 text-gray-400" />
                 <div className="flex-1">
                   <div className="flex justify-between items-center">
                     <span className="font-medium text-sm">{room.roomName}</span>
@@ -130,43 +132,14 @@ export default function ChatPage() {
 
       {selectedRoom && (
         <div className="flex-1 flex flex-col rounded border border-mainColor">
+          <div className="text-center bg-white border-b border-gray-300 py-2 mb-4 rounded">
+            {selectedRoom &&
+              chatRooms.find((room) => room.roomId === selectedRoom)?.roomName}
+          </div>
           <div ref={containerRef} className="flex-1 overflow-y-auto">
-            <p className="text-center bg-white border-b border-gray-300 py-2 mb-4 sticky top-0 rounded">
-              {selectedRoom &&
-                chatRooms.find((room) => room.roomId === selectedRoom)
-                  ?.roomName}
-            </p>
-            <div className="space-y-4 overflow-y-auto p-4">
-              {chatLog.map(({ messageId, content, senderName }) => (
-                <div
-                  key={messageId}
-                  className={`flex relative ${senderName === `${user!.name}` ? "justify-end" : "justify-start"}`}
-                >
-                  <div className="bg-black">
-                    <span className="absolute">{senderName}</span>
-                    <div
-                      className={`flex items-end gap-2 ${senderName === `${user!.name}` ? "flex-row-reverse" : "flex-row"}`}
-                    >
-                      {senderName !== `${user!.name}` && (
-                        <div className="w-8 h-8 bg-gray-200 rounded-full flex-shrink-0" />
-                      )}
-                      <div className="flex flex-col gap-1">
-                        <div
-                          className={`max-w-md px-4 py-2 rounded-2xl 
-                      ${
-                        senderName === `${user!.name}`
-                          ? "bg-rose-200 text-gray-800"
-                          : "bg-gray-200 text-gray-800"
-                      }`}
-                        >
-                          {content}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <ul className="space-y-4 overflow-y-auto p-4">
+              <UserMessage chatLog={chatLog} user={user} />
+            </ul>
           </div>
 
           <div className="border-t border-gray-300 p-4">
