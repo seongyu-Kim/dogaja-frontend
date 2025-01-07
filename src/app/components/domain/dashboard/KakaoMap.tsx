@@ -38,19 +38,61 @@ const KakaoMap = ({ keyword, onPlacesFetched }: KakaoMapProps) => {
   }, []);
 
   useEffect(() => {
+    if (!currentPosition || !window.kakao || !window.kakao.maps) {
+      return;
+    }
+
+    const mapContainer = document.getElementById("map");
+    if (!mapContainer) {
+      return;
+    }
+
+    const map = new window.kakao.maps.Map(mapContainer, {
+      center: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng),
+      level: 5,
+    });
+
+    // 현재 위치 마커
+    const marker = new kakao.maps.Marker({
+      position: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng),
+      map: map,
+      title: "현재 위치",
+    });
+
+    const currentLocationOverlay = new kakao.maps.CustomOverlay({
+      position: marker.getPosition(),
+      content: `
+        <div style="
+          margin-bottom: 130px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 5px 10px;
+          background-color: white;
+          border-radius: 5px;
+          border: 1px solid grey;
+        ">
+          현재 위치
+        </div>
+      `,
+      zIndex: 1,
+    });
+
+    marker.setMap(map);
+    currentLocationOverlay.setMap(map);
+  }, [currentPosition]);
+
+  useEffect(() => {
     if (!keyword.trim()) {
-      console.warn("검색어가 비어 있습니다.");
       return;
     }
 
     if (!window.kakao || !window.kakao.maps) {
-      console.error("카카오 맵 API가 로드되지 않았습니다.");
       return;
     }
 
     const ps = new kakao.maps.services.Places();
 
-    // 검색된 위치에 마커 추가
     ps.keywordSearch(keyword, (data, status) => {
       if (status === kakao.maps.services.Status.OK && data.length > 0) {
         const firstPlace = data[0];
@@ -63,7 +105,6 @@ const KakaoMap = ({ keyword, onPlacesFetched }: KakaoMapProps) => {
 
           const mapContainer = document.getElementById("map");
           if (!mapContainer) {
-            console.error("맵 컨테이너를 찾을 수 없습니다.");
             return;
           }
 
@@ -72,19 +113,35 @@ const KakaoMap = ({ keyword, onPlacesFetched }: KakaoMapProps) => {
             level: 5,
           });
 
+          // 마커 생성
           const marker = new kakao.maps.Marker({
             position: new kakao.maps.LatLng(newPosition.lat, newPosition.lng),
             map: map,
             title: `${keyword} 위치`,
           });
 
-          const infowindow = new kakao.maps.InfoWindow({
-            content: `<div style="text-align: center; font-size: 14px;">${keyword}</div>`,
+          const customOverlay = new kakao.maps.CustomOverlay({
+            position: marker.getPosition(),
+            content: `
+              <div style="
+                margin-bottom: 130px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 5px 10px;
+                background-color: white;
+                border-radius: 5px;
+                border: 1px solid grey;
+              ">
+                ${keyword}
+              </div>
+            `,
+            zIndex: 1,
           });
-          infowindow.open(map, marker);
+
+          marker.setMap(map);
+          customOverlay.setMap(map);
         }
-      } else {
-        console.warn("검색 결과가 없습니다.");
       }
     });
 
@@ -108,9 +165,7 @@ const KakaoMap = ({ keyword, onPlacesFetched }: KakaoMapProps) => {
         <MapMarker position={selectedLocationPosition} />
       )}
       {currentPosition && !selectedLocationPosition && (
-        <MapMarker position={currentPosition}>
-          <div>현재 위치</div>
-        </MapMarker>
+        <MapMarker position={currentPosition} />
       )}
     </Map>
   );
