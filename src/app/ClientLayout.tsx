@@ -5,7 +5,7 @@ import Navbar from "./components/common/Navbar";
 import Sidebar from "./components/common/Sidebar";
 import ToastProvider from "@/app/ToastProvider";
 import { useUserStore } from "@/app/store/userStore";
-import UserChatBox from "@/app/components/UserChatBox";
+import UserChatBox from "@/app/components/domain/chat/UserChatBox";
 import { useEffect } from "react";
 
 interface ClientLayoutProps {
