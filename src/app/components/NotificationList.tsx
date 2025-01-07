@@ -5,7 +5,13 @@ import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 import { NotificationType } from "../type/natificationType";
 import { isAxiosError } from "axios";
 
-const NotificationList: React.FC = () => {
+interface NotificationListProps {
+  onUnreadCountChange: (count: number) => void;
+}
+
+const NotificationList: React.FC<NotificationListProps> = ({
+  onUnreadCountChange,
+}) => {
 
   const [alarms, setAlarms] = useState<NotificationType[]>([]);
   const [loading, setLoading] = useState(false);
@@ -40,11 +46,13 @@ const NotificationList: React.FC = () => {
     };
     getNotifucation()
     .then((data) => {
-      const validData = data.filter((item) => item.id && item.type && item.sendername);
+      const validData = data.filter((item) => item.id && item.type && item.senderName);
       setAlarms(validData);
+      const unreadCount = validData.filter((item) => !item.isRead).length;
+      onUnreadCountChange(unreadCount);
     })
     .catch((error) => console.error(error));
-  }, []);
+  }, [onUnreadCountChange]);
 
   // 알림 읽음 처리
   const handleAlarmClick = async (alarm: NotificationType) => {
@@ -65,7 +73,11 @@ const NotificationList: React.FC = () => {
           item.id === alarm.id ? { ...item, isRead: true } : item
         );
         setAlarms(updatedAlarms);
-        SuccessAlert(`${alarm.sendername}님이 보내신 알림을 확인했습니다.`);
+
+        const unreadCount = updatedAlarms.filter((item) => !item.isRead).length;
+        onUnreadCountChange(unreadCount);
+
+        SuccessAlert(`${alarm.senderName}님이 보내신 알림을 확인했습니다.`);
       } else {
         throw new Error("Failed to mark notification as read.");
       }
@@ -93,9 +105,9 @@ const NotificationList: React.FC = () => {
             >
               <span className="flex-1">
                 {alarm.type === "friend_request" &&
-                  `🖐 ${alarm.sendername}님의 친구 요청`}
+                  `🖐 ${alarm.senderName}님의 친구 요청`}
                 {alarm.type === "schedule_invite" &&
-                  `🎉 ${alarm.sendername}님이 일정에 초대했습니다.`}
+                  `🎉 ${alarm.senderName}님이 일정에 초대했습니다.`}
               </span>
             </li>
           ))}

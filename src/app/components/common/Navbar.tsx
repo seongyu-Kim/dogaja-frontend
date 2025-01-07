@@ -13,26 +13,17 @@ import { PiBellBold, PiBellRingingFill } from "react-icons/pi";
 import SlideMenu from "./Slidemenu";
 import AddressBookModal from "../AddressBookModal";
 import NotificationList from "../NotificationList";
+import { NotificationType } from "@/app/type/natificationType";
 import { useUserStore } from "@/app/store/userStore";
-
-export interface Notification {
-  id: string;
-  type: "friend" | "invite";
-  userId: number;
-  name: string;
-  code: string;
-}
 
 export default function Navbar() {
   const router = useRouter();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutMenu, setShowLogoutMenu] = useState(false);
   const [showAddressBookModal, setShowAddressBookModal] = useState(false);
-  const [showRequestModal, setShowRequestModal] = useState(false);
-  const [selectedNotification, setSelectedNotification] =
-    useState<Notification | null>(null);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const { resetUser, user } = useUserStore();
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     getFriendRequests();
@@ -44,14 +35,14 @@ export default function Navbar() {
     const { FRIENDS_REQUEST_GET } = API.FRIENDS;
 
     try {
-      const res = await mainApi<{ requests: Notification[] }>({
+      const res = await mainApi<{ requests: NotificationType[] }>({
         url: FRIENDS_REQUEST_GET,
         method: "GET",
         withAuth: true,
       });
 
       if (res.status === 200) {
-        setNotifications(res.data.requests); // 임시 - 타입 추가 지정 확실하게 해줘야함
+        setNotifications(res.data.requests || []);
       }
     } catch (e) {
       console.error(e);
@@ -85,13 +76,6 @@ export default function Navbar() {
   const toggleLogoutMenu = () => setShowLogoutMenu((prev) => !prev);
   const openAddressBookModal = () => setShowAddressBookModal((prev) => !prev);
 
-  const handleNotificationClick = (notification: Notification) => {
-    // 초대 알림 클릭 시 /post/{id}로 이동
-    router.push(`/post/${notification.id}`);
-  };
-
-  // const hasNotifications = notifications.length > 0;
-
   return (
     <nav className="fixed top-0 left-0 right-0 z-10 w-full border-b-4 border-mainColor text-white p-4 flex justify-between items-center bg-white">
       <div>
@@ -110,20 +94,20 @@ export default function Navbar() {
               className="cursor-pointer text-mainColor text-2xl focus:outline-none"
               onClick={toggleNotifications}
             >
-              {/* {hasNotifications ? (
+              {unreadCount > 0 ? (
                 <PiBellRingingFill className="hover:scale-105 transition-all duration-300 ease-in-out" />
-              ) : ( */}
+              ) : (
                 <PiBellBold className="hover:scale-105 transition-all duration-300 ease-in-out" />
-              {/* )}
-              {hasNotifications && (
+              )}
+              {unreadCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full px-1 text-xs">
-                  {notifications.length}
+                  {unreadCount}
                 </span>
-              )} */}
+              )}
             </button>
             {showNotifications && (
               <div className="absolute right-0 w-60 mt-4">
-                <NotificationList />
+                <NotificationList onUnreadCountChange={setUnreadCount} />
               </div>
             )}
           </li>
