@@ -4,6 +4,7 @@ import { MessagesType, MessageType } from "@/app/type/ChatType";
 import { useUserStore } from "@/app/store/userStore";
 import { disconnectSocket, getSocket } from "@/app/utils/websocket";
 import { Socket } from "socket.io-client";
+import UserMessage from "@/app/components/domain/chat/UserMessage";
 
 interface Props {
   adminChatClick: boolean;
@@ -18,7 +19,7 @@ export default function UserChatArea({
     <>
       {adminChatClick && (
         <div className="z-50 overflow-y-hidden flex gap-3 flex-col items-center group bg-white border border-gray-300 shadow-2xl fixed bottom-5 right-5 py-1 px-1 rounded-md w-[400px] h-[700px]">
-          <div className="flex justify-between w-full px-4 items-center">
+          <div className="flex justify-between w-full items-center">
             <h3 className="font-semibold text-gray-700">1:1 문의</h3>
             <IoIosClose
               onClick={() => {
@@ -29,7 +30,7 @@ export default function UserChatArea({
             />
           </div>
           <div className="flex items-center w-full h-full border-t border-gray-300">
-            <UserChatInput />
+            <ChatArea />
           </div>
         </div>
       )}
@@ -37,7 +38,7 @@ export default function UserChatArea({
   );
 }
 
-function UserChatInput() {
+function ChatArea() {
   const [chatLog, setChatLog] = useState<MessagesType[]>([]);
   const [roomId, setRoomId] = useState<number | null>(null);
   const messageRef = useRef<HTMLInputElement>(null);
@@ -118,32 +119,7 @@ function UserChatInput() {
         ref={containerRef}
         className="space-y-4 px-2 py-2 overflow-y-auto pb-16 h-full"
       >
-        {chatLog.map(({ messageId, content, senderName }) => (
-          <div
-            key={messageId}
-            className={`flex ${senderName === `${user!.name}` ? "justify-end" : "justify-start"}`}
-          >
-            <div
-              className={`flex items-end gap-2 ${senderName === `${user!.name}` ? "flex-row-reverse" : "flex-row"}`}
-            >
-              {senderName !== `${user!.name}` && (
-                <div className="w-8 h-8 bg-gray-200 rounded-full flex-shrink-0" />
-              )}
-              <div className="flex flex-col gap-1">
-                <div
-                  className={`max-w-md px-4 py-2 rounded-2xl
-                      ${
-                        senderName === `${user!.name}`
-                          ? "bg-rose-200 text-gray-800"
-                          : "bg-gray-200 text-gray-800"
-                      }`}
-                >
-                  {content}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+        <UserMessage chatLog={chatLog} user={user} />
       </div>
       <div className="border-t border-gray-300 p-2 sticky bottom-0 left-0 w-full bg-white">
         <form onSubmit={submitMessageHandler} className="flex gap-2 w-full">
