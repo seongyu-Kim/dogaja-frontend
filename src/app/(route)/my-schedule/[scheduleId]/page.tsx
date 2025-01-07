@@ -6,7 +6,7 @@ import { TravelPlan } from '@/app/type/scheduleDetailType';
 import TravelDetails from '@/app/components/common/fetchSchedule/TravelDetails';
 import { fetchSchedule } from "./fetchSchedule";
 import { TravelLocation } from '@/app/type/scheduleDetailType';
-import List from './[listId]/page';
+import List from '../../../components/domain/schedule/UpdateCheck';
 import Link from "next/link";
 
 const TravelPlanPage: React.FC = () => {

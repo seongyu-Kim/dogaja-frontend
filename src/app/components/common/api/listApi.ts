@@ -1,23 +1,20 @@
-import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
-import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
-import { CheckListItem, BucketListItem } from '@/app/type/scheduleDetailType';
+import { API } from "@/app/utils/api";
+import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
 
-export const addBucketListItem  = async (content: BucketListItem, scheduleId: string) => {
-  const { SCHEDULE_ADD_BUCKET } = API.SCHEDULE;
-
+export const updateCheckStatus = async (
+  scheduleId: string,
+  listId: string
+) => {
   try {
-    const res = await mainApi({
-      url: SCHEDULE_ADD_BUCKET(scheduleId),
+    const response = await mainApi({
+      url: API.SCHEDULE.SCHEDULE_LIST_CHECK(scheduleId, listId),
       method: "PUT",
-      data: { content },
       withAuth: true,
     });
-
-    SuccessAlert("버킷리스트 아이템이 추가되었습니다.");
-    return res.data;
-    } catch (error) {
-      ErrorAlert("버킷리스트 아이템을 추가하는 중 문제가 발생했습니다.");
-      throw error;
+    return response.data;
+  } catch (error) {
+    ErrorAlert("상태 업데이트에 실패했습니다.");
+    throw error;
   }
 };

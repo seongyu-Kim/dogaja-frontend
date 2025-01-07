@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface Notification {
-  id: number;
+  id: string;
   type: 'friend' | 'invite';
   userId: number;
   name: string;
