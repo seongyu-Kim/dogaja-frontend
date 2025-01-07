@@ -10,7 +10,6 @@ export default async function BoardDetailView({
   boardTitle,
 }: {
   postId: string;
-  //임시 추후 분리 완료하면 ? 제거
   boardTitle?: string;
 }) {
   const post = await readPost(Number(postId));

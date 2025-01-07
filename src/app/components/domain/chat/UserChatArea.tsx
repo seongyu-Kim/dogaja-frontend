@@ -51,6 +51,7 @@ function ChatArea() {
       disconnectSocket();
       return;
     }
+
     socketRef.current = getSocket();
     const chatSocket = socketRef.current;
 
@@ -85,6 +86,7 @@ function ChatArea() {
   //메시지 전송
   const submitMessageHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!messageRef.current?.value || !user || !roomId) return;
 
     const messageContent = messageRef.current.value;

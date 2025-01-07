@@ -7,11 +7,13 @@ import { BoardListType, ReadBoardType } from "@/app/type/boardListType";
 //추후 board 리스트 요청 함수 통합
 export const getFriendBoardList = async () => {
   const { BOARD_FRIEND_GET } = API.BOARD;
+
   try {
     const res = await mainApi({
       url: BOARD_FRIEND_GET,
       method: "GET",
     });
+
     if (res.status === 200) {
       return res.data as BoardListType[];
     }
@@ -21,11 +23,13 @@ export const getFriendBoardList = async () => {
 };
 export const getAskBoardList = async () => {
   const { BOARD_ASK_GET } = API.BOARD;
+
   try {
     const res = await mainApi({
       url: BOARD_ASK_GET,
       method: "GET",
     });
+
     if (res.status === 200) {
       return res.data as BoardListType[];
     }
@@ -35,11 +39,13 @@ export const getAskBoardList = async () => {
 };
 export const getReviewBoardList = async () => {
   const { BOARD_REVIEW_GET } = API.BOARD;
+
   try {
     const res = await mainApi({
       url: BOARD_REVIEW_GET,
       method: "GET",
     });
+
     if (res.status === 200) {
       return res.data as BoardListType[];
     }
@@ -50,11 +56,13 @@ export const getReviewBoardList = async () => {
 //추후 토큰 값 가져와서 사용
 export const getWithBoardList = async () => {
   const { BOARD_WITH_GET } = API.BOARD;
+
   try {
     const res = await mainApi({
       url: BOARD_WITH_GET,
       method: "GET",
     });
+
     if (res.status === 200) {
       return res.data as BoardListType[];
     }
@@ -66,11 +74,13 @@ export const getWithBoardList = async () => {
 //게시글 상세보기
 export const readPost = async (id: number) => {
   const { POST_READ } = API.BOARD;
+
   try {
     const res = await mainApi({
       url: POST_READ(String(id)),
       method: "GET",
     });
+
     if (res.status === 200) {
       return res.data as ReadBoardType;
     }

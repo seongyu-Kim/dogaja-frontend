@@ -10,6 +10,7 @@ interface Params {
 export default async function FindFriendPostUpdatePage({ params }: Params) {
   const { boardId } = params;
   const post = await readPost(Number(boardId));
+
   if (!post) {
     return (
       <p className="flex items-center justify-center">
