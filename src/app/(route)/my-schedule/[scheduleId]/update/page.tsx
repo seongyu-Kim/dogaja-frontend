@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchSchedule } from '../fetchSchedule';
 import { updateSchedule } from './updateSchedule';
-import { Schedule, UpdateDto } from "@/app/type/scheduleUpdateDto";
+import { Schedule, UpdateDto, CheckItem } from "@/app/type/scheduleUpdateDto";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 import { addFriendsToSchedule } from '@/app/components/common/api/friendApi';
 
 import { formatDate } from '@/app/components/common/formatDate';
-import { CheckListItem, BucketListItem, TravelLocation } from '@/app/type/scheduleDetailType';
+import { TravelLocation } from '@/app/type/scheduleDetailType';
 import Checklist from '@/app/components/common/saveSchedule/Checklist';
 import AddressBookModal from "@/app/components/AddressBookModal";
 import CreateTravleSegment from "@/app/components/common/saveSchedule/TravleSegmant";
@@ -45,10 +45,25 @@ const EditSchedulePage = () => {
   const [review, setReview] = useState<string>("");
   const [travelDuration, setTravelDuration] = useState<string>();
   const [friendList, setFriendList] = useState<string[]>([]);
-  const [checkItems, setCheckItems] = useState<CheckListItem[]>([]);
-  const [bucketItems, setBucketItems] = useState<BucketListItem[]>([]);
+
+  const [checkItems, setCheckItems] = useState<CheckItem[]>([]);
+  const [bucketItems, setBucketItems] = useState<CheckItem[]>([]);
+
   const [reviewImage, setReviewImage] = useState<File | null>(null);
   const [locations, setLocations] = useState<TravelLocation[]>([]);
+
+  const handleAddCheckItem = (newItem: CheckItem) => {
+    setCheckItems([...checkItems, newItem]);
+  };
+  const handleRemoveCheckItem = (index: number) => {
+    setCheckItems(checkItems.filter((_, i) => i !== index));
+  };
+  const handleAddBucketItem = (newItem: CheckItem) => {
+    setBucketItems((prevItems) => [...prevItems, newItem]);
+  };
+  const handleRemoveBucketItem = (index: number) => {
+    setBucketItems((prevItems) => prevItems.filter((_, i) => i !== index));
+  };
 
   const addCompanion = (companion: { id: string; name: string }) => {
     setCompanions((prev) => {
@@ -105,6 +120,8 @@ const EditSchedulePage = () => {
       startDto: departureSchedule,
       arriveDto: arrivalSchedule,
       reviewDto: { review: review || "" },
+      bucketDto: bucketItems.map(item => ({ content: item.content, type: "bucket" })),
+      checkDto: checkItems.map(item => ({ content: item.content, type: "check" })),
     };
 
     const friends = companions.map(companion => companion.id);
@@ -203,20 +220,20 @@ const EditSchedulePage = () => {
             </div>
 
             <div className="flex items-center mt-2 gap-2">
-              <div className="opacity-60 flex w-full gap-2 pointer-events-none">
+              <div className="flex w-full gap-2">
                 <Checklist
                   title="준비물 체크리스트"
                   items={checkItems}
                   type="check"
-                  onAddItem={() => {}}
-                  onRemoveItem={() => {}}
+                  onAddItem={handleAddCheckItem}
+                  onRemoveItem={handleRemoveCheckItem}
                 />
                 <Checklist
                   title="이번 여행 버킷리스트"
                   items={bucketItems}
                   type="bucket"
-                  onAddItem={() => {}}
-                  onRemoveItem={() => {}}
+                  onAddItem={handleAddBucketItem}
+                  onRemoveItem={handleRemoveBucketItem}
                 />
               </div>
             </div>
