@@ -214,7 +214,13 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
 
                 <div className="flex mr-3 space-x-4">
                   <div
-                    onClick={() => openAddPlaceModal(place)}
+                    onClick={() => {
+                      if (isLogin) {
+                        openAddPlaceModal(place);
+                      } else {
+                        ErrorAlert("로그인 후 이용해주세요");
+                      }
+                    }}
                     className="cursor-pointer hover:text-green-500"
                   >
                     + 일정에 추가하기

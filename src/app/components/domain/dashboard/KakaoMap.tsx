@@ -17,7 +17,7 @@ interface KakaoMapProps {
   onPlacesFetched: (places: Place[]) => void;
 }
 
-const KakaoMap: React.FC<KakaoMapProps> = ({ keyword, onPlacesFetched }) => {
+const KakaoMap = ({ keyword, onPlacesFetched }: KakaoMapProps) => {
   const [currentPosition, setCurrentPosition] = useState<{
     lat: number;
     lng: number;
@@ -38,51 +38,53 @@ const KakaoMap: React.FC<KakaoMapProps> = ({ keyword, onPlacesFetched }) => {
   }, []);
 
   useEffect(() => {
-    if (!keyword) return;
+    if (!keyword.trim()) {
+      console.warn("검색어가 비어 있습니다.");
+      return;
+    }
+
+    if (!window.kakao || !window.kakao.maps) {
+      console.error("카카오 맵 API가 로드되지 않았습니다.");
+      return;
+    }
 
     const ps = new kakao.maps.services.Places();
 
-    // 검색된 위치에 마커(맛집X)
-    ps.keywordSearch(`${keyword}`, (data, status) => {
-      if (status === kakao.maps.services.Status.OK) {
+    // 검색된 위치에 마커 추가
+    ps.keywordSearch(keyword, (data, status) => {
+      if (status === kakao.maps.services.Status.OK && data.length > 0) {
         const firstPlace = data[0];
-        if (firstPlace?.y && firstPlace?.x) {
+        if (firstPlace.y && firstPlace.x) {
           const newPosition = {
             lat: parseFloat(firstPlace.y),
             lng: parseFloat(firstPlace.x),
           };
           setSelectedLocationPosition(newPosition);
 
-          // 지도 위치
-          if (window.kakao && window.kakao.maps) {
-            const map = new window.kakao.maps.Map(
-              document.getElementById("map") as HTMLElement,
-              {
-                center: new kakao.maps.LatLng(newPosition.lat, newPosition.lng),
-                level: 5,
-              }
-            );
-
-            // 마커
-            const marker = new kakao.maps.Marker({
-              position: new kakao.maps.LatLng(newPosition.lat, newPosition.lng),
-              map: map,
-              title: `${keyword} 위치`,
-            });
-
-            // 인포윈도우
-            const infowindow = new kakao.maps.InfoWindow({
-              content: `
-                      <div style="text-align: center; font-size: 14px;">
-                        <div>선택된 위치: ${keyword}</div>
-                        <div>인구 밀도: 많음</div>
-                        <div>가까운 주차장: XX주차장</div>
-                      </div>
-              `,
-            });
-            infowindow.open(map, marker);
+          const mapContainer = document.getElementById("map");
+          if (!mapContainer) {
+            console.error("맵 컨테이너를 찾을 수 없습니다.");
+            return;
           }
+
+          const map = new window.kakao.maps.Map(mapContainer, {
+            center: new kakao.maps.LatLng(newPosition.lat, newPosition.lng),
+            level: 5,
+          });
+
+          const marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(newPosition.lat, newPosition.lng),
+            map: map,
+            title: `${keyword} 위치`,
+          });
+
+          const infowindow = new kakao.maps.InfoWindow({
+            content: `<div style="text-align: center; font-size: 14px;">${keyword}</div>`,
+          });
+          infowindow.open(map, marker);
         }
+      } else {
+        console.warn("검색 결과가 없습니다.");
       }
     });
 
@@ -90,6 +92,8 @@ const KakaoMap: React.FC<KakaoMapProps> = ({ keyword, onPlacesFetched }) => {
     ps.keywordSearch(`${keyword} 맛집`, (data, status) => {
       if (status === kakao.maps.services.Status.OK) {
         onPlacesFetched(data as Place[]);
+      } else {
+        console.warn("추천 맛집 검색 결과가 없습니다.");
       }
     });
   }, [keyword, onPlacesFetched]);
@@ -103,7 +107,6 @@ const KakaoMap: React.FC<KakaoMapProps> = ({ keyword, onPlacesFetched }) => {
       {selectedLocationPosition && (
         <MapMarker position={selectedLocationPosition} />
       )}
-
       {currentPosition && !selectedLocationPosition && (
         <MapMarker position={currentPosition}>
           <div>현재 위치</div>
