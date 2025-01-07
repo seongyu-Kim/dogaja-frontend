@@ -24,15 +24,19 @@ export default function BoardDetailViewButtonBox({
 
   const handleOpenModal = () => setReportModal((prev) => !prev);
   const handleCloseModal = () => setReportModal(false);
+
   const handleDeleteClick = async () => {
     const deleteCheck = confirm("게시글을 삭제하시겠습니까?");
+
     if (deleteCheck) {
       const res = await deletePost(Number(postId));
+
       if (res === 200) {
         SuccessAlert("게시글이 삭제되었습니다");
         router.push("./");
         return;
       }
+
       if (res !== 200) {
         ErrorAlert("게시글 삭제 실패");
       }
