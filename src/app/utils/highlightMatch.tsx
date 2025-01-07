@@ -6,7 +6,7 @@ export const highlightMatch = (text: string, search: string) => {
 
   return parts.map((part, index) =>
     part === search ? (
-      <span key={index} className="text-green-500">
+      <span key={index} className="text-mainColor">
         {part}
       </span>
     ) : (
