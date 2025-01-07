@@ -4,6 +4,8 @@ import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
 import { AxiosResponse, isAxiosError } from "axios";
 import { ScheduleType } from "@/app/type/scheduleListType";
+import { groupByType } from "@/app/utils/groupByType";
+import { DataType } from "@/app/type/boardListType";
 
 export const createPost = async (
   formData: FormData,
@@ -212,6 +214,23 @@ export const scheduleDelete = async (id: string) => {
 
     if (res.status === 200) {
       return res.status;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getAllPost = async () => {
+  const { BOARD_ALL_GET } = API.BOARD;
+
+  try {
+    const res = await mainApi({
+      url: BOARD_ALL_GET,
+      method: "GET",
+    });
+
+    if (res.status === 200) {
+      return groupByType(res.data as DataType[]);
     }
   } catch (e) {
     console.error(e);
