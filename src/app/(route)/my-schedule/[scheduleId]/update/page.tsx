@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { fetchSchedule } from '../fetchSchedule';
-import { updateSchedule } from './updateSchedule';
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { fetchSchedule } from "../fetchSchedule";
+import { updateSchedule } from "./updateSchedule";
 import { Schedule, UpdateDto, CheckItem } from "@/app/type/scheduleUpdateDto";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
-import { addFriendsToSchedule } from '@/app/components/common/api/friendApi';
+import { addFriendsToSchedule } from "@/app/components/common/api/friendApi";
 
-import { formatDate } from '@/app/components/common/formatDate';
-import { TravelLocation } from '@/app/type/scheduleDetailType';
-import Checklist from '@/app/components/common/saveSchedule/Checklist';
+import { formatDate } from "@/app/components/common/formatDate";
+import { TravelLocation } from "@/app/type/scheduleDetailType";
+import Checklist from "@/app/components/common/saveSchedule/Checklist";
 import AddressBookModal from "@/app/components/AddressBookModal";
 import CreateTravleSegment from "@/app/components/common/saveSchedule/TravleSegmant";
 import Input from "@/app/components/common/Input";
@@ -25,7 +25,9 @@ const EditSchedulePage = () => {
   const [friendsModalOpen, setFriendsModalOpen] = useState(false);
 
   const [title, setTitle] = useState<string>("");
-  const [companions, setCompanions] = useState<{ id: string; name: string }[]>([]);
+  const [companions, setCompanions] = useState<{ id: string; name: string }[]>(
+    [],
+  );
   const [departureSchedule, setDepartureSchedule] = useState<Schedule>({
     date: null,
     start: "",
@@ -68,7 +70,7 @@ const EditSchedulePage = () => {
   const addCompanion = (companion: { id: string; name: string }) => {
     setCompanions((prev) => {
       const newCompanions = [...prev, companion];
-      setFriendList(newCompanions.map(c => c.name));
+      setFriendList(newCompanions.map((c) => c.name));
       return newCompanions;
     });
   };
@@ -76,12 +78,12 @@ const EditSchedulePage = () => {
   const removeCompanion = (index: number) => {
     setCompanions((prev) => {
       const updatedCompanions = prev.filter((_, i) => i !== index);
-      setFriendList(updatedCompanions.map(c => c.name)); // 친구 목록 업데이트
+      setFriendList(updatedCompanions.map((c) => c.name)); // 친구 목록 업데이트
       return updatedCompanions;
     });
   };
-  
-    // 일정 로드
+
+  // 일정 로드
   useEffect(() => {
     const loadSchedule = async () => {
       try {
@@ -97,8 +99,12 @@ const EditSchedulePage = () => {
         });
         setReview(schedule.review || "");
 
-        const formattedStartDate = formatDate(new Date(schedule.startInfo.date));
-        const formattedArriveDate = formatDate(new Date(schedule.arriveInfo.date));
+        const formattedStartDate = formatDate(
+          new Date(schedule.startInfo.date),
+        );
+        const formattedArriveDate = formatDate(
+          new Date(schedule.arriveInfo.date),
+        );
 
         setTravelDuration(`${formattedStartDate} ~ ${formattedArriveDate}`);
         setFriendList(schedule.friendList.map((friend) => friend.name));
@@ -113,25 +119,33 @@ const EditSchedulePage = () => {
     loadSchedule();
   }, [scheduleId]);
 
-      // 일정 수정
+  // 일정 수정
   const handleUpdate = async () => {
     const updateDto: UpdateDto = {
       scheduleDto: { title },
       startDto: departureSchedule,
       arriveDto: arrivalSchedule,
       reviewDto: { review: review || "" },
-      bucketDto: bucketItems.map(item => ({ content: item.content, type: "bucket" })),
-      checkDto: checkItems.map(item => ({ content: item.content, type: "check" })),
+      bucketDto: bucketItems.map((item) => ({
+        content: item.content,
+        type: "bucket",
+      })),
+      checkDto: checkItems.map((item) => ({
+        content: item.content,
+        type: "check",
+      })),
     };
 
-    const friends = companions.map(companion => companion.id);
+    const friends = companions.map((companion) => companion.id);
 
     try {
-      const res =  await updateSchedule(scheduleId as string, updateDto);
+      const res = await updateSchedule(scheduleId as string, updateDto);
       await addFriendsToSchedule(scheduleId as string, friends);
-      console.log(res);
-      SuccessAlert("일정이 성공적으로 수정되었습니다.");
-      router.push('/my-schedule');
+      if (res) {
+        SuccessAlert("일정이 성공적으로 수정되었습니다.");
+        router.push("/my-schedule");
+        return;
+      }
     } catch (error) {
       console.error(error);
       ErrorAlert("일정을 수정하는 중 문제가 발생했습니다.");
@@ -162,9 +176,7 @@ const EditSchedulePage = () => {
           <div className="relative mx-2 w-full lg:w-1/3 opacity-60 pointer-events-none">
             여행 기간
             <div className="flex items-center gap-2 min-w-[300px] text-sm my-3 border border-gray-300 rounded-lg py-1.5 px-3 bg-gray-100">
-              <span className="text-gray-400">
-                {travelDuration}
-              </span>
+              <span className="text-gray-400">{travelDuration}</span>
             </div>
           </div>
 
@@ -195,7 +207,7 @@ const EditSchedulePage = () => {
                 onClick={() => setFriendsModalOpen(true)}
                 className="text-mainColor text-xl"
               >
-                <IoPersonAddOutline className="hover:scale-110"/>
+                <IoPersonAddOutline className="hover:scale-110" />
               </button>
             </div>
           </div>
@@ -243,7 +255,7 @@ const EditSchedulePage = () => {
             <div className="p-4 border border-mainColor rounded-lg w-full">
               <h2>한 줄 후기</h2>
               <div className="flex">
-                <SelectImage 
+                <SelectImage
                   onImageChange={handleImageChange}
                   scheduleId={scheduleId as string}
                 />
@@ -258,22 +270,30 @@ const EditSchedulePage = () => {
             <div className="p-4 border border-mainColor rounded-lg w-full min-h-[396px] max-h-[396px]">
               <h2>일정에 추가 된 장소</h2>
               <div className="overflow-y-auto max-h-[335px] my-2">
-              {locations.length > 0 ? (
-                locations.map((location) => (
-                  <div
-                    key={location.id}
-                    className="border border-mainColor rounded-lg flex items-center p-2 mt-2"
-                  >
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold pb-1">{location.location}</span>
-                    <span className="text-xs pb-1">전화번호: {location.phone || "없음"}</span>
-                    <span className="text-xs">주소: {location.address || "정보 없음"}</span>
-                  </div>
-                </div>
-                ))
-              ) : (
-                <p className="text-center text-sm text-gray-500 mt-2">아직 등록된 장소가 없습니다.</p>
-              )}
+                {locations.length > 0 ? (
+                  locations.map((location) => (
+                    <div
+                      key={location.id}
+                      className="border border-mainColor rounded-lg flex items-center p-2 mt-2"
+                    >
+                      <div className="flex flex-col">
+                        <span className="text-sm font-semibold pb-1">
+                          {location.location}
+                        </span>
+                        <span className="text-xs pb-1">
+                          전화번호: {location.phone || "없음"}
+                        </span>
+                        <span className="text-xs">
+                          주소: {location.address || "정보 없음"}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center text-sm text-gray-500 mt-2">
+                    아직 등록된 장소가 없습니다.
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -287,8 +307,6 @@ const EditSchedulePage = () => {
         저장
       </button>
     </div>
-
-
   );
 };
 

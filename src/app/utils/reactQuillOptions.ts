@@ -34,7 +34,6 @@ const imageHandler = () => {
           try {
             // 업로드 완료 후 다운로드 URL 가져오기
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            // console.log("다운로드 URL:", downloadURL);
 
             // 에디터에 이미지 삽입
             const editor = document.querySelector(".ql-editor");
