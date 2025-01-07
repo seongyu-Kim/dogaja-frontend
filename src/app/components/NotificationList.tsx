@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
 export interface Notification {
   id: string;
-  type: 'friend' | 'invite';
+  type: "friend" | "invite";
   userId: number;
   name: string;
   code: string;
@@ -14,7 +14,7 @@ interface NotificationListProps {
 }
 
 const NotificationList: React.FC<NotificationListProps> = ({
-  notifications,
+  notifications = [],
   onNotificationClick,
 }) => {
   return (
@@ -30,8 +30,10 @@ const NotificationList: React.FC<NotificationListProps> = ({
               onClick={() => onNotificationClick(notification)}
             >
               <span className="flex-1">
-                {notification.type === 'friend' && `🖐 ${notification.name}님의 친구 요청`}
-                {notification.type === 'invite' && `🎉 ${notification.name}님이 일정에 초대했습니다.`}
+                {notification.type === "friend" &&
+                  `🖐 ${notification.name}님의 친구 요청`}
+                {notification.type === "invite" &&
+                  `🎉 ${notification.name}님이 일정에 초대했습니다.`}
               </span>
             </li>
           ))}
