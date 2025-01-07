@@ -44,6 +44,10 @@ export const API = {
     FRIENDS_SEARCH: (friendName: string) =>
       `${BASE_URL}/friends/search?keyword=${friendName}`,
   },
+  NOTIFICATION: {
+    NOTIFICATION_GET:`${BASE_URL}/notifications`,
+    NOTIFICATION_READ: (id: string) => `${BASE_URL}/notifications/${id}`,
+  },
   COMMENT: {
     COMMENT_CREATE: (id: string) => `${BASE_URL}/comment/${id}`,
     COMMENT_UPDATE: (id: string, commentId: string) =>
@@ -85,8 +89,3 @@ export const API = {
     CHAT_ROOM_LIST_READ: `${BASE_URL}/chat/rooms`,
   },
 };
-
-// SCHEDULE_ADD_BUCKET: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/bucket`,
-// SCHEDULE_ADD_CHECKLIST: (scheduleId:string) => `${BASE_URL}/schedule/${scheduleId}/check`,
-// SCHEDULE_LIST_UPDATE: (scheduleId:string, listsId:string) => `${BASE_URL}/schedule/${scheduleId}/${listsId}`,
-// SCHEDULE_LIST_DELETE: (scheduleId:string, listsId:string) => `${BASE_URL}/schedule/${scheduleId}/${listsId}`,
