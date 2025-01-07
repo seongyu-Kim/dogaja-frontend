@@ -127,7 +127,6 @@ function Description({
     <ul className="flex flex-col items-center justify-center w-full gap-4">
       {list!.map(
         ({ id, title, user, location, period, review, image, friends }) => {
-          console.log("이미지: ", image);
           const [start, end, day] = days(period);
           return (
             <div
@@ -141,7 +140,7 @@ function Description({
                 >
                   <div className="w-[10%] h-full hidden md:flex items-center justify-center">
                     {image ? (
-                      <img 
+                      <img
                         src={`http://kdt-react-node-1-team02.elicecoding.com:3003${image}`}
                       />
                     ) : (

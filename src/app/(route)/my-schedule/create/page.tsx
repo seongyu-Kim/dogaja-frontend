@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from 'next/navigation';
+import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { createSchedule } from "./createSchedule";
 import { CreateDto, Schedule } from "@/app/type/scheduleCreateDto";
 import { CheckItem } from "@/app/type/scheduleCreateDto";
 import { SuccessAlert } from "@/app/utils/toastAlert";
-import { formatDate } from '@/app/components/common/formatDate';
+import { formatDate } from "@/app/components/common/formatDate";
 
 import CreateTravleSegment from "@/app/components/common/saveSchedule/TravleSegmant";
 import Input from "@/app/components/common/Input";
@@ -24,7 +24,9 @@ const CreateSchedulePage = () => {
 
   const [title, setTitle] = useState("");
   const [travelDuration, setTravelDuration] = useState("");
-  const [companions, setCompanions] = useState<{ id: string; name: string }[]>([]);
+  const [companions, setCompanions] = useState<{ id: string; name: string }[]>(
+    [],
+  );
   const [departureSchedule, setDepartureSchedule] = useState<Schedule>({
     date: null,
     start: "",
@@ -78,15 +80,14 @@ const CreateSchedulePage = () => {
   }, [departureSchedule.date, arrivalSchedule.date]);
 
   const handleSave = async () => {
-
-    const checkDto = checkItems.map(item => ({
+    const checkDto = checkItems.map((item) => ({
       content: item.content,
-      type: item.type
+      type: item.type,
     }));
 
-    const bucketDto = bucketItems.map(item => ({
+    const bucketDto = bucketItems.map((item) => ({
       content: item.content,
-      type: item.type
+      type: item.type,
     }));
 
     const createDto: CreateDto = {
@@ -95,14 +96,17 @@ const CreateSchedulePage = () => {
       arriveDto: arrivalSchedule,
       bucketDto: bucketDto,
       checkDto: checkDto,
-      friendDto: companions.map(companion => companion.id),
+      friendDto: companions.map((companion) => companion.id),
     };
 
-    const response = await createSchedule(scheduleId as string, createDto, companions.map(companion => companion.id));
+    const response = await createSchedule(
+      scheduleId as string,
+      createDto,
+      companions.map((companion) => companion.id),
+    );
     if (response) {
       SuccessAlert("일정이 성공적으로 저장되었습니다.");
       router.push("/my-schedule");
-      console.log("Created schedule:", response);
     }
   };
 
@@ -153,7 +157,7 @@ const CreateSchedulePage = () => {
                 onClick={() => setFriendsModalOpen(true)}
                 className="text-mainColor text-xl"
               >
-                <IoPersonAddOutline className="hover:scale-110"/>
+                <IoPersonAddOutline className="hover:scale-110" />
               </button>
             </div>
           </div>
@@ -196,11 +200,12 @@ const CreateSchedulePage = () => {
           </div>
         </div>
       </div>
-        <button 
-          onClick={handleSave}
-          className="flex items-center justify-center mt-4 bg-mainColor hover:bg-mainHover text-white rounded-lg px-3 py-2">
-          저장
-        </button>
+      <button
+        onClick={handleSave}
+        className="flex items-center justify-center mt-4 bg-mainColor hover:bg-mainHover text-white rounded-lg px-3 py-2"
+      >
+        저장
+      </button>
     </div>
   );
 };

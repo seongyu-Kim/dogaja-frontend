@@ -80,11 +80,6 @@ export const addFriend = async (friendName: string) => {
 
 // 친구 삭제
 export const deleteFriend = async (friendId: string) => {
-  const deleteConfirm = confirm("정말 친구 목록에서 삭제하시겠습니까?");
-  if (!deleteConfirm) {
-    return;
-  }
-
   const { FRIENDS_DELETE } = API.FRIENDS;
 
   try {
@@ -171,7 +166,10 @@ export const refuseFriendRequest = async (friendId: string) => {
 };
 
 // 일정에 친구(동행자) 추가
-export const addFriendsToSchedule = async (scheduleId: string, friends: string[]) => {
+export const addFriendsToSchedule = async (
+  scheduleId: string,
+  friends: string[],
+) => {
   try {
     const { SCHEDULE_ADD_FRIEND } = API.SCHEDULE;
 
