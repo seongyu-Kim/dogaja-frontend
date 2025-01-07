@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { CheckListItem, BucketListItem } from "@/app/type/scheduleDetailType";
-import { updateCheckStatus } from "./updateCheckStatus";
+import { updateCheckStatus } from "../../common/api/listApi";
 
 interface ListProps {
   scheduleId: string;

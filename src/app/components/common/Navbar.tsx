@@ -36,7 +36,7 @@ export default function Navbar() {
     const { FRIENDS_REQUEST_GET } = API.FRIENDS;
 
     try {
-      const res = await mainApi({
+      const res = await mainApi<{ requests: Notification[] }>({
         url: FRIENDS_REQUEST_GET,
         method: "GET",
         withAuth: true,

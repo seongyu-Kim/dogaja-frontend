@@ -7,24 +7,26 @@ import Image from "next/image";
 import { FaSearch } from "react-icons/fa";
 import { LuMapPin } from "react-icons/lu";
 import Link from "next/link";
-
-import Button from "@/app/components/common/Button"; // Button 컴포넌트 import
+import locations from "@/app/assets/locations";
+import { useRouter } from "next/navigation";
 
 const Main: React.FC = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [locations, setLocations] = useState<string[]>([
-    "우리집",
-    "서울역",
-    "동대문",
-    "광화문",
-    "압구정",
-    "홍대",
-    "이태원",
-  ]);
+  const [locationsList] = useState<string[]>(locations.map((location) => location.name));
+
+  const router = useRouter();
 
   const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchValue(e.target.value);
   };
+
+  const handleSearch = () => {
+    if (searchValue.trim() !== "") {
+      router.push(`/dashboard?search=${encodeURIComponent(searchValue)}`);
+    }
+  };
+
+  const filteredLocations = locationsList.filter((location) => location.includes(searchValue));
 
   return (
     <div className="flex flex-col items-center justify-center mx-16 mt-32">
@@ -52,23 +54,26 @@ const Main: React.FC = () => {
                 className="w-80 border-none text-mainColor focus:ring-none placeholder-mainHover text-sm font-bold"
               />
             </div>
-            <div className="flex items-center mt-1 w-full border-2 border-mainColor rounded-lg bg-mainColor bg-opacity-25 text-center">
-              <ul className="text-sm font-bold w-full max-h-48 overflow-y-auto">
-                {locations.map((location, index) => (
-                  <li
-                    key={index}
-                    className={`flex items-center gap-2 py-2 px-2 hover:bg-mainHover hover:bg-opacity-50 cursor-pointer ${
-                      index !== locations.length - 1
-                        ? "border-b border-mainColor"
-                        : ""
-                    }`}
-                  >
-                    <LuMapPin className="text-lg" />
-                    {location}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {filteredLocations.length > 0 && (
+              <div className="flex items-center mt-1 w-full border-2 border-mainColor rounded-lg bg-mainColor bg-opacity-25 text-center">
+                <ul className="text-sm font-bold w-full max-h-48 overflow-y-auto">
+                  {filteredLocations.map((location, index) => (
+                    <li
+                      key={location}
+                      className={`flex items-center gap-2 py-2 px-2 hover:bg-mainHover hover:bg-opacity-50 cursor-pointer ${
+                        index !== filteredLocations.length - 1
+                          ? "border-b border-mainColor"
+                          : ""
+                      }`}
+                      onClick={handleSearch}
+                    >
+                      <LuMapPin className="text-lg" />
+                      {location}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
           <Image src={TextLogo} alt="TextLogo" width={500} height={500} />
         </div>
