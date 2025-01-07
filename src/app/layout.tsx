@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import ClientLayout from "./ClientLayout";
+import Head from "next/head";
 
 export const metadata: Metadata = {
   title: "Do가자",
@@ -23,6 +24,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <Head>
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="upgrade-insecure-requests"
+        />
+      </Head>
       <body className={`${font.className} antialiased flex flex-col flex-1`}>
         <ClientLayout>{children}</ClientLayout>
         <script

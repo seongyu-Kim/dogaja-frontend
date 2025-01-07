@@ -48,7 +48,9 @@ const AddPlaceModal = ({
       });
       setSchedules(res.data as Schedule[]);
     } catch (e) {
-      ErrorAlert("일정을 불러오는데 실패했습니다.");
+      if (isAxiosError(e)) {
+        ErrorAlert("일정을 불러오는데 실패했습니다.");
+      }
     } finally {
       setIsLoading(false);
     }
