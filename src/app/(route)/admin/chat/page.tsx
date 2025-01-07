@@ -103,6 +103,8 @@ export default function ChatPage() {
     }
   };
 
+  if (!user) return;
+
   return (
     <div className="flex bg-white gap-2 px-10 pt-10 h-[800px]">
       <div className="w-64 border border-mainColor rounded overflow-y-auto">

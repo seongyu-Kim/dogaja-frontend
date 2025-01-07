@@ -30,7 +30,7 @@ const AddressBookModal: React.FC<{
 
   useEffect(() => {
     getFriendListHandler();
-  }, []);
+  }, [isOpen, isRequestModalOpen]);
 
   const getFriendListHandler = async () => {
     //임시 - 유저 정보 없으면 API 호출 불가
@@ -45,6 +45,12 @@ const AddressBookModal: React.FC<{
 
   // 친구 삭제
   const handleDelete = async (friendId: string) => {
+    const deleteConfirm = confirm("정말 친구 목록에서 삭제하시겠습니까?");
+
+    if (!deleteConfirm) {
+      return;
+    }
+
     try {
       await deleteFriend(friendId.toString());
       setFriends(friends.filter((friend) => friend.id !== friendId)); // 삭제 후 친구 목록에서 제거
@@ -96,25 +102,27 @@ const AddressBookModal: React.FC<{
                     </Button>
                   )}
                   {!isSchedulePage && (
-                  <Button
-                    onClick={() => handleDelete(friend.id)}
-                    style={{
-                      textColor: "text-mainRed",
-                      backgroundColor: "bg-transparent",
-                      hoverTextColor: "hover:text-mainRedHover",
-                    }}
-                  >
-                    삭제
-                  </Button>
+                    <Button
+                      onClick={() => handleDelete(friend.id)}
+                      style={{
+                        textColor: "text-mainRed",
+                        backgroundColor: "bg-transparent",
+                        hoverTextColor: "hover:text-mainRedHover",
+                      }}
+                    >
+                      삭제
+                    </Button>
                   )}
                 </li>
               ))}
             </ul>
           ) : (
             <div className="text-center text-gray-500 mt-4">
-              아직 친구목록이 없습니다ㅠㅠ<br />
+              아직 친구목록이 없습니다ㅠㅠ
+              <br />
               <div className="mt-8">
-                함께 여행하고 싶은 친구에게 공유하거나,<br />
+                함께 여행하고 싶은 친구에게 공유하거나,
+                <br />
                 <Link
                   href="/board/friend"
                   className="font-semibold text-mainColor"
