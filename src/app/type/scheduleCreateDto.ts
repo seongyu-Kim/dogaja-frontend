@@ -14,6 +14,7 @@ export interface Schedule {
   etc: string;
   type: "start" | "arrive";
 }
+
 export interface CheckItem {
   content: string;
   type: "check" | "bucket";
