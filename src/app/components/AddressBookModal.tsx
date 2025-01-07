@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import Modal from "./Modal";
 import Button from "./common/Button";
 import RequestModal from "./RequestModal";
@@ -19,7 +20,7 @@ interface Friend {
 const AddressBookModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-  onAddFriend?: (friendName: string) => void;
+  onAddFriend?: (friend: Friend) => void;
   isSchedulePage?: boolean;
 }> = ({ isOpen, onClose, onAddFriend, isSchedulePage }) => {
   const [isRequestModalOpen, setRequestModalOpen] = useState(false);
@@ -60,9 +61,9 @@ const AddressBookModal: React.FC<{
     setFriendAddModalOpen(true);
   };
 
-  const handleAddSchedule = (friendName: string) => {
+  const handleAddSchedule = (friend: Friend) => {
     if (onAddFriend) {
-      onAddFriend(friendName);
+      onAddFriend(friend);
       onClose();
     }
   };
@@ -71,41 +72,59 @@ const AddressBookModal: React.FC<{
     <>
       <Modal isOpen={isOpen} onClose={onClose} title="주소록">
         <div className="min-h-60 max-h-60 overflow-y-auto mb-4">
-          <ul className="mb-4">
-            {friends.map((friend) => (
-              <li
-                key={friend.id}
-                className="flex justify-between items-center py-2 px-2 border-b border-gray-300"
-              >
-                <span className="flex items-center gap-2">
-                  <IoPersonCircleOutline className="text-gray-300 w-[50px] h-[50px]" />
-                  {friend.name}
-                </span>
-                {isSchedulePage && (
+          {friends.length > 0 ? (
+            <ul className="mb-4">
+              {friends.map((friend) => (
+                <li
+                  key={friend.id}
+                  className="flex justify-between items-center py-2 px-2 border-b border-gray-300"
+                >
+                  <span className="flex items-center gap-2">
+                    <IoPersonCircleOutline className="text-gray-300 w-[50px] h-[50px]" />
+                    {friend.name}
+                  </span>
+                  {isSchedulePage && (
+                    <Button
+                      onClick={() => handleAddSchedule(friend)} // 친구 선택 시 처리
+                      style={{
+                        textColor: "text-mainColor",
+                        backgroundColor: "bg-transparent",
+                        hoverTextColor: "hover:text-mainColorHover",
+                      }}
+                    >
+                      추가
+                    </Button>
+                  )}
+                  {!isSchedulePage && (
                   <Button
-                    onClick={() => handleAddSchedule(friend.name)} // 친구 선택 시 처리
+                    onClick={() => handleDelete(friend.id)}
                     style={{
-                      textColor: "text-mainColor",
+                      textColor: "text-mainRed",
                       backgroundColor: "bg-transparent",
-                      hoverTextColor: "hover:text-mainColorHover",
+                      hoverTextColor: "hover:text-mainRedHover",
                     }}
                   >
-                    추가
+                    삭제
                   </Button>
-                )}
-                <Button
-                  onClick={() => handleDelete(friend.id)}
-                  style={{
-                    textColor: "text-mainRed",
-                    backgroundColor: "bg-transparent",
-                    hoverTextColor: "hover:text-mainRedHover",
-                  }}
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-center text-gray-500 mt-4">
+              아직 친구목록이 없습니다ㅠㅠ<br />
+              <div className="mt-8">
+                함께 여행하고 싶은 친구에게 공유하거나,<br />
+                <Link
+                  href="/board/friend"
+                  className="font-semibold text-mainColor"
                 >
-                  삭제
-                </Button>
-              </li>
-            ))}
-          </ul>
+                  [친구구함 게시판]
+                </Link>
+                을 통해 친구를 맺어보세요!
+              </div>
+            </div>
+          )}
         </div>
         <div className="flex justify-center gap-2">
           <Button

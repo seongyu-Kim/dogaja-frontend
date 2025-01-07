@@ -10,6 +10,7 @@ import Link from "next/link";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { isAxiosError } from "axios";
 
 type FindPasswordFormData = {
   email: string;
@@ -41,8 +42,10 @@ const FindPassword: React.FC = () => {
         reset();
       }
     } catch (e) {
-      if (e.status === 404) {
-        ErrorAlert("등록되지 않은 이메일입니다.");
+      if (isAxiosError(e)) {
+        if (e.status === 404) {
+          ErrorAlert("등록되지 않은 이메일입니다.");
+        }
       }
     }
   };
