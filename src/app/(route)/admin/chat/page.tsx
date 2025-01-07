@@ -47,6 +47,7 @@ export default function ChatPage() {
     if (selectedRoom) {
       socketRef.current = getSocket();
       const chatSocket = socketRef.current;
+
       chatSocket.emit("joinRoom", selectedRoom);
     }
   }, [selectedRoom]);
@@ -55,9 +56,12 @@ export default function ChatPage() {
   useEffect(() => {
     const rooms = async () => {
       const room = await getRoomList();
+
       if (!room) return;
+
       setChatRooms(room);
     };
+
     rooms();
   }, []);
 

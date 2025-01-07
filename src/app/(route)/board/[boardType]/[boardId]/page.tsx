@@ -14,12 +14,14 @@ export async function generateMetadata({
 }: PostIdProps): Promise<Metadata> {
   const { boardId } = params;
   const post = await readPost(Number(boardId));
+
   if (!post) {
     return {
       title: "Do가자",
       description: "여행플래너 Do가자",
     };
   }
+
   return {
     title: post.title,
     description: post.content,
@@ -29,5 +31,6 @@ export async function generateMetadata({
 export default async function FindFriendId({ params }: PostIdProps) {
   const { boardId, boardType } = params;
   const title = getBoardTitle(boardType);
+
   return <BoardDetailView postId={boardId} boardTitle={title} />;
 }
