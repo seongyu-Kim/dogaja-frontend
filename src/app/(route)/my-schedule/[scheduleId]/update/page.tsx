@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchSchedule } from "../fetchSchedule";
-import { updateSchedule } from "./updateSchedule";
+import { updateSchedule, deletePlace } from "./updateSchedule";
 import { Schedule, UpdateDto, CheckItem } from "@/app/type/scheduleUpdateDto";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 import { addFriendsToSchedule } from "@/app/components/common/api/friendApi";
@@ -17,6 +17,7 @@ import Input from "@/app/components/common/Input";
 import SelectImage from "@/app/components/common/SelectImage";
 
 import { IoPersonAddOutline } from "react-icons/io5";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
 const EditSchedulePage = () => {
   const { scheduleId } = useParams();
@@ -156,6 +157,17 @@ const EditSchedulePage = () => {
     setReviewImage(file);
   };
 
+  const handleRemoveLocation = async (locationId: number) => {
+    try {
+      await deletePlace(scheduleId as string, locationId.toString());
+      setLocations((prevLocations) =>
+        prevLocations.filter((location) => location.id !== locationId)
+      );
+    } catch (error) {
+      console.error("Error deleting location:", error);
+    }
+  };
+
   return (
     <div className="p-6 space-y-2 flex flex-col justify-center items-center mx-auto w-full max-w-[1100px]">
       <div className="flex flex-col justify-between items-start w-full gap-2">
@@ -271,15 +283,20 @@ const EditSchedulePage = () => {
               <h2>일정에 추가 된 장소</h2>
               <div className="overflow-y-auto max-h-[335px] my-2">
                 {locations.length > 0 ? (
-                  locations.map((location) => (
+                  locations.map((location, index) => (
                     <div
                       key={location.id}
                       className="border border-mainColor rounded-lg flex items-center p-2 mt-2"
                     >
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold pb-1">
-                          {location.location}
-                        </span>
+                      <div className="flex flex-col w-full">
+                        <div className="flex justify-between">
+                          <span className="text-sm font-semibold pb-1">
+                            {location.location}
+                          </span>
+                          <button onClick={() => handleRemoveLocation(location.id)} className="hover:scale-110">
+                            <IoCloseCircleOutline className="text-mainRed text-lg mx-1" />
+                          </button>
+                        </div>
                         <span className="text-xs pb-1">
                           전화번호: {location.phone || "없음"}
                         </span>
