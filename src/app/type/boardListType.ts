@@ -32,3 +32,7 @@ export interface ReportListType {
   reason: string;
   name: string;
 }
+
+export interface DataType extends BoardListType {
+  type: string;
+}
