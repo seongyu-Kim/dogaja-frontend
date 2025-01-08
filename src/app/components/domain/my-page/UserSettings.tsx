@@ -124,12 +124,34 @@ const UserSettings = () => {
   };
 
   return (
-    <div className="flex flex-col basis-1/3 p-4 space-y-4 bg-gray-200 rounded-lg shadow-md mr-4 relative">
-      <h2 className="flex text-lg p-3 items-center">
-        <FaUserEdit className="w-6 h-auto mr-2" /> 내 정보
-      </h2>
+    <div className="flex flex-col p-4 space-y-4 border-2 border-mainColor rounded-lg shadow-md relative">
+      <div className="flex items-center justify-between">
+        <h2 className="flex text-lg p-3 items-center">
+          <FaUserEdit className="w-6 h-auto mr-2" /> 내 정보
+        </h2>
+        {/* 탈퇴하기 */}
+          <Button
+            style={{
+              backgroundColor: "bg-none",
+              textSize: "text-xs",
+              textColor: "text-mainRed",
+              padding: "px-1",
+              hover: "hover:scale-105 hover:underline",
+            }}
+            onClick={() => {
+              if (!isLogin) {
+                ErrorAlert("로그인 후 이용해주세요.");
+                return;
+              }
+              handleUserDelete();
+            }}
+          >
+            탈퇴하기
+          </Button>
+      </div>
+
       {/* 닉변 */}
-      <div className="p-3">
+      <div className="flex flex-col items-center">
         <label className="block text-gray-700">닉네임</label>
         {isEditingName ? (
           <form
@@ -174,10 +196,11 @@ const UserSettings = () => {
             <span>{user?.name || "알 수 없는 사용자"}</span>
             <Button
               style={{
-                hoverColor: "hover:bg-[#3CB731]",
-                backgroundColor: "bg-[#6AC662]",
+                textColor: "text-mainColor",
+                backgroundColor: "bg-none",
                 textSize: "text-sm",
-                padding: "px-3 py-1",
+                padding: "px-2",
+                hover: "hover:scale-125",
               }}
               onClick={() => {
                 if (!isLogin) {
@@ -187,15 +210,14 @@ const UserSettings = () => {
                 setIsEditingName(true);
               }}
             >
-              <MdEdit className="w-5 h-auto" />
+              <MdEdit className="text-lg" />
             </Button>
           </div>
         )}
       </div>
 
       {/* 비밀번호 변경 */}
-      <div className="p-3">
-        <label className="block text-gray-700">비밀번호 변경</label>
+      <div className="flex flex-col items-center">
         {!isChangingPassword ? (
           <Button
             style={{
@@ -302,21 +324,6 @@ const UserSettings = () => {
         )}
       </div>
 
-      {/* 탈퇴하기 */}
-      <div className="absolute bottom-4 right-4">
-        <Button
-          className="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1"
-          onClick={() => {
-            if (!isLogin) {
-              ErrorAlert("로그인 후 이용해주세요.");
-              return;
-            }
-            handleUserDelete();
-          }}
-        >
-          탈퇴하기
-        </Button>
-      </div>
     </div>
   );
 };
