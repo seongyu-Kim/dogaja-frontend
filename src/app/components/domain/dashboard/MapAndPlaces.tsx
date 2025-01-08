@@ -238,7 +238,7 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
               </div>
             ))
           ) : (
-            <div>추천 장소가 없습니다.</div>
+            <p className="text-gray-500">추천 장소가 없습니다.</p>
           )}
         </div>
       </div>

@@ -64,7 +64,7 @@ const Favorites = () => {
   };
 
   return (
-    <div className="bg-gray-200 rounded-lg shadow-md h-[45vh] overflow-hidden">
+    <div className="border-2 border-mainColor rounded-lg shadow-md p-4 h-[45vh] overflow-hidden">
       <h2 className="flex text-lg p-3 items-center">
         <FaBookmark className="w-5 h-auto mr-2" /> 즐겨찾기
       </h2>
@@ -93,7 +93,7 @@ const Favorites = () => {
             ))}
           </ul>
         ) : (
-          <p>즐겨찾기한 글이 없습니다.</p>
+          <p className="text-gray-500">즐겨찾기한 글이 없습니다.</p>
         )}
       </div>
     </div>
