@@ -82,7 +82,7 @@ const SignUp = () => {
                     message: "올바른 이메일 형식이 아닙니다",
                   },
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.email && (
                 <p className="ml-1 text-red-500 text-sm">
@@ -108,7 +108,7 @@ const SignUp = () => {
                     message: "이름은 15자 이하여야 합니다",
                   },
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.name && (
                 <p className="ml-1 text-red-500 text-sm">
@@ -134,7 +134,7 @@ const SignUp = () => {
                     message: "비밀번호는 20자 이하여야 합니다",
                   },
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.password && (
                 <p className="ml-1 text-red-500 text-sm">
@@ -155,7 +155,7 @@ const SignUp = () => {
                     value === watch("password") ||
                     "비밀번호가 일치하지 않습니다",
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.confirmPassword && (
                 <p className="ml-1 text-red-500 text-sm">

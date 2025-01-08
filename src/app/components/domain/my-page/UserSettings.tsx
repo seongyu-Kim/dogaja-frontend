@@ -225,7 +225,7 @@ const UserSettings = () => {
               {...register("currentPassword", {
                 required: "현재 비밀번호를 입력해주세요",
               })}
-              className="pl-2"
+              className="pl-2 placeholder:text-sm"
             />
             <Input
               type="password"
@@ -241,7 +241,7 @@ const UserSettings = () => {
                   message: "비밀번호는 20자 이하이어야 합니다",
                 },
               })}
-              className="pl-2"
+              className="pl-2 placeholder:text-sm"
             />
             <Input
               type="password"
@@ -252,7 +252,7 @@ const UserSettings = () => {
                   value === watch("newPassword") ||
                   "비밀번호가 일치하지 않습니다",
               })}
-              className="pl-2"
+              className="pl-2 placeholder:text-sm"
             />
             {errors.newPassword &&
               typeof errors.newPassword.message === "string" && (
