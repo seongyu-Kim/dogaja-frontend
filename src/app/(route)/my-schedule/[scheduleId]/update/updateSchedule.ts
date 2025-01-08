@@ -22,3 +22,21 @@ export const updateSchedule = async (
     throw error;
   }
 };
+
+export const deletePlace = async (scheduleId: string, locationId: string) => {
+  try {
+
+    const { SCHEDULE_DELEDT_LOCATION } = API.SCHEDULE;
+
+    const response = await mainApi({
+      url: SCHEDULE_DELEDT_LOCATION(scheduleId, locationId),
+      method: "DELETE",
+      withAuth: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    ErrorAlert("장소를 삭제하는 중 문제가 발생했습니다.");
+    throw error;
+  }
+};
