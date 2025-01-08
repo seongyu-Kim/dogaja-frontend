@@ -39,7 +39,7 @@ const MyPosts = () => {
   }, [isLogin]);
 
   return (
-    <div className="bg-gray-200 rounded-lg shadow-md h-[45vh] overflow-hidden">
+    <div className="border-2 border-mainColor rounded-lg p-4 shadow-md h-full overflow-hidden">
       <h2 className="flex text-lg p-3 items-center">
         <FaListAlt className="w-5 h-auto mr-2" /> 내가 작성한 글
       </h2>
@@ -67,7 +67,10 @@ const MyPosts = () => {
             ))}
           </ul>
         ) : (
-          <p>작성한 글이 없습니다.</p>
+          <div className="text-gray-500 flex flex-col items-center justify-center mt-8">
+            <p>아직 작성한 글이 없습니다!</p>
+            <p>게시판 목록에서 다양한 소통을 해보세요!</p>
+          </div>
         )}
       </div>
     </div>

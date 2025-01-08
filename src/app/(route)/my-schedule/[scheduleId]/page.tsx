@@ -67,17 +67,17 @@ const TravelPlanPage: React.FC = () => {
           </div>
 
           <div className="w-[30%] my-4">
-            <div className="w-full mb-4 border-2 border-mainColor rounded-lg">
+            <div className="w-full mb-4 border-2 border-mainColor rounded-lg h-[175px]">
               <h2 className="text-lg mb-2 py-2 px-4 border-b-2 border-mainColor border-dashed bg-mainColor bg-opacity-25">
                 추억 남기기
               </h2>
               <div className="flex">
                 {travelPlan.image && (
-                  <div className="border border-mainColor rounded-lg m-2 p-2 bg-gray-100">
+                  <div className="border border-mainColor rounded-lg m-2 p-2 bg-gray-100 max-w-[100px] max-h-[100px]" >
                     <img
                       src={`http://kdt-react-node-1-team02.elicecoding.com${travelPlan.image}`}
                       alt="후기 사진"
-                      className="w-32 h-auto rounded-lg shadow-lg bg-white"
+                      className="w-full h-full w-24 rounded-lg shadow-lg bg-white"
                     />
                   </div>
                 )}
@@ -86,11 +86,11 @@ const TravelPlanPage: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className="border-2 border-mainColor rounded-lg w-full min-h-[395px] max-h-[395px]">
+            <div className="border-2 border-mainColor rounded-lg w-full h-[370px]">
               <h2 className="text-lg py-2 px-4 border-b-2 border-mainColor border-dashed bg-mainColor bg-opacity-25">
                 일정에 추가 된 장소
               </h2>
-              <div className="overflow-y-auto max-h-[335px] m-2 py-2">
+              <div className="overflow-y-auto h-[300px] m-2 py-2">
                 {locations.length > 0 ? (
                   locations.map((location) => (
                     <div
