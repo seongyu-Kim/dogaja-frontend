@@ -11,7 +11,7 @@ import locations from "@/app/assets/locations";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { isAxiosError } from "axios";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface ApiResponse {
   nameData: string;
@@ -64,13 +64,15 @@ interface EventData {
 
 const Dashboard: React.FC = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const initialLocation = searchParams.get("search") || "";
 
   const [searchValue, setSearchValue] = useState<string>(initialLocation);
   const [locationsList] = useState<string[]>(
     locations.map((location) => location.name)
   );
-  const [selectedLocation, setSelectedLocation] = useState<string>(initialLocation);
+  const [selectedLocation, setSelectedLocation] =
+    useState<string>(initialLocation);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [eventsData, setEventsData] = useState<EventData[]>([]);
@@ -78,10 +80,18 @@ const Dashboard: React.FC = () => {
   const [isWeatherLoading, setIsWeatherLoading] = useState<boolean>(false);
   const [isEventsLoading, setIsEventsLoading] = useState<boolean>(false);
 
+  const updateURL = (location: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("search", location);
+    router.replace(`?${params.toString()}`);
+  };
+
   const handleLocationSelect = async (location: string) => {
     setSearchValue(location);
     setSelectedLocation(location);
     setShowDropdown(false);
+
+    updateURL(location);
 
     setIsWeatherLoading(true);
     setIsEventsLoading(true);
@@ -164,6 +174,7 @@ const Dashboard: React.FC = () => {
               setSearchValue("");
               setSelectedLocation("");
               setShowDropdown(false);
+              updateURL("");
             }}
           >
             <IoCloseSharp className="w-8 h-auto mr-2" />
