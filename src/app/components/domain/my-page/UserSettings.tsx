@@ -124,7 +124,7 @@ const UserSettings = () => {
   };
 
   return (
-    <div className="flex flex-col basis-1/3 p-4 space-y-4 bg-gray-200 rounded-lg shadow-md mr-4 relative">
+    <div className="flex flex-col basis-1/3 p-4 space-y-4 border-2 border-mainColor bg-gray-100 rounded-lg shadow-md mr-4 relative">
       <h2 className="flex text-lg p-3 items-center">
         <FaUserEdit className="w-6 h-auto mr-2" /> 내 정보
       </h2>

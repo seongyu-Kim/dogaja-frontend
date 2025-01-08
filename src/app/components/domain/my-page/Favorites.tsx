@@ -64,7 +64,7 @@ const Favorites = () => {
   };
 
   return (
-    <div className="bg-gray-200 rounded-lg shadow-md h-[45vh] overflow-hidden">
+    <div className="border-2 border-mainColor bg-gray-100 rounded-lg shadow-md h-[45vh] overflow-hidden">
       <h2 className="flex text-lg p-3 items-center">
         <FaBookmark className="w-5 h-auto mr-2" /> 즐겨찾기
       </h2>
