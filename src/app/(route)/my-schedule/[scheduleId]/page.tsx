@@ -75,7 +75,7 @@ const TravelPlanPage: React.FC = () => {
                 {travelPlan.image && (
                   <div className="border border-mainColor rounded-lg m-2 p-2 bg-gray-100">
                     <img
-                      src={`http://kdt-react-node-1-team02.elicecoding.com:3003${travelPlan.image}`}
+                      src={`http://kdt-react-node-1-team02.elicecoding.com${travelPlan.image}`}
                       alt="후기 사진"
                       className="w-32 h-auto rounded-lg shadow-lg bg-white"
                     />
