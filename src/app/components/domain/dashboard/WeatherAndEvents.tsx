@@ -52,33 +52,50 @@ const WeatherAndEvents: React.FC<WeatherAndEventsProps> = ({
   return (
     <div className="flex flex-col flex-grow basis-1/3 p-4 space-y-4">
       {/* 날씨 섹션 */}
-      <div className="bg-gray-200 rounded-lg shadow-md h-[45vh] overflow-hidden">
-        <h2 className="flex text-lg p-3">
-          <TiWeatherPartlySunny className="w-6 h-auto mr-2" />
-          날씨
-        </h2>
-        <div className="p-4">
+      <div className="border-2 border-mainColor p-4 rounded-lg shadow-md h-[45vh] min-w-72 overflow-hidden">
+        <div className="h-[calc(100%-0.5rem)] overflow-y-auto">
           {isWeatherLoading ? (
             <p className="text-gray-500">날씨 데이터를 불러오는 중...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : weather ? (
-            <div className="space-y-4">
-              <div>
-                <p>지역: {weather.nameData}</p>
-                <p>혼잡도 레벨: {weather.congestionLV}</p>
-                <p>혼잡도 메시지: {weather.congestionMSG}</p>
+            <div className="space-y-2">
+              <h2 className="flex text-xl pb-3">
+                <TiWeatherPartlySunny className="w-6 h-auto mr-2" />
+                <p className="text-mainColor">{weather.nameData}</p>의 날씨
+              </h2>
+              <div className="border-b-2 pb-2">
+                <div className="flex items-center mb-2 justify-between">
+                  <p className="text-mainColor py-1">혼잡도 레벨</p> 
+                  <span className="border-2 border-mainColor bg-mainColor bg-opacity-10 text-mainColor text-xs rounded-full p-1 mr-4">
+                    {weather.congestionLV}
+                  </span>
+                </div>
+                <p>{weather.congestionMSG}</p> 
               </div>
 
-              <div>
-                <p>온도: {weather.temp}°C</p>
-                <p>체감 온도: {weather.sensibleTemp}°C</p>
-                <p>강수 상태: {weather.pcpMSG}</p>
+              <div className="border-b-2 pb-2">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-mainColor py-1">온도</p>
+                  <span className="border-2 border-mainColor bg-mainColor bg-opacity-10 text-mainColor text-xs rounded-full p-1 mr-4">
+                    {weather.temp}°C
+                  </span>
+                  <p className="text-mainColor py-1">체감 온도</p>
+                  <span className="border-2 border-mainColor bg-mainColor bg-opacity-10 text-mainColor text-xs rounded-full p-1 mr-4">
+                    {weather.sensibleTemp}°C
+                  </span>
+                </div>
+                <p>{weather.pcpMSG}</p>
               </div>
 
-              <div>
-                <p>자외선 지수: {weather.UVIndex}</p>
-                <p>자외선 메시지: {weather.UVMSG}</p>
+              <div className="border-b-2 pb-2">
+                <div className="flex items-center mb-2 gap-2">
+                  <p className="text-mainColor py-1">자외선 지수</p>
+                  <span className="border-2 border-mainColor bg-mainColor bg-opacity-10 text-mainColor text-xs rounded-full p-1">
+                    {weather.UVIndex}
+                  </span>
+                </div>
+                <p>{weather.UVMSG}</p>
               </div>
 
               <div>

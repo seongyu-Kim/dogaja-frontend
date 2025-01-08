@@ -141,7 +141,7 @@ function Description({
                   <div className="w-[10%] h-full hidden md:flex items-center justify-center">
                     {image ? (
                       <img
-                        src={`http://kdt-react-node-1-team02.elicecoding.com:3003${image}`}
+                        src={`http://kdt-react-node-1-team02.elicecoding.com${image}`}
                       />
                     ) : (
                       <IoDocumentText className="w-[55px] h-[55px] text-gray-400" />

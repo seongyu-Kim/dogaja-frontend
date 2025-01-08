@@ -181,8 +181,8 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
   };
   return (
     <div className="flex flex-col flex-grow basis-2/3 p-4 space-y-4">
-      <div className="flex-grow bg-gray-200 rounded-lg shadow-md">
-        <div className="flex text-lg p-3">
+      <div className="flex-grow border-2 border-mainColor p-4 rounded-lg shadow-lg">
+        <div className="flex text-xl pb-3">
           <div className="flex items-center">
             <TbMapSearch className="w-6 h-auto mr-2" />
             지도
@@ -192,17 +192,17 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
           <KakaoMap keyword={selectedLocation} onPlacesFetched={setPlaces} />
         </div>
       </div>
-      <div className="bg-gray-200 rounded-lg shadow-md h-[35vh] overflow-hidden">
-        <div className="flex text-lg p-3">
+      <div className="border-2 border-mainColor p-4 rounded-lg shadow-md h-[35vh] overflow-hidden">
+        <div className="flex text-xl pb-3">
           <LiaThumbtackSolid className="w-6 h-auto mr-2" />
-          추천 맛집
+          주변 맛집
         </div>
-        <div className="flex flex-col ml-3 h-[calc(100%-3rem)] overflow-y-auto">
+        <div className="flex flex-col h-[calc(100%-3rem)] overflow-y-auto">
           {places.length > 0 ? (
             places.map((place, index) => (
               <div
                 key={index}
-                className="mb-4 border-b-[1px] border-gray-400 pb-4 flex justify-between items-center"
+                className="border-b border-gray-400 py-2 flex justify-between items-center hover:bg-mainColor hover:bg-opacity-25"
               >
                 <div>
                   <p className="text-lg">{place.place_name}</p>
@@ -221,13 +221,13 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
                         ErrorAlert("로그인 후 이용해주세요");
                       }
                     }}
-                    className="cursor-pointer hover:text-green-500"
+                    className="cursor-pointer hover:scale-105"
                   >
                     + 일정에 추가하기
                   </div>
 
                   <FaStar
-                    className={`cursor-pointer w-6 h-auto  ${place.isFavorite ? "text-yellow-500" : "text-gray-400"}`}
+                    className={`cursor-pointer w-6 h-auto hover:scale-105 ${place.isFavorite ? "text-yellow-500" : "text-gray-400"}`}
                     onClick={() =>
                       place.isFavorite
                         ? removeFavoritePlace(place)
