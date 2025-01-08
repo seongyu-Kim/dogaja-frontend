@@ -2,25 +2,23 @@ import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import Button from "./common/Button";
 
-import { API } from "@/app/utils/api";
-import { mainApi } from "@/app/utils/mainApi";
-import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
+import { ErrorAlert } from "@/app/utils/toastAlert";
+import { searchFriends, addFriend } from "./common/api/friendApi";
 
 import { FaPlus } from "react-icons/fa";
+import { IoPersonAddSharp } from "react-icons/io5";
 
 interface Friend {
-  id: number;
-  nickname: string;
+  id: string;
+  name: string;
 }
 
 interface FriendAddModalProps {
   isOpen: boolean;
   onClose: () => void;
-  mode: "friendRequest" | "companionAdd";
-  onAddCompanion?: (nickname: string) => void;
 }
 
-const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose, mode, onAddCompanion }) => {
+const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose }) => {
   const [inputValue, setInputValue] = useState("");
   const [friends, setFriends] = useState<Friend[]>([]);
   const [loading, setLoading] = useState(false);
@@ -36,6 +34,7 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose, mode, 
     }
   };
 
+  // 친구 검색
   const handleSearch = async () => {
     if (!inputValue.trim()) {
       setFriends([]);
@@ -45,48 +44,26 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose, mode, 
 
     setLoading(true);
     setHasSearched(true);
-    
-    const dummyFriends = [
-      { id: 1, nickname: "엘리스" },
-      { id: 2, nickname: "김토끼" },
-      { id: 3, nickname: "이토끼" },
-      { id: 4, nickname: "박토끼" },
-      { id: 5, nickname: "최토끼" },
-    ];
 
-    const filteredFriends = dummyFriends.filter(friend =>
-      friend.nickname.includes(inputValue.trim())
-    );
-
-    setFriends(filteredFriends);
-    setLoading(false);
+    try {
+      const result = await searchFriends(inputValue.trim());
+      setFriends(result);
+    } catch (error) {
+      console.error(error);
+      ErrorAlert("친구 검색 중 오류가 발생했습니다.");
+      setFriends([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // 친구 추가
   const handleAdd = async (friend: Friend) => {
-    if (mode === "friendRequest") {
-      // 친구 요청 전송
-      const { FRIENDS_REQUEST_POST } = API.FRIENDS;
-      try {
-        const res = await mainApi({
-          url: FRIENDS_REQUEST_POST,
-          method: "POST",
-          data: { friendName: friend.nickname },
-        });
-
-        if (res.status === 200) {
-          SuccessAlert("친구 요청이 전송되었습니다.");
-          closeModal();
-        } else {
-          ErrorAlert("친구 요청 전송에 실패했습니다.");
-        }
-      } catch (e) {
-        console.error(e);
-        ErrorAlert("친구 요청 전송 중 오류가 발생했습니다.");
-      }
-    } else if (mode === "companionAdd" && onAddCompanion) {
-      // 동행자 추가
-      onAddCompanion(friend.nickname);
+    try {
+      await addFriend(friend.name);
       closeModal();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -99,23 +76,22 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose, mode, 
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onClose={closeModal} 
-      title={mode === "friendRequest" ? "친구 추가" : "동행자 추가"}
+    <Modal
+      isOpen={isOpen}
+      onClose={closeModal}
+      title="친구 추가"
       inputProps={{
         type: "text",
-        name: "nickname",
+        name: "name",
         placeholder: "닉네임을 입력하세요",
         value: inputValue,
         onChange: handleInputChange,
         onKeyDown: handleKeyDown,
-      }} 
+      }}
       onSubmit={handleSearch}
     >
       <Button
         onClick={handleSearch}
-        
         className="text-sm w-full"
         style={{
           backgroundColor: "bg-mainColor",
@@ -134,11 +110,14 @@ const FriendAddModal: React.FC<FriendAddModalProps> = ({ isOpen, onClose, mode, 
       {friends.length > 0 && (
         <div className="mt-4 max-h-36 overflow-y-auto border border-gray-200 rounded">
           <ul>
-            {friends.map(friend => (
-              <li key={friend.id} className="flex justify-between items-center py-2 px-4 border-b border-gray-300">
+            {friends.map((friend) => (
+              <li
+                key={friend.id}
+                className="flex justify-between items-center py-2 px-4 border-b border-gray-300"
+              >
                 <span className="flex items-center">
-                  <div className="mr-3 py-3 px-1 border rounded-lg bg-gray-300">이미지</div>
-                  {friend.nickname}
+                  <IoPersonAddSharp className="text-gray-300 w-[40px] h-[40px] rounded-full" />
+                  {friend.name}
                 </span>
                 <button
                   className="bg-mainColor text-sm hover:bg-mainHover text-white px-1.5 py-1.5 rounded"

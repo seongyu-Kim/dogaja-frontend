@@ -10,6 +10,7 @@ import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { useRouter } from "next/navigation";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { isAxiosError } from "axios";
 
 type ResetPasswordFormData = {
   newPassword: string;
@@ -53,10 +54,12 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
         }, 1200);
       }
     } catch (e) {
-      if (e.status === 400) {
-        ErrorAlert("유효하지 않은 토큰입니다.");
-      } else {
-        ErrorAlert("비밀번호 변경 실패");
+      if (isAxiosError(e)) {
+        if (e.status === 400) {
+          ErrorAlert("유효하지 않은 토큰입니다.");
+        } else {
+          ErrorAlert("비밀번호 변경 실패");
+        }
       }
     }
   };
@@ -86,7 +89,7 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
                     message: "비밀번호는 최소 8자 이상이어야 합니다",
                   },
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.newPassword && (
                 <p className="ml-1 text-red-500 text-sm mt-1">
@@ -104,7 +107,7 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
                 {...register("confirmPassword", {
                   required: "비밀번호 확인을 입력해주세요",
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.confirmPassword && (
                 <p className="ml-1 text-red-500 text-sm mt-1">

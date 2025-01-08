@@ -38,9 +38,15 @@ export const API = {
     FRIENDS_REQUEST_GET: `${BASE_URL}/friends/requests/received`,
     FRIENDS_LIST_GET: `${BASE_URL}/friends/list`,
     FRIENDS_REQUEST_POST: `${BASE_URL}/friends/request`,
-    FRIENDS_REQUEST_PATCH: (id: number) =>
-      `${BASE_URL}/friends/requests/${id}/respond`,
+    FRIENDS_REQUEST_PATCH: (friendId: string) =>
+      `${BASE_URL}/friends/requests/${friendId}/respond`,
     FRIENDS_DELETE: (friendId: string) => `${BASE_URL}/friends/${friendId}`,
+    FRIENDS_SEARCH: (friendName: string) =>
+      `${BASE_URL}/friends/search?keyword=${friendName}`,
+  },
+  NOTIFICATION: {
+    NOTIFICATION_GET:`${BASE_URL}/notifications`,
+    NOTIFICATION_READ: (id: string) => `${BASE_URL}/notifications/${id}`,
   },
   COMMENT: {
     COMMENT_CREATE: (id: string) => `${BASE_URL}/comment/${id}`,
@@ -57,7 +63,29 @@ export const API = {
   SCHEDULE: {
     SCHEDULE_CREATE: `${BASE_URL}/schedule/create`,
     SCHEDULE_LIST_GET: `${BASE_URL}/schedule`,
-    SCHEDULE_GET: (id: string) => `${BASE_URL}/schedule/${id}`,
-    SCHEDULE_DELETE: (id: string) => `${BASE_URL}/schedule/${id}`,
+    SCHEDULE_GET: (scheduleId: string) => `${BASE_URL}/schedule/${scheduleId}`,
+    SCHEDULE_UPDATE: (scheduleId: string) =>
+      `${BASE_URL}/schedule/${scheduleId}`,
+    SCHEDULE_IMAGE_UPDATE: (scheduleId: string) =>
+      `${BASE_URL}/schedule/${scheduleId}/image`,
+    SCHEDULE_DELETE: (scheduleId: string) =>
+      `${BASE_URL}/schedule/${scheduleId}`,
+    SCHEDULE_LIST_CHECK: (scheduleId: string, listsId: string) =>
+      `${BASE_URL}/schedule/${scheduleId}/${listsId}/checked`,
+    SCHEDULE_ADD_FRIEND: (scheduleId: string) =>
+      `${BASE_URL}/schedule/${scheduleId}/friends`,
+    SCHEDULE_DELETE_FRIEND: (scheduleId: string, friendId: string) =>
+      `${BASE_URL}/schedule/${scheduleId}/${friendId}`,
+    SCHEDULE_ADD_LOCATION: (scheduleId: string) =>
+      `${BASE_URL}/schedule/${scheduleId}/location`,
+    SCHEDULE_DELEDT_LOCATION: (scheduleId: string, locationId: string) =>
+      `${BASE_URL}/schedule/location/${scheduleId}/${locationId}`,
+
+  },
+  SEARCH: {
+    SEARCH_RESULT: `${BASE_URL}/search/result`,
+  },
+  CHAT: {
+    CHAT_ROOM_LIST_READ: `${BASE_URL}/chat/rooms`,
   },
 };

@@ -10,7 +10,6 @@ export default async function BoardDetailView({
   boardTitle,
 }: {
   postId: string;
-  //임시 추후 분리 완료하면 ? 제거
   boardTitle?: string;
 }) {
   const post = await readPost(Number(postId));
@@ -23,7 +22,7 @@ export default async function BoardDetailView({
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col w-[50%] h-auto gap-5 pt-10 px-3 border-x border-mainColor">
+      <div className="flex flex-col w-[50%] min-w-[400px] h-auto gap-5 pt-10 px-3 border-x border-mainColor">
         <Link href="./" className="max-w-[10%]">
           <p>{boardTitle}</p>
         </Link>
@@ -56,6 +55,7 @@ function ContentArea({
       </div>
       <div className="pb-20 border-b border-gray-400 break-all mt-5">
         <div
+          className="min-h-[300px]"
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(content, {}),
           }}

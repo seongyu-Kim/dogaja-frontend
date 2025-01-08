@@ -3,8 +3,8 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { MdOutlinePhoto } from "react-icons/md";
 import { BoardListType } from "@/app/type/boardListType";
+
 interface ListProps {
-  // 임시 타입
   list: BoardListType[];
   preview?: boolean;
   boardType?: string;
@@ -24,6 +24,7 @@ export default function List({
   if (!list) {
     return null;
   }
+
   const searchParams = useSearchParams().get("page");
   const route = usePathname();
 
@@ -52,18 +53,20 @@ export default function List({
                     )}
                   </div>
                 )}
-                <div className="flex w-[85%] items-center gap-3">
+                <div className="flex gap-1 w-[85%]">
                   {parseInt(postId!) == id && (
                     <p className="font-semibold text-xl">{"→"}</p>
                   )}
-                  <div className="w-auto max-w-md">
+                  <div className="w-full max-w-md flex items-center gap-3">
                     <p className="overflow-hidden whitespace-nowrap text-ellipsis">
                       {title}
                     </p>
+                    {commentsCount > 0 && (
+                      <p className="text-[10px] text-blue-700">
+                        {commentsCount}
+                      </p>
+                    )}
                   </div>
-                  {commentsCount > 0 && (
-                    <p className="text-[10px] text-blue-700">{commentsCount}</p>
-                  )}
                 </div>
                 {preview && (
                   <div className="hidden md:flex items-end justify-end w-[100px]">

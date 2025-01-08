@@ -2,19 +2,23 @@
 
 import { API } from "@/app/utils/api";
 import { mainApi } from "@/app/utils/mainApi";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse, isAxiosError } from "axios";
 import { ScheduleType } from "@/app/type/scheduleListType";
+import { groupByType } from "@/app/utils/groupByType";
+import { DataType } from "@/app/type/boardListType";
 
 export const createPost = async (
   formData: FormData,
   type: string,
 ): Promise<AxiosResponse<any> | undefined> => {
   const { POST_CREATE } = API.BOARD;
+
   const body = {
     title: formData.get("title") as string,
     content: formData.get("content") as string,
     type: type,
   };
+
   try {
     const res = await mainApi({
       url: POST_CREATE,
@@ -22,6 +26,7 @@ export const createPost = async (
       data: body,
       withAuth: true,
     });
+
     if (res.status === 201) {
       return res;
     }
@@ -32,10 +37,12 @@ export const createPost = async (
 //게시글 수정
 export const updatePost = async (formData: FormData, id: number) => {
   const { POST_UPDATE } = API.BOARD;
+
   const body = {
     title: formData.get("title") as string,
     content: formData.get("content") as string,
   };
+
   try {
     const res = await mainApi({
       url: POST_UPDATE(String(id)),
@@ -43,6 +50,7 @@ export const updatePost = async (formData: FormData, id: number) => {
       data: body,
       withAuth: true,
     });
+
     if (res.status === 200) {
       return res.status;
     }
@@ -53,12 +61,14 @@ export const updatePost = async (formData: FormData, id: number) => {
 //게시글 삭제
 export const deletePost = async (id: number) => {
   const { POST_DELETE } = API.BOARD;
+
   try {
     const res = await mainApi({
       url: POST_DELETE(String(id)),
       method: "DELETE",
       withAuth: true,
     });
+
     if (res.status === 200) {
       return res.status;
     }
@@ -70,6 +80,7 @@ export const deletePost = async (id: number) => {
 //댓글 생성
 export const createComment = async (formData: FormData, id: string) => {
   const { COMMENT_CREATE } = API.COMMENT;
+
   try {
     const res = await mainApi({
       url: COMMENT_CREATE(id),
@@ -77,6 +88,7 @@ export const createComment = async (formData: FormData, id: string) => {
       data: { content: formData.get("content") as string },
       withAuth: true,
     });
+
     if (res.status === 201) {
       return res.status;
     }
@@ -92,6 +104,7 @@ export const updateComment = async (
   postId: string,
 ) => {
   const { COMMENT_UPDATE } = API.COMMENT;
+
   try {
     const res = await mainApi({
       url: COMMENT_UPDATE(postId, commentId),
@@ -99,6 +112,7 @@ export const updateComment = async (
       data: { content: formData.get("content") as string },
       withAuth: true,
     });
+
     if (res.status === 200) {
       return res.status;
     }
@@ -110,12 +124,14 @@ export const updateComment = async (
 //댓글 삭제
 export const deleteComment = async (commentId: string, postId: string) => {
   const { COMMENT_DELETE } = API.COMMENT;
+
   try {
     const res = await mainApi({
       url: COMMENT_DELETE(postId, commentId),
       method: "DELETE",
       withAuth: true,
     });
+
     if (res.status === 200) {
       return res.status;
     }
@@ -127,12 +143,14 @@ export const deleteComment = async (commentId: string, postId: string) => {
 //특정 신고 삭제
 export const deleteReport = async (reportId: number) => {
   const { REPORT_DELETE } = API.REPORT;
+
   try {
     const res = await mainApi({
       url: REPORT_DELETE(String(reportId)),
       method: "DELETE",
       withAuth: true,
     });
+
     if (res.status === 200) {
       return res.status;
     }
@@ -151,25 +169,30 @@ export const requestFriend = async (friendName: string) => {
       data: { friendName: friendName },
       withAuth: true,
     });
-    if (res.status === 200) {
+
+    if (res.status === 200 || res.status === 201) {
       return res.status;
     }
   } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    return e.status;
+    if (isAxiosError(e)) {
+      if (e.response?.status) {
+        return e.status;
+      }
+    }
   }
 };
 
 //일정 리스트 조회
 export const scheduleGet = async () => {
   const { SCHEDULE_LIST_GET } = API.SCHEDULE;
+
   try {
     const res = await mainApi({
       url: SCHEDULE_LIST_GET,
       method: "GET",
       withAuth: true,
     });
+
     if (res.status === 200) {
       return res.data as ScheduleType[];
     }
@@ -181,14 +204,33 @@ export const scheduleGet = async () => {
 //일정 리스트 삭제 요청
 export const scheduleDelete = async (id: string) => {
   const { SCHEDULE_DELETE } = API.SCHEDULE;
+
   try {
     const res = await mainApi({
       url: SCHEDULE_DELETE(id),
       method: "DELETE",
       withAuth: true,
     });
+
     if (res.status === 200) {
       return res.status;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getAllPost = async () => {
+  const { BOARD_ALL_GET } = API.BOARD;
+
+  try {
+    const res = await mainApi({
+      url: BOARD_ALL_GET,
+      method: "GET",
+    });
+
+    if (res.status === 200) {
+      return groupByType(res.data as DataType[]);
     }
   } catch (e) {
     console.error(e);

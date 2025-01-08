@@ -9,74 +9,40 @@ import { mainApi } from "@/app/utils/mainApi";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 import Logo from "@/app/assets/Do_logo_non_text.png";
 import { FaRegAddressBook } from "react-icons/fa6";
-import { PiBellBold } from "react-icons/pi";
+import { PiBellBold, PiBellRingingFill } from "react-icons/pi";
 import SlideMenu from "./Slidemenu";
 import AddressBookModal from "../AddressBookModal";
-import RequestModal from "../RequestModal";
-import NotificationList, { Notification } from "../NotificationList";
+import NotificationList from "../NotificationList";
+import { NotificationType } from "@/app/type/natificationType";
 import { useUserStore } from "@/app/store/userStore";
-
-interface UserInfoResponse {
-  name: string;
-}
 
 export default function Navbar() {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutMenu, setShowLogoutMenu] = useState(false);
   const [showAddressBookModal, setShowAddressBookModal] = useState(false);
-  const [showRequestModal, setShowRequestModal] = useState(false);
-  const [selectedNotification, setSelectedNotification] =
-    useState<Notification | null>(null);
-  const [name, setName] = useState<string>("");
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const { resetUser, user } = useUserStore();
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    getUserName();
     getFriendRequests();
-
-    // 임시 로그인 상태 설정
-    // setIsLoggedIn(true);
-    // setName("elice");
-  }, []);
-
-  const getUserName = async () => {
-    //임시 - 유저 정보 없으면 API 호출 불가
-    if (!user) return;
-    const { MY_INFO_GET } = API.USER;
-    try {
-      const res = await mainApi<UserInfoResponse>({
-        url: MY_INFO_GET,
-        method: "GET",
-        withAuth: true,
-      });
-      if (res.status === 200) {
-        const userName = res.data.name;
-        setName(userName);
-        setIsLoggedIn(true);
-        SuccessAlert(`${userName}님 반갑습니다!`);
-      }
-    } catch (e) {
-      console.error(e);
-      setIsLoggedIn(false);
-      ErrorAlert("이름 가져오기에 실패했습니다.");
-    }
-  };
+  }, [user]);
 
   const getFriendRequests = async () => {
-    //임시 - 유저 정보 없으면 API 호출 불가
     if (!user) return;
+
     const { FRIENDS_REQUEST_GET } = API.FRIENDS;
+
     try {
-      const res = await mainApi({
+      const res = await mainApi<{ requests: NotificationType[] }>({
         url: FRIENDS_REQUEST_GET,
         method: "GET",
         withAuth: true,
       });
+
       if (res.status === 200) {
-        setNotifications(res.data.requests);
+        setNotifications(res.data.requests || []);
       }
     } catch (e) {
       console.error(e);
@@ -86,16 +52,17 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     const { LOGOUT } = API.AUTH;
+
     try {
       const res = await mainApi({
         url: LOGOUT,
         method: "POST",
         withAuth: true,
       });
+
       if (res.status === 201) {
         localStorage.removeItem("token");
         resetUser();
-        setIsLoggedIn(false);
         router.replace("/");
         SuccessAlert("로그아웃 되었습니다.");
       }
@@ -109,11 +76,6 @@ export default function Navbar() {
   const toggleLogoutMenu = () => setShowLogoutMenu((prev) => !prev);
   const openAddressBookModal = () => setShowAddressBookModal((prev) => !prev);
 
-  const handleNotificationClick = (notification: Notification) => {
-    // 초대 알림 클릭 시 /post/{id}로 이동
-    router.push(`/post/${notification.id}`);
-  };
-
   return (
     <nav className="fixed top-0 left-0 right-0 z-10 w-full border-b-4 border-mainColor text-white p-4 flex justify-between items-center bg-white">
       <div>
@@ -122,7 +84,7 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {isLoggedIn ? (
+      {user ? (
         <ul className="flex gap-3">
           <li className="cursor-pointer" onClick={openAddressBookModal}>
             <FaRegAddressBook className="text-mainColor text-2xl hover:scale-105 transition-all duration-300 ease-in-out" />
@@ -132,14 +94,20 @@ export default function Navbar() {
               className="cursor-pointer text-mainColor text-2xl focus:outline-none"
               onClick={toggleNotifications}
             >
-              <PiBellBold className="hover:scale-105 transition-all duration-300 ease-in-out" />
+              {unreadCount > 0 ? (
+                <PiBellRingingFill className="hover:scale-105 transition-all duration-300 ease-in-out" />
+              ) : (
+                <PiBellBold className="hover:scale-105 transition-all duration-300 ease-in-out" />
+              )}
+              {unreadCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full px-1 text-xs">
+                  {unreadCount}
+                </span>
+              )}
             </button>
             {showNotifications && (
               <div className="absolute right-0 w-60 mt-4">
-                <NotificationList
-                  notifications={notifications}
-                  onNotificationClick={handleNotificationClick}
-                />
+                <NotificationList onUnreadCountChange={setUnreadCount} />
               </div>
             )}
           </li>
@@ -147,7 +115,7 @@ export default function Navbar() {
             className="mr-2 hover:underline cursor-pointer text-mainColor font-bold hover:scale-105 transition-all duration-300 ease-in-out"
             onClick={toggleLogoutMenu}
           >
-            {name}님
+            {user.name}님
           </li>
           <SlideMenu
             show={showLogoutMenu}
@@ -159,6 +127,10 @@ export default function Navbar() {
             ]}
             className="right-4 w-20 text-center"
           />
+          <AddressBookModal
+            isOpen={showAddressBookModal}
+            onClose={openAddressBookModal}
+          />
         </ul>
       ) : (
         <Link
@@ -168,11 +140,6 @@ export default function Navbar() {
           로그인
         </Link>
       )}
-
-      <AddressBookModal
-        isOpen={showAddressBookModal}
-        onClose={openAddressBookModal}
-      />
     </nav>
   );
 }

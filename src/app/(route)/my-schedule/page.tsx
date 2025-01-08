@@ -82,7 +82,7 @@ export default function MySchedulePage() {
         <div className="flex items-center justify-between">
           <p className="text-3xl">일정 관리</p>
           {/*임시 추후 일정 생성 create 페이지로 이동*/}
-          <Link href="/my-schedule/planner">
+          <Link href="/my-schedule/create">
             <Button
               style={{
                 backgroundColor: "bg-mainColor",
@@ -113,7 +113,7 @@ export default function MySchedulePage() {
     </div>
   );
 }
-//임시 추후 타입 지정
+
 function Description({
   list,
   onDelete,
@@ -122,26 +122,27 @@ function Description({
   onDelete: (id: number) => void;
 }) {
   const { user: loginUser } = useUserStore();
+
   return (
     <ul className="flex flex-col items-center justify-center w-full gap-4">
       {list!.map(
         ({ id, title, user, location, period, review, image, friends }) => {
-          const route = usePathname();
           const [start, end, day] = days(period);
           return (
-            //   임시 추후 일정 상세 보기 페이지로 이동
             <div
               key={id}
               className="w-full h-[150px] border-b border-gray-400 hover:cursor-pointer hover:bg-gray-200"
             >
               <div className="w-full flex item-center h-full px-2 gap-1 relative">
                 <Link
-                  href={`${route}/${id}`}
+                  href={`/my-schedule/${id}`}
                   className="w-full flex item-center h-full px-2 gap-1"
                 >
                   <div className="w-[10%] h-full hidden md:flex items-center justify-center">
                     {image ? (
-                      <p>이미지</p> //임시 - 추후 이미지 가공해서 보여주기
+                      <img
+                        src={`http://kdt-react-node-1-team02.elicecoding.com${image}`}
+                      />
                     ) : (
                       <IoDocumentText className="w-[55px] h-[55px] text-gray-400" />
                     )}
@@ -181,8 +182,7 @@ function Description({
                     >
                       삭제
                     </Button>
-                    {/*임시 - 추후 아래 주소 수정*/}
-                    <Link href={`${route}/${id}/update`}>
+                    <Link href={`/my-schedule/${id}/update`}>
                       <Button
                         style={{
                           backgroundColor: "bg-mainColor",

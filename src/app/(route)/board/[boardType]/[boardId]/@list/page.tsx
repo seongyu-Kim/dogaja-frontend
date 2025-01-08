@@ -16,6 +16,7 @@ export default async function ListPage({ params }: Props) {
   const { boardType, boardId } = params;
   const boardTitle = getBoardTitle(boardType);
   const list = await boardTypeRequest(boardType as BoardType);
+
   return (
     <div className="flex justify-center">
       <Board

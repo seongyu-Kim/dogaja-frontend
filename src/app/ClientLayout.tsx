@@ -5,7 +5,7 @@ import Navbar from "./components/common/Navbar";
 import Sidebar from "./components/common/Sidebar";
 import ToastProvider from "@/app/ToastProvider";
 import { useUserStore } from "@/app/store/userStore";
-import UserChatBox from "@/app/components/UserChatBox";
+import UserChatBox from "@/app/components/domain/chat/UserChatBox";
 import { useEffect } from "react";
 
 interface ClientLayoutProps {
@@ -14,10 +14,14 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const pathname = usePathname();
-  const { user, fetchUser } = useUserStore();
+  const { user, fetchUser, resetUser } = useUserStore();
   useEffect(() => {
     const authValidate = async () => {
       const token = localStorage.getItem("token");
+      if (!token && user) {
+        resetUser();
+        return;
+      }
       if (token) {
         await fetchUser();
       }

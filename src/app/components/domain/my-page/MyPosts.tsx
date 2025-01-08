@@ -3,6 +3,7 @@ import { FaListAlt } from "react-icons/fa";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { ErrorAlert } from "@/app/utils/toastAlert";
+import { useUserStore } from "@/app/store/userStore";
 
 interface myPost {
   id?: string;
@@ -12,9 +13,12 @@ interface myPost {
 
 const MyPosts = () => {
   const [myPosts, setMyPosts] = useState<myPost[]>([]);
+  const { isLogin } = useUserStore();
 
-  //내가 쓴 글
+  // 내가 쓴 글
   const fetchMyPost = async () => {
+    if (!isLogin) return;
+
     try {
       const res = await mainApi({
         url: API.BOARD.BOARD_MY_POST,
@@ -24,17 +28,18 @@ const MyPosts = () => {
 
       setMyPosts((res.data as { posts: myPost[] }).posts);
     } catch (e) {
-      console.error(e);
       ErrorAlert("나의 게시글을 불러오는데 실패하였습니다.");
     }
   };
 
   useEffect(() => {
-    fetchMyPost();
-  }, []);
+    if (isLogin) {
+      fetchMyPost();
+    }
+  }, [isLogin]);
 
   return (
-    <div className="bg-gray-200 rounded-lg shadow-md h-[45vh] overflow-hidden">
+    <div className="border-2 border-mainColor rounded-lg p-4 shadow-md h-full overflow-hidden">
       <h2 className="flex text-lg p-3 items-center">
         <FaListAlt className="w-5 h-auto mr-2" /> 내가 작성한 글
       </h2>
@@ -62,7 +67,10 @@ const MyPosts = () => {
             ))}
           </ul>
         ) : (
-          <p>작성한 글이 없습니다.</p>
+          <div className="text-gray-500 flex flex-col items-center justify-center mt-8">
+            <p>아직 작성한 글이 없습니다!</p>
+            <p>게시판 목록에서 다양한 소통을 해보세요!</p>
+          </div>
         )}
       </div>
     </div>

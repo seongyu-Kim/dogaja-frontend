@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 1. 팀 소개
+**팀명** : 2팀 두가자
 
-## Getting Started
+**팀원** : 이희재(팀장), 이수엽, 박주호, 한지수, 김선규
+<hr />
+<hr />
 
-First, run the development server:
+## 2. 기획내용
+**프로젝트 주제** : 공공 데이터를 활용한 웹 플랫폼
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**프로젝트 기간** : 2024년 12월 16일 ~ 2025년 1월 8일
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**프로젝트 인원** : 5명
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**프로젝트 소개** : 서울의 핫플레이스 109곳을 중점으로 주변 맛집과 날씨 및 혼잡도, 행사 및 축제 등의 정보를 실시간으로 얻고 그 정보를 기반으로 일정을 계획할 수 있는 플랫폼
+<hr />
+<hr />
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 3. 역할 분담
+| **팀원**            | **역할**                                                                 |
+|---------------------|--------------------------------------------------------------------------|
+| **박주호 (Front)**  | 게시판, 일정관리 리스트, 관리자, 댓글 CRUD, 채팅, 공용 버튼                                                 |
+| **한지수 (Front)**  | Nav & SideBar, 메인페이지, Modal 전체, 주소록(친구), 알림                                                |
+| **김선규 (Front)**  | 로그인 & 회원가입, 비밀번호, 장소 정보 페이지, 마이페이지, 공용 Input                                      |
+| **이수엽 (Back)**   | Nginx, Docker, Logger, 게시판/댓글 API, 일정 API, 찜 API, 신고 API, 검색/Open API                      |
+| **이희재 (Back)**   | 로그인/회원가입 API, 유저 정보 수정 API, 친구 API, 알림 API, 채팅 API                                    |
 
-## Learn More
+<hr />
+<hr />
 
-To learn more about Next.js, take a look at the following resources:
+## 4. 구현기능
+##### 로그인 및 회원가입
+- 로그인 : 사용자의 입력 값을 유효성 검사(front/back) 후 토큰 저장
+- 회원가입 : 필수 입력사항 유효성 검사(front) 후 데이터를 DB에 전송
+- 비밀번호 재설정 : 이메일 유효성 검사(front) 및 인증(back) 후 이메일로 재설정 링크 전송
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+##### 사이드바 및 상단바
+- 사이드바 : 각 페이지로 이동 -> 로그인하지 않은 유저는 마이페이지 아이콘 비활성화
+- 상단바 : 주소록과 알림버튼, 유저의 닉네임이 뜨고 알림이 오면 알림(종 버튼) 활성화
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+##### 메인페이지
+- 검색 목록: 검색 또는 목록에 있는 장소를 선택하면 dashBoard페이지에 장소를 띄워줌
 
-## Deploy on Vercel
+##### 장소 정보 페이지
+- 지도 : 장소 검색을 하지 않으면 현재 위치, 장소를 검색하면 해당 장소로 핀 고정
+- 주변 맛집 : 장소를 검색하면 주변의 맛집을 추천
+- 날씨 : 장소를 검색하면 장소의 날씨와 혼잡도 등을 보여줌
+- 주변 행사 및 축제 : 장소를 검색하면 장소 근처에서 진행되는 행사, 공연, 축제 등을 보여줌
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+##### 마이페이지
+- 인적사항 수정 : 닉네임과 비밀번호를 수정
+- 내가 작성한 글 : 게시글에서 작성한 글의 목록을 보여줌
+- 찜 목록 : 장소 검색 후 추천 맛집을 찜하고 찜 목록을 보여줌
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+##### 주소록
+- 친구 목록 : 친구를 맺은 목록을 보여줌
+- 요청 확인 : 친구 요청이 온 목록을 보여줌 수락/거절
+- 친구 추가 : 닉네임을 검색하면 목록이 나오고, 추가 버튼을 누르면 친구 요청이 전송
+
+##### 알림
+- 알림 활성화 : 알림이 있으면 버튼이 활성화 모드로 변하고, 알림의 개수만큼 숫자를 띄워줌
+- 친구 요청 : 친구 요청이 오면 알림
+- 초대 알림 : 상대방이 일정을 생성할 때 동행자로 추가하면 초대 알림
+
+##### 게시판
+- 친구 구함, 문의, 후기, 동행 4개의 게시판 조회
+- 로그인 한 유저만 글 작성 및 댓글 작성
+- 댓글에서 닉네임을 클릭하면 친구 요청 전송
+
+##### 일정 관리
+- 로그인 한 유저가 일정을 조회, 생성, 수정, 삭제할 수 있음
+- 일정을 생성하고나면 dashBoard페이지에서 장소를 일정에 추가할 수 있음
+- 친구를 일정에 초대하면 함께 일정을 공유할 수 있음
+
+##### 관리자
+- 관리자는 게시판 글의 신고 내용과 게시글의 일정 조치가 가능
+- 1대 1 실시간 문의 채팅
+
+<hr />
+<hr />
+
+## 5. 보완할 점 & 추후 개발하고자 하는부분
+- ui가 너무 단순하고 밋밋해서 조금 더 예쁘게 꾸미고싶은 욕심..!
+- 코드 가독성이 별로 좋지 않아서 코드 가독성을 더 높일 수 있도록 보완
+- 지역을 서울뿐 아니라, 전국의 장소 정보를 가져와 더욱 많은 사람과 많은 여행에 도움이 되고싶음
+
+<hr />
+<hr />
+
+## 접속링크
+https://kdt-react-node-1-team02.elicecoding.com/

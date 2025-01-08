@@ -13,10 +13,10 @@ import { createPost } from "@/app/utils/boardApi";
 
 export default function PostCreate() {
   //임시 라우터 추후 API 연동 할 때 게시판명 받아서 POST 요청
-  const boardType = useParams().boardType;
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [disabled, setDisabled] = useState(true);
+  const boardType = useParams().boardType;
   const router = useRouter();
 
   useEffect(() => {
@@ -29,19 +29,24 @@ export default function PostCreate() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (disabled) {
       ErrorAlert("모든 필드를 다 채워주세요");
       return;
     }
+
     const formData = new FormData(e.target as HTMLFormElement);
     formData.append("content", content);
     const res = await createPost(formData, boardType as string);
+
     if (!res) return;
+
     if (res.status === 201) {
       SuccessAlert("게시글 생성 성공");
       router.push(`${res.data.postId}`);
       return;
     }
+
     if (res.status !== 200) {
       ErrorAlert("게시글 생성 실패");
     }

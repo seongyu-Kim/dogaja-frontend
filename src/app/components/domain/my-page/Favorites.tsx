@@ -3,6 +3,7 @@ import { FaBookmark, FaStar } from "react-icons/fa";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { ErrorAlert, SuccessAlert } from "@/app/utils/toastAlert";
+import { useUserStore } from "@/app/store/userStore";
 
 interface Fav {
   id?: string;
@@ -13,9 +14,13 @@ interface Fav {
 }
 const Favorites = () => {
   const [favorites, setFavorites] = useState<Fav[]>([]);
+  const { isLogin } = useUserStore();
+
   useEffect(() => {
-    fetchFavoritePlaces();
-  }, []);
+    if (isLogin) {
+      fetchFavoritePlaces();
+    }
+  }, [isLogin]);
 
   //즐찾 리스트
   const fetchFavoritePlaces = async () => {
@@ -32,8 +37,9 @@ const Favorites = () => {
         );
       }
     } catch (e) {
-      console.error("즐찾 불러오기 실패", e);
-      ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
+      if (isLogin) {
+        ErrorAlert("즐겨찾기 목록을 불러오는데 실패하였습니다.");
+      }
     }
   };
 
@@ -53,13 +59,12 @@ const Favorites = () => {
         await fetchFavoritePlaces();
       }
     } catch (e) {
-      console.error(e);
       ErrorAlert("즐겨찾기 삭제하는데 실패하였습니다.");
     }
   };
 
   return (
-    <div className="bg-gray-200 rounded-lg shadow-md h-[45vh] overflow-hidden">
+    <div className="border-2 border-mainColor rounded-lg shadow-md p-4 h-[45vh] overflow-hidden">
       <h2 className="flex text-lg p-3 items-center">
         <FaBookmark className="w-5 h-auto mr-2" /> 즐겨찾기
       </h2>
@@ -88,7 +93,7 @@ const Favorites = () => {
             ))}
           </ul>
         ) : (
-          <p>즐겨찾기한 글이 없습니다.</p>
+          <p className="text-gray-500">즐겨찾기한 글이 없습니다.</p>
         )}
       </div>
     </div>

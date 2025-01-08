@@ -2,10 +2,11 @@
 
 import { PiChatTeardropText } from "react-icons/pi";
 import { useState } from "react";
-import UserChatArea from "@/app/components/UserChatArea";
+import UserChatArea from "@/app/components/domain/chat/UserChatArea";
 
 export default function UserChatBox() {
   const [adminChatClick, setAdminChatClick] = useState<boolean>(false);
+
   return (
     <div className="hidden md:block">
       {!adminChatClick ? (

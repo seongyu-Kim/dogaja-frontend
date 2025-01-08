@@ -10,6 +10,7 @@ import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
 import { useRouter } from "next/navigation";
+import { isAxiosError } from "axios";
 
 type SignUpFormData = {
   email: string;
@@ -47,14 +48,15 @@ const SignUp = () => {
           router.push("/login");
         }, 1200);
       }
-    } catch (e: any) {
-      console.error("회원가입 실패", e);
-      if (e.status === 409) {
-        ErrorAlert("이미 존재하는 이메일입니다.");
-      } else if (e.status === 422) {
-        ErrorAlert("이미 존재하는 이름입니다.");
-      } else {
-        ErrorAlert("회원가입에 실패하였습니다.");
+    } catch (e) {
+      if (isAxiosError(e)) {
+        if (e.status === 409) {
+          ErrorAlert("이미 존재하는 이메일입니다.");
+        } else if (e.status === 422) {
+          ErrorAlert("이미 존재하는 이름입니다.");
+        } else {
+          ErrorAlert("회원가입에 실패하였습니다.");
+        }
       }
     }
   };
@@ -80,7 +82,7 @@ const SignUp = () => {
                     message: "올바른 이메일 형식이 아닙니다",
                   },
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.email && (
                 <p className="ml-1 text-red-500 text-sm">
@@ -106,7 +108,7 @@ const SignUp = () => {
                     message: "이름은 15자 이하여야 합니다",
                   },
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.name && (
                 <p className="ml-1 text-red-500 text-sm">
@@ -132,7 +134,7 @@ const SignUp = () => {
                     message: "비밀번호는 20자 이하여야 합니다",
                   },
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.password && (
                 <p className="ml-1 text-red-500 text-sm">
@@ -153,7 +155,7 @@ const SignUp = () => {
                     value === watch("password") ||
                     "비밀번호가 일치하지 않습니다",
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.confirmPassword && (
                 <p className="ml-1 text-red-500 text-sm">

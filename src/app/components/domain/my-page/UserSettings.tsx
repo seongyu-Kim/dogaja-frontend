@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 
 const UserSettings = () => {
-  const { user, fetchUser } = useUserStore();
+  const { user, fetchUser, isLogin } = useUserStore();
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
   const [isChangingPassword, setIsChangingPassword] = useState<boolean>(false);
   const router = useRouter();
@@ -26,8 +26,10 @@ const UserSettings = () => {
   });
 
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+    if (isLogin) {
+      fetchUser();
+    }
+  }, [fetchUser, isLogin]);
 
   useEffect(() => {
     if (user) {
@@ -37,6 +39,11 @@ const UserSettings = () => {
 
   // 이름 변경
   const handleNameChange: SubmitHandler<FieldValues> = async (data) => {
+    if (!isLogin) {
+      ErrorAlert("로그인 후 이용해주세요.");
+      return;
+    }
+
     try {
       const res = await mainApi({
         url: API.USER.NAME_UPDATE,
@@ -51,13 +58,17 @@ const UserSettings = () => {
         SuccessAlert("닉네임이 변경되었습니다.");
       }
     } catch (e) {
-      console.error(e);
       ErrorAlert("닉네임 변경에 실패하였습니다.");
     }
   };
 
   // 비밀번호 변경
   const handlePasswordChange: SubmitHandler<FieldValues> = async (data) => {
+    if (!isLogin) {
+      ErrorAlert("로그인 후 이용해주세요.");
+      return;
+    }
+
     if (data.newPassword !== data.confirmPassword) {
       ErrorAlert("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
       return;
@@ -80,13 +91,17 @@ const UserSettings = () => {
         SuccessAlert("비밀번호가 변경되었습니다.");
       }
     } catch (e) {
-      console.error(e);
       ErrorAlert("비밀번호 변경에 실패하였습니다.");
     }
   };
 
   // 회원탈퇴
   const handleUserDelete = async () => {
+    if (!isLogin) {
+      ErrorAlert("로그인 후 이용해주세요.");
+      return;
+    }
+
     if (window.confirm("정말로 계정을 탈퇴하시겠습니까?")) {
       try {
         const res = await mainApi({
@@ -103,19 +118,40 @@ const UserSettings = () => {
           }, 1200);
         }
       } catch (e) {
-        console.error(e);
         ErrorAlert("회원탈퇴에 실패하였습니다.");
       }
     }
   };
 
   return (
-    <div className="flex flex-col basis-1/3 p-4 space-y-4 bg-gray-200 rounded-lg shadow-md mr-4 relative">
-      <h2 className="flex text-lg p-3 items-center">
-        <FaUserEdit className="w-6 h-auto mr-2" /> 내 정보
-      </h2>
+    <div className="flex flex-col p-4 space-y-4 border-2 border-mainColor rounded-lg shadow-md relative">
+      <div className="flex items-center justify-between">
+        <h2 className="flex text-lg p-3 items-center">
+          <FaUserEdit className="w-6 h-auto mr-2" /> 내 정보
+        </h2>
+        {/* 탈퇴하기 */}
+          <Button
+            style={{
+              backgroundColor: "bg-none",
+              textSize: "text-xs",
+              textColor: "text-mainRed",
+              padding: "px-1",
+              hover: "hover:scale-105 hover:underline",
+            }}
+            onClick={() => {
+              if (!isLogin) {
+                ErrorAlert("로그인 후 이용해주세요.");
+                return;
+              }
+              handleUserDelete();
+            }}
+          >
+            탈퇴하기
+          </Button>
+      </div>
+
       {/* 닉변 */}
-      <div className="p-3">
+      <div className="flex flex-col items-center">
         <label className="block text-gray-700">닉네임</label>
         {isEditingName ? (
           <form
@@ -160,22 +196,28 @@ const UserSettings = () => {
             <span>{user?.name || "알 수 없는 사용자"}</span>
             <Button
               style={{
-                hoverColor: "hover:bg-[#3CB731]",
-                backgroundColor: "bg-[#6AC662]",
+                textColor: "text-mainColor",
+                backgroundColor: "bg-none",
                 textSize: "text-sm",
-                padding: "px-3 py-1",
+                padding: "px-2",
+                hover: "hover:scale-125",
               }}
-              onClick={() => setIsEditingName(true)}
+              onClick={() => {
+                if (!isLogin) {
+                  ErrorAlert("로그인 후 이용해주세요.");
+                  return;
+                }
+                setIsEditingName(true);
+              }}
             >
-              <MdEdit className="w-5 h-auto" />
+              <MdEdit className="text-lg" />
             </Button>
           </div>
         )}
       </div>
 
       {/* 비밀번호 변경 */}
-      <div className="p-3">
-        <label className="block text-gray-700">비밀번호 변경</label>
+      <div className="flex flex-col items-center">
         {!isChangingPassword ? (
           <Button
             style={{
@@ -184,7 +226,13 @@ const UserSettings = () => {
               textSize: "text-sm",
               padding: "px-3 py-1",
             }}
-            onClick={() => setIsChangingPassword(true)}
+            onClick={() => {
+              if (!isLogin) {
+                ErrorAlert("로그인 후 이용해주세요.");
+                return;
+              }
+              setIsChangingPassword(true);
+            }}
           >
             비밀번호 변경
           </Button>
@@ -199,7 +247,7 @@ const UserSettings = () => {
               {...register("currentPassword", {
                 required: "현재 비밀번호를 입력해주세요",
               })}
-              className="pl-2"
+              className="pl-2 placeholder:text-sm"
             />
             <Input
               type="password"
@@ -215,7 +263,7 @@ const UserSettings = () => {
                   message: "비밀번호는 20자 이하이어야 합니다",
                 },
               })}
-              className="pl-2"
+              className="pl-2 placeholder:text-sm"
             />
             <Input
               type="password"
@@ -226,7 +274,7 @@ const UserSettings = () => {
                   value === watch("newPassword") ||
                   "비밀번호가 일치하지 않습니다",
               })}
-              className="pl-2"
+              className="pl-2 placeholder:text-sm"
             />
             {errors.newPassword &&
               typeof errors.newPassword.message === "string" && (
@@ -276,15 +324,6 @@ const UserSettings = () => {
         )}
       </div>
 
-      {/* 탈퇴하기 */}
-      <div className="absolute bottom-4 right-4">
-        <Button
-          className="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1"
-          onClick={handleUserDelete}
-        >
-          탈퇴하기
-        </Button>
-      </div>
     </div>
   );
 };

@@ -5,8 +5,7 @@ import { BOARD_TYPES } from "@/app/utils/board-config";
 import List from "@/app/components/domain/board/List";
 import { useEffect, useState } from "react";
 import { BoardListType } from "@/app/type/boardListType";
-import boardTypeRequest from "@/app/utils/boardTypeRequest";
-import { ErrorAlert } from "@/app/utils/toastAlert";
+import { getAllPost } from "@/app/utils/boardApi";
 
 type BOARD_TYPES_KEY = keyof typeof BOARD_TYPES;
 
@@ -19,25 +18,11 @@ export default function BoardListPage() {
 
   useEffect(() => {
     const getData = async () => {
-      try {
-        const result: Record<string, BoardListType[]> = {};
+      const res = await getAllPost();
 
-        await Promise.all(
-          boardTypeKeys.map(async (boardType) => {
-            const data = await boardTypeRequest(boardType as BOARD_TYPES_KEY);
-            if (data) {
-              result[boardType] = data;
-              return;
-            }
-            result[boardType] = [];
-          }),
-        );
+      if (!res) return;
 
-        setBoardData(result);
-      } catch (e) {
-        console.error(e);
-        ErrorAlert("데이터 조회에 실패했습니다");
-      }
+      setBoardData(res);
     };
 
     getData();

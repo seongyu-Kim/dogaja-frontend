@@ -12,6 +12,7 @@ import { deletePost, deleteReport } from "@/app/utils/boardApi";
 import getBoardTitle from "@/app/utils/getBoardTitle";
 import Pagination from "@/app/components/common/Pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { isAxiosError } from "axios";
 
 const itemsPerPage = 10;
 
@@ -48,22 +49,26 @@ export default function ReportPage() {
   //신고 게시판 목록 불러오기
   const getReportList = async () => {
     const { REPORT_GET } = API.REPORT;
+
     try {
       const res = await mainApi({
         url: REPORT_GET,
         method: "GET",
         withAuth: true,
       });
+
       if (res.status === 200) {
         setList(res.data as ReportListType[]);
         return;
       }
     } catch (e) {
-      if (e.response.data.statusCode === 401) {
-        ErrorAlert("유효하지 않은 사용자");
-        router.replace("/");
+      if (isAxiosError(e)) {
+        if (e.response && e.response.data.statusCode === 401) {
+          ErrorAlert("유효하지 않은 사용자");
+          router.replace("/");
+        }
+        ErrorAlert("오류가 발생했습니다. 다시 시도해주세요.");
       }
-      ErrorAlert("오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -74,6 +79,7 @@ export default function ReportPage() {
         router.push(`${boardPath}?page=${page}`);
         return;
       }
+
       router.push(
         `${boardPath.split("/").slice(0, -1).join("/")}?page=${page}`,
       );

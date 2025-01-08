@@ -1,37 +1,113 @@
-import React from 'react';
-
-export interface Notification {
-  id: number;
-  type: 'friend' | 'invite';
-  userId: number;
-  name: string;
-  code: string;
-}
+import React, { useEffect, useState } from "react";
+import { API } from "@/app/utils/api";
+import { mainApi } from "@/app/utils/mainApi";
+import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
+import { NotificationType } from "../type/natificationType";
+import { isAxiosError } from "axios";
 
 interface NotificationListProps {
-  notifications: Notification[];
-  onNotificationClick: (notification: Notification) => void;
+  onUnreadCountChange: (count: number) => void;
 }
 
 const NotificationList: React.FC<NotificationListProps> = ({
-  notifications,
-  onNotificationClick,
+  onUnreadCountChange,
 }) => {
+
+  const [alarms, setAlarms] = useState<NotificationType[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // 알림 가져오기
+  useEffect(() => {
+    const getNotifucation = async (): Promise<NotificationType[]> => {
+      const { NOTIFICATION_GET } = API.NOTIFICATION;
+    
+      try {
+        const res = await mainApi({
+          url: NOTIFICATION_GET,
+          method: "GET",
+          withAuth: true,
+        });
+    
+        if (res.status === 200) {
+          return res.data as NotificationType[];
+        } else {
+          throw new Error("Failed to fetch notifications.");
+        }
+      } catch (error) {
+        if (isAxiosError(error)) {
+          if(error.response?.status === 404) {
+            console.error;
+          } else {
+            ErrorAlert("알림목록 가져오기에 실패했습니다.");
+          }
+        } 
+        throw error;
+      }
+    };
+    getNotifucation()
+    .then((data) => {
+      const validData = data.filter((item) => item.id && item.type && item.senderName);
+      setAlarms(validData);
+      const unreadCount = validData.filter((item) => !item.isRead).length;
+      onUnreadCountChange(unreadCount);
+    })
+    .catch((error) => console.error(error));
+  }, [onUnreadCountChange]);
+
+  // 알림 읽음 처리
+  const handleAlarmClick = async (alarm: NotificationType) => {
+    const { NOTIFICATION_READ } = API.NOTIFICATION;
+
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      const res = await mainApi({
+        url: NOTIFICATION_READ(alarm.id),
+        method: "PATCH",
+        withAuth: true,
+      });
+  
+      if (res.status === 200) {
+        const updatedAlarms = alarms.map((item) =>
+          item.id === alarm.id ? { ...item, isRead: true } : item
+        );
+        setAlarms(updatedAlarms);
+
+        const unreadCount = updatedAlarms.filter((item) => !item.isRead).length;
+        onUnreadCountChange(unreadCount);
+
+        SuccessAlert(`${alarm.senderName}님이 보내신 알림을 확인했습니다.`);
+      } else {
+        throw new Error("Failed to mark notification as read.");
+      }
+    } catch (error) {
+      console.error(error);
+      ErrorAlert("알림 읽음 처리에 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };  
+
   return (
     <div className="max-h-60 text-sm overflow-y-auto bg-mainColor rounded shadow-lg p-4">
-      {notifications.length === 0 ? (
+      {alarms.length === 0 ? (
         <p className="text-center text-white text-sm">알림이 없습니다.</p>
       ) : (
         <ul>
-          {notifications.map((notification) => (
+          {alarms.map((alarm) => (
             <li
-              key={notification.id}
-              className="flex items-center border-b border-white py-2 cursor-pointer hover:underline transition"
-              onClick={() => onNotificationClick(notification)}
+              key={alarm.id}
+              className={`flex items-center border-b border-white py-2 cursor-pointer hover:underline transition ${
+                alarm.isRead ? "opacity-50" : "opacity-100"
+              } ${loading ? "pointer-events-none" : ""}`}
+              onClick={() => handleAlarmClick(alarm)}
             >
               <span className="flex-1">
-                {notification.type === 'friend' && `🖐 ${notification.name}님의 친구 요청`}
-                {notification.type === 'invite' && `🎉 ${notification.name}님이 일정에 초대했습니다.`}
+                {alarm.type === "friend_request" &&
+                  `🖐 ${alarm.senderName}님의 친구 요청`}
+                {alarm.type === "schedule_invite" &&
+                  `🎉 ${alarm.senderName}님이 일정에 초대했습니다.`}
               </span>
             </li>
           ))}

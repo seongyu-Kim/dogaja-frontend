@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { mainApi } from "@/app/utils/mainApi";
 import { API } from "@/app/utils/api";
 import { SuccessAlert, ErrorAlert } from "@/app/utils/toastAlert";
+import { isAxiosError } from "axios";
 
 type LoginFormData = {
   email: string;
@@ -43,13 +44,14 @@ const Login = () => {
         router.push("/dashboard");
       }
     } catch (e) {
-      console.error("로그인 실패", e);
-      if (e.status === 401) {
-        ErrorAlert("이메일 또는 비밀번호가 일치하지 않습니다.");
-      } else if (e.status === 403) {
-        ErrorAlert("관리자 권한이 존재하지 않습니다.");
-      } else {
-        ErrorAlert("로그인 중 오류가 발생했습니다.");
+      if (isAxiosError(e)) {
+        if (e.status === 401) {
+          ErrorAlert("이메일 또는 비밀번호가 일치하지 않습니다.");
+        } else if (e.status === 403) {
+          ErrorAlert("관리자 권한이 존재하지 않습니다.");
+        } else {
+          ErrorAlert("로그인 중 오류가 발생했습니다.");
+        }
       }
     }
   };
@@ -67,7 +69,7 @@ const Login = () => {
           <p className="text-center text-gray-600 mt-2">
             로그인하고 두가자와
             <br />
-            함께 여행을 계획해 보세요(대충 설명 or 슬로건)
+            함께 여행을 계획해 보세요.
           </p>
 
           <div className="space-y-4 mt-4 w-10/12 mx-auto">
@@ -85,7 +87,7 @@ const Login = () => {
                     message: "올바른 이메일 형식이 아닙니다",
                   },
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.email && (
                 <p className="ml-1 text-red-500 text-sm">
@@ -103,7 +105,7 @@ const Login = () => {
                 {...register("password", {
                   required: "비밀번호를 입력해주세요",
                 })}
-                className="focus:ring-1 focus:ring-green-300"
+                className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
               />
               {errors.password && (
                 <p className="ml-1 text-red-500 text-sm">

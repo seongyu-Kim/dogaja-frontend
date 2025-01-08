@@ -40,33 +40,40 @@ export default function Sidebar() {
             className="flex flex-col items-center hover:underline hover:scale-105 transition-all duration-300 ease-in-out"
             onClick={toggleBoardMenu}
           >
-            <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
-              <FaRegListAlt className="text-xl" />
-            </div>
-            게시판
+            <Link href="/board">
+              <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
+                <FaRegListAlt className="text-xl" />
+              </div>
+              게시판
+            </Link>
           </div>
-          {/* 하위 목록 */}
           {isBoardOpen && (
             <ul className="mt-2.5 text-center text-xs">
-              <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
-                <Link href="/board">둘러보기</Link>
-              </li>
-              <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
-                <Link href="/board/friend">친구 구함</Link>
-              </li>
-              <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
-                <Link href="/board/ask">문의</Link>
-              </li>
-              <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
-                <Link href="/board/review">후기</Link>
-              </li>
-              <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 transition-all duration-300 ease-in-out">
-                <Link href="/board/with">동행</Link>
-              </li>
+              <Link href="/board/friend">
+                <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 hover:bg-gray-200 transition-all duration-300 ease-in-out">
+                  친구 구함
+                </li>
+              </Link>
+              <Link href="/board/ask">
+                <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 hover:bg-gray-200 transition-all duration-300 ease-in-out">
+                  문의
+                </li>
+              </Link>
+              <Link href="/board/review">
+                <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 hover:bg-gray-200 transition-all duration-300 ease-in-out">
+                  후기
+                </li>
+              </Link>
+              <Link href="/board/with">
+                <li className="py-1.5 hover:underline hover:text-mainColor hover:scale-110 hover:bg-gray-200 transition-all duration-300 ease-in-out">
+                  동행
+                </li>
+              </Link>
             </ul>
           )}
         </li>
 
+      {user && (
         <li className="p-2 mt-4 hover:underline hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out">
           <Link href="/my-page" className="flex flex-col items-center">
             <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
@@ -75,7 +82,8 @@ export default function Sidebar() {
           </Link>
           마이페이지
         </li>
-
+      )}
+      
         <li className="p-2 mt-4 hover:underline hover:scale-105 cursor-pointer transition-all duration-300 ease-in-out">
           <Link href="/my-schedule" className="flex flex-col items-center">
             <div className="flex items-center justify-center border-2 border-mainColor rounded-full p-2">
