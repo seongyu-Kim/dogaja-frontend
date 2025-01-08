@@ -82,7 +82,7 @@ const FindPassword: React.FC = () => {
                       message: "올바른 이메일 형식이 아닙니다.",
                     },
                   })}
-                  className="focus:ring-1 focus:ring-green-300"
+                  className="focus:ring-1 focus:ring-green-300 placeholder:text-sm"
                 />
                 {errors.email && (
                   <p className="absolute top-16 ml-1 text-sm text-red-500">
