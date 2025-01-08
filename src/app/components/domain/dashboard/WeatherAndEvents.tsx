@@ -52,18 +52,18 @@ const WeatherAndEvents: React.FC<WeatherAndEventsProps> = ({
   return (
     <div className="flex flex-col flex-grow basis-1/3 p-4 space-y-4">
       {/* 날씨 섹션 */}
-      <div className="border-2 border-mainColor p-4 rounded-lg shadow-md h-[45vh] min-w-72 overflow-hidden">
-        <div className="h-[calc(100%-0.5rem)] overflow-y-auto">
+      <div className="border-2 border-mainColor bg-gray-100 p-4 rounded-lg shadow-md h-[45vh] min-w-72 overflow-hidden">
+        <h2 className="flex text-xl pb-3">
+          <TiWeatherPartlySunny className="w-6 h-auto mr-2" />
+          <p className="text-mainColor">{weather?.nameData}</p>의 날씨
+        </h2>
+        <div className="h-[calc(100%-2.5rem)] overflow-y-auto">
           {isWeatherLoading ? (
             <p className="text-gray-500">날씨 데이터를 불러오는 중...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : weather ? (
             <div className="space-y-2">
-              <h2 className="flex text-xl pb-3">
-                <TiWeatherPartlySunny className="w-6 h-auto mr-2" />
-                <p className="text-mainColor">{weather.nameData}</p>의 날씨
-              </h2>
               <div className="border-b-2 pb-2">
                 <div className="flex items-center mb-2 justify-between">
                   <p className="text-mainColor py-1">혼잡도 레벨</p> 
@@ -89,9 +89,9 @@ const WeatherAndEvents: React.FC<WeatherAndEventsProps> = ({
               </div>
 
               <div className="border-b-2 pb-2">
-                <div className="flex items-center mb-2 gap-2">
+                <div className="flex items-center justify-between mb-2">
                   <p className="text-mainColor py-1">자외선 지수</p>
-                  <span className="border-2 border-mainColor bg-mainColor bg-opacity-10 text-mainColor text-xs rounded-full p-1">
+                  <span className="border-2 border-mainColor bg-mainColor bg-opacity-10 text-mainColor text-xs rounded-full p-1 mr-4">
                     {weather.UVIndex}
                   </span>
                 </div>
@@ -99,9 +99,17 @@ const WeatherAndEvents: React.FC<WeatherAndEventsProps> = ({
               </div>
 
               <div>
-                <p>미세먼지 상태: {weather.pm10MSG}</p>
-                <p>초미세먼지 상태: {weather.pm25MSG}</p>
-                <p>공기질 메시지: {weather.airMSG}</p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-mainColor py-1">미세먼지</p>
+                  <span className="border-2 border-mainColor bg-mainColor bg-opacity-10 text-mainColor text-xs rounded-full p-1 mr-4">
+                    {weather.pm10MSG}
+                  </span>
+                  <p className="text-mainColor py-1">초미세먼지</p>
+                  <span className="border-2 border-mainColor bg-mainColor bg-opacity-10 text-mainColor text-xs rounded-full p-1 mr-4">
+                    {weather.pm25MSG}
+                  </span>
+                </div>
+                <p>{weather.airMSG}</p>
               </div>
             </div>
           ) : (
@@ -111,12 +119,12 @@ const WeatherAndEvents: React.FC<WeatherAndEventsProps> = ({
       </div>
 
       {/* 행사 및 축제 섹션 */}
-      <div className="bg-gray-200 rounded-lg shadow-md h-[45vh] overflow-hidden">
+      <div className="border-2 border-mainColor bg-gray-100 rounded-lg shadow-md h-[45vh] overflow-hidden">
         <h2 className="flex text-lg p-3">
           <FaMapMarkerAlt className="w-5 h-auto mr-2" />
-          행사 및 축제
+          주변 행사 및 축제
         </h2>
-        <div className="p-4 h-[calc(100%-3rem)] overflow-y-auto">
+        <div className="mx-4 h-[calc(100%-4rem)] overflow-y-auto">
           {isEventsLoading ? (
             <p className="text-gray-500">행사 데이터를 불러오는 중...</p>
           ) : error ? (
@@ -126,16 +134,16 @@ const WeatherAndEvents: React.FC<WeatherAndEventsProps> = ({
               {events.map((event, index) => (
                 <div
                   key={index}
-                  className="p-2 border-b border-gray-300 last:border-none"
+                  className="p-2 border-b-2 border-gray-300 last:border-none"
                 >
-                  <h3 className="font-semibold">{event.EVENT_NM}</h3>
+                  <h3 className="font-semibold text-mainColor">{event.EVENT_NM}</h3>
                   <p>기간: {event.EVENT_PERIOD}</p>
                   <p>장소: {event.EVENT_PLACE}</p>
                   <a
                     href={event.URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 underline"
+                    className="text-gray-500 underline flex justify-end"
                   >
                     자세히 보기
                   </a>

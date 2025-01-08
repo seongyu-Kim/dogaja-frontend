@@ -181,7 +181,7 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
   };
   return (
     <div className="flex flex-col flex-grow basis-2/3 p-4 space-y-4">
-      <div className="flex-grow border-2 border-mainColor p-4 rounded-lg shadow-lg">
+      <div className="flex-grow border-2 border-mainColor p-4 rounded-lg shadow-lg bg-gray-100">
         <div className="flex text-xl pb-3">
           <div className="flex items-center">
             <TbMapSearch className="w-6 h-auto mr-2" />
@@ -192,7 +192,7 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
           <KakaoMap keyword={selectedLocation} onPlacesFetched={setPlaces} />
         </div>
       </div>
-      <div className="border-2 border-mainColor p-4 rounded-lg shadow-md h-[35vh] overflow-hidden">
+      <div className="border-2 border-mainColor bg-gray-100 p-4 rounded-lg shadow-md h-[35vh] overflow-hidden">
         <div className="flex text-xl pb-3">
           <LiaThumbtackSolid className="w-6 h-auto mr-2" />
           주변 맛집
@@ -205,7 +205,7 @@ const MapWithPlaces = ({ selectedLocation }: { selectedLocation: string }) => {
                 className="border-b border-gray-400 py-2 flex justify-between items-center hover:bg-mainColor hover:bg-opacity-25"
               >
                 <div>
-                  <p className="text-lg">{place.place_name}</p>
+                  <p className="text-lg text-mainColor">{place.place_name}</p>
                   <p>{place.road_address_name || place.address_name}</p>
                   <p className="text-sm">
                     {place.phone || "번호를 제공하지 않는 장소입니다."}
