@@ -13,6 +13,12 @@
 **프로젝트 인원** : 5명
 
 **프로젝트 소개** : 서울의 핫플레이스 109곳을 중점으로 주변 맛집과 날씨 및 혼잡도, 행사 및 축제 등의 정보를 실시간으로 얻고 그 정보를 기반으로 일정을 계획할 수 있는 플랫폼
+
+<br/>
+
+**기술 스택** :  <img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white"> <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white"> <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=axios&logoColor=white" /> <img src="https://img.shields.io/badge/Zustand-3578E5.svg?style=for-the-badge&logo=Zustand&logoColor=white" /> <img src="https://img.shields.io/badge/React%20Hook%20Form-%23EC5990.svg?style=for-the-badge&logo=reacthookform&logoColor=white" /> 
+
+
 <hr />
 <hr />
 
