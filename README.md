@@ -87,5 +87,5 @@
 <hr />
 <hr />
 
-## 접속링크
-https://kdt-react-node-1-team02.elicecoding.com/
+## 시연영상
+https://www.youtube.com/watch?v=HM2lbkQlCRA
