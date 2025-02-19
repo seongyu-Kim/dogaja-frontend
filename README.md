@@ -1,9 +1,13 @@
+# Do가자
+
+<br />
+
 ## 1. 팀 소개
 **팀명** : 2팀 두가자
 
 **팀원** : 이희재(팀장), 이수엽, 박주호, 한지수, 김선규
-<hr />
-<hr />
+
+<br />
 
 ## 2. 기획내용
 **프로젝트 주제** : 공공 데이터를 활용한 웹 플랫폼
@@ -19,8 +23,7 @@
 **기술 스택** :  <img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white"> <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white"> <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=axios&logoColor=white" /> <img src="https://img.shields.io/badge/Zustand-3578E5.svg?style=for-the-badge&logo=Zustand&logoColor=white" /> <img src="https://img.shields.io/badge/React%20Hook%20Form-%23EC5990.svg?style=for-the-badge&logo=reacthookform&logoColor=white" /> 
 
 
-<hr />
-<hr />
+<br />
 
 ## 3. 역할 분담
 | **팀원**            | **역할**                                                                 |
@@ -31,14 +34,13 @@
 | **이수엽 (Back)**   | Nginx, Docker, Logger, 게시판/댓글 API, 일정 API, 찜 API, 신고 API, 검색/Open API                      |
 | **이희재 (Back)**   | 로그인/회원가입 API, 유저 정보 수정 API, 친구 API, 알림 API, 채팅 API                                    |
 
-<hr />
-<hr />
+<br />
 
 ## 4. 구현기능
 ##### 로그인 및 회원가입
-- 로그인 : 사용자의 입력 값을 유효성 검사(front/back) 후 토큰 저장
-- 회원가입 : 필수 입력사항 유효성 검사(front) 후 데이터를 DB에 전송
-- 비밀번호 재설정 : 이메일 유효성 검사(front) 및 인증(back) 후 이메일로 재설정 링크 전송
+- 로그인 : 사용자의 입력 값을 유효성 검사 후 토큰 저장
+- 회원가입 : 필수 입력사항 유효성 검사 후 데이터를 DB에 전송
+- 비밀번호 재설정 : 이메일 유효성 검사 및 인증 후 이메일로 재설정 링크 전송
 
 ##### 사이드바 및 상단바
 - 사이드바 : 각 페이지로 이동 -> 로그인하지 않은 유저는 마이페이지 아이콘 비활성화
@@ -82,16 +84,15 @@
 - 관리자는 게시판 글의 신고 내용과 게시글의 일정 조치가 가능
 - 1대 1 실시간 문의 채팅
 
-<hr />
-<hr />
+<br />
 
 ## 5. 보완할 점 & 추후 개발하고자 하는부분
-- ui가 너무 단순하고 밋밋해서 조금 더 예쁘게 꾸미고싶은 욕심..!
-- 코드 가독성이 별로 좋지 않아서 코드 가독성을 더 높일 수 있도록 보완
+- 타입을 정의할 때, 타입이 너무 길어서 별도로 API 코드들을 모아놓는 파일을 만들고 API호출 함수와 타입을 쌍으로 두면 가독성을 높일 수 있을 것 같음
+- useState가 꼭 필요하지 않은 상황해서 사용한 경우가 있어서 최적화 부분에서 아쉬움이 남음
+- data-isLoaging-Error를 묶어서 단순히 API를 호출하지만 코드가 너무 길어져서 tantack-query를 적용해보면 어떨까 싶음
 - 지역을 서울뿐 아니라, 전국의 장소 정보를 가져와 더욱 많은 사람과 많은 여행에 도움이 되고싶음
 
-<hr />
-<hr />
+<br />
 
 ## 시연영상
 https://www.youtube.com/watch?v=HM2lbkQlCRA
