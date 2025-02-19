@@ -4,7 +4,6 @@
   <img width="30%" alt="스크린샷 2025-01-08 오후 8 49 15" src="https://github.com/user-attachments/assets/096af2e7-2133-461b-9ee2-cf092d294d2b" />
 </div>
 
-
 <br />
 
 ## 1. 팀 소개
